@@ -509,6 +509,10 @@ async function downloadAllCatalogAsPDF() {
     showToast('در حال آماده‌سازی PDF...', 'success');
 
     try {
+        // Hide download buttons before capturing
+        const downloadButtons = liveCatalogGrid.querySelectorAll('.download-image-btn');
+        downloadButtons.forEach(btn => btn.style.display = 'none');
+
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pageWidth = pdf.internal.pageSize.getWidth();
@@ -539,10 +543,17 @@ async function downloadAllCatalogAsPDF() {
 
         pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
         pdf.save('کاتالوگ-محصولات.pdf');
+        
+        // Show download buttons again after capturing
+        downloadButtons.forEach(btn => btn.style.display = '');
+        
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
         console.error('PDF generation error:', error);
         showToast('خطا در ایجاد PDF', 'error');
+        // Make sure to show buttons again even if there's an error
+        const downloadButtons = liveCatalogGrid.querySelectorAll('.download-image-btn');
+        downloadButtons.forEach(btn => btn.style.display = '');
     }
 }
 
