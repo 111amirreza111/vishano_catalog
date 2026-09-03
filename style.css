@@ -358,92 +358,97 @@ body {
 /* Live Catalog Grid */
 .live-catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
 /* Catalog Card Design */
 .catalog-card {
     background-color: var(--white);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: var(--shadow-md);
-    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    padding: 1rem;
     position: relative;
+    border: 1px solid var(--gray-200);
 }
 
 .catalog-card-image {
     width: 100%;
     object-fit: contain;
-    max-height: 400px;
-    margin-bottom: 1rem;
+    max-height: 280px;
+    margin-bottom: 0.75rem;
     background-color: var(--white);
 }
 
 .catalog-card-divider {
-    height: 2px;
-    background-color: var(--light-green);
-    margin: 1rem 0;
+    height: 1px;
+    background-color: var(--gray-200);
+    margin: 0.75rem 0;
 }
 
 .catalog-card-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-green);
-    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.75rem;
 }
 
 .catalog-card-descriptions {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .catalog-card-descriptions p {
-    color: var(--gray-700);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    padding-right: 1rem;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+    padding-right: 0.75rem;
     position: relative;
+    line-height: 1.5;
 }
 
 .catalog-card-descriptions p::before {
     content: '•';
     color: var(--primary-green);
-    font-weight: bold;
+    font-weight: 500;
     position: absolute;
     right: 0;
+    font-size: 0.75rem;
 }
 
 .catalog-card-prices {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
+    flex-direction: column;
 }
 
 .catalog-price-box {
-    flex: 1;
-    padding: 1rem;
-    border-radius: var(--radius);
-    text-align: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .catalog-price-box.cash {
-    background-color: var(--primary-green);
-    color: var(--white);
+    background-color: var(--light-green);
+    color: var(--primary-green);
 }
 
 .catalog-price-box.installment {
-    background-color: var(--dark-green);
-    color: var(--white);
+    background-color: var(--gray-100);
+    color: var(--gray-700);
 }
 
 .catalog-price-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    margin-bottom: 0.5rem;
 }
 
 .catalog-price-value {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .download-image-btn {
@@ -706,6 +711,14 @@ body {
     
     .catalog-card-prices {
         flex-direction: column;
+    }
+    
+    .catalog-card {
+        padding: 0.875rem;
+    }
+    
+    .catalog-card-image {
+        max-height: 220px;
     }
 }
 
