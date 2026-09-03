@@ -515,41 +515,29 @@ async function downloadAllCatalogAsPDF() {
         const pageHeight = pdf.internal.pageSize.getHeight();
         const margin = 10;
         const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2);
 
-        for (let i = 0; i < products.length; i++) {
-            const product = products[i];
-            const card = document.getElementById(`catalog-card-${product.id}`);
-            
-            if (!card) continue;
+        // Capture the entire grid as a single screenshot
+        const canvas = await html2canvas(liveCatalogGrid, {
+            scale: 1.5,
+            useCORS: true,
+            backgroundColor: '#FFFFFF'
+        });
 
-            // Add new page for each product (except first)
-            if (i > 0) {
-                pdf.addPage();
-            }
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
 
-            // Capture the card as canvas
-            const canvas = await html2canvas(card, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#FFFFFF'
-            });
+        // Calculate dimensions to fit on PDF page
+        const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+        const finalWidth = imgWidth * ratio;
+        const finalHeight = imgHeight * ratio;
 
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+        // Center the image on the page
+        const x = (pageWidth - finalWidth) / 2;
+        const y = margin;
 
-            // Calculate dimensions to fit on PDF page
-            const ratio = Math.min(maxWidth / imgWidth, (pageHeight - margin * 2) / imgHeight);
-            const finalWidth = imgWidth * ratio;
-            const finalHeight = imgHeight * ratio;
-
-            // Center the image on the page
-            const x = (pageWidth - finalWidth) / 2;
-            const y = margin;
-
-            pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
-        }
-
+        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
         pdf.save('کاتالوگ-محصولات.pdf');
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
