@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -83,6 +84,10 @@
             <section id="live-catalog-page" class="page">
                 <div class="page-header">
                     <h2>مشاهده لایو کاتالوگ</h2>
+                    <button class="btn btn-primary" id="download-all-pdf-btn">
+                        <span class="icon">📄</span>
+                        دانلود تمام تصاویر به صورت PDF
+                    </button>
                 </div>
                 
                 <div class="live-catalog-grid" id="live-catalog-grid">

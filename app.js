@@ -462,6 +462,9 @@ function renderLiveCatalog() {
             </button>
         </div>
     `).join('');
+
+    // Initialize download all PDF button
+    initializeDownloadAllPDF();
 }
 
 async function downloadProductImage(productId, productName) {
@@ -486,6 +489,72 @@ async function downloadProductImage(productId, productName) {
     } catch (error) {
         console.error('Image capture error:', error);
         showToast('خطا در دانلود تصویر', 'error');
+    }
+}
+
+function initializeDownloadAllPDF() {
+    const downloadAllBtn = document.getElementById('download-all-pdf-btn');
+    if (downloadAllBtn) {
+        downloadAllBtn.removeEventListener('click', downloadAllCatalogAsPDF);
+        downloadAllBtn.addEventListener('click', downloadAllCatalogAsPDF);
+    }
+}
+
+async function downloadAllCatalogAsPDF() {
+    if (products.length === 0) {
+        showToast('محصولی برای دانلود وجود ندارد', 'error');
+        return;
+    }
+
+    showToast('در حال آماده‌سازی PDF...', 'success');
+
+    try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const maxWidth = pageWidth - (margin * 2);
+
+        for (let i = 0; i < products.length; i++) {
+            const product = products[i];
+            const card = document.getElementById(`catalog-card-${product.id}`);
+            
+            if (!card) continue;
+
+            // Add new page for each product (except first)
+            if (i > 0) {
+                pdf.addPage();
+            }
+
+            // Capture the card as canvas
+            const canvas = await html2canvas(card, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#FFFFFF'
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            // Calculate dimensions to fit on PDF page
+            const ratio = Math.min(maxWidth / imgWidth, (pageHeight - margin * 2) / imgHeight);
+            const finalWidth = imgWidth * ratio;
+            const finalHeight = imgHeight * ratio;
+
+            // Center the image on the page
+            const x = (pageWidth - finalWidth) / 2;
+            const y = margin;
+
+            pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
+        }
+
+        pdf.save('کاتالوگ-محصولات.pdf');
+        showToast('PDF با موفقیت دانلود شد', 'success');
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        showToast('خطا در ایجاد PDF', 'error');
     }
 }
 
