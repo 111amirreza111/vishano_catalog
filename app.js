@@ -437,14 +437,14 @@ function renderLiveCatalog() {
     }
 
     liveCatalogGrid.innerHTML = products.map(product => `
-        <div>
-            <div class="catalog-card" id="catalog-card-${product.id}">
-                <img src="${product.image}" alt="${product.name}" class="catalog-card-image">
-                <div class="catalog-card-divider"></div>
-                <h3 class="catalog-card-name">${product.name}</h3>
-                <div class="catalog-card-descriptions">
-                    ${product.descriptions.map(desc => `<p>${desc}</p>`).join('')}
-                </div>
+        <div class="catalog-card" id="catalog-card-${product.id}">
+            <img src="${product.image}" alt="${product.name}" class="catalog-card-image">
+            <div class="catalog-card-divider"></div>
+            <h3 class="catalog-card-name">${product.name}</h3>
+            <div class="catalog-card-descriptions">
+                ${product.descriptions.map(desc => `<p>${desc}</p>`).join('')}
+            </div>
+            <div class="catalog-card-footer">
                 <div class="catalog-card-prices">
                     <div class="catalog-price-box cash">
                         <div class="catalog-price-label">قیمت نقدی</div>
@@ -455,11 +455,11 @@ function renderLiveCatalog() {
                         <div class="catalog-price-value">${formatPrice(product.installmentPrice)}</div>
                     </div>
                 </div>
+                <button class="btn btn-primary download-image-btn" onclick="downloadProductImage('${product.id}', '${product.name}')">
+                    <span class="icon">📥</span>
+                    دانلود تصویر
+                </button>
             </div>
-            <button class="btn btn-primary download-image-btn" onclick="downloadProductImage('${product.id}', '${product.name}')">
-                <span class="icon">📥</span>
-                دانلود تصویر
-            </button>
         </div>
     `).join('');
 

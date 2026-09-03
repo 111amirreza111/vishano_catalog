@@ -360,6 +360,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+    align-items: stretch;
 }
 
 /* Catalog Card Design */
@@ -371,6 +372,9 @@ body {
     padding: 1rem;
     position: relative;
     border: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .catalog-card-image {
@@ -422,6 +426,13 @@ body {
     flex-direction: column;
 }
 
+.catalog-card-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .catalog-price-box {
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
@@ -452,7 +463,7 @@ body {
 }
 
 .download-image-btn {
-    margin-top: 1rem;
+    margin-top: auto;
     width: 100%;
 }
 
