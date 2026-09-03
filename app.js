@@ -6,6 +6,9 @@ let settings = {
 };
 let editingProductId = null;
 let productToDelete = null;
+let uploadedImageFile = null;
+
+const API_BASE = 'http://localhost:3000/api';
 
 // DOM Elements
 const navTabs = document.querySelectorAll('.nav-tab');
@@ -21,8 +24,8 @@ const imagePreview = document.getElementById('image-preview');
 const toast = document.getElementById('toast');
 
 // Initialize App
-document.addEventListener('DOMContentLoaded', () => {
-    loadFromLocalStorage();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadFromAPI();
     initializeNavigation();
     initializeProductForm();
     initializeSettings();
@@ -40,7 +43,10 @@ function initializeNavigation() {
     });
 }
 
-function switchPage(pageName) {
+async function switchPage(pageName) {
+    // Reload data when switching to ensure freshness
+    await loadFromAPI();
+    
     // Update nav tabs
     navTabs.forEach(tab => {
         tab.classList.remove('active');
@@ -62,27 +68,37 @@ function switchPage(pageName) {
         renderPdfPreview();
     } else if (pageName === 'live-catalog') {
         renderLiveCatalog();
+    } else if (pageName === 'products') {
+        renderProducts();
     }
 }
 
-// localStorage Management
-function loadFromLocalStorage() {
-    // Load products
-    const savedProducts = localStorage.getItem('products');
-    if (savedProducts) {
-        products = JSON.parse(savedProducts);
+// API Management
+async function loadFromAPI() {
+    try {
+        console.log('Loading data from API...');
+        const [productsRes, settingsRes] = await Promise.all([
+            fetch(`${API_BASE}/products`),
+            fetch(`${API_BASE}/settings`)
+        ]);
+        
+        if (!productsRes.ok || !settingsRes.ok) {
+            throw new Error('API request failed');
+        }
+        
+        products = await productsRes.json();
+        settings = await settingsRes.json();
+        console.log('Data loaded successfully:', { productsCount: products.length, settings });
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showToast('خطا در بارگذاری داده‌ها', 'error');
+        // Set default values if loading fails
+        products = [];
+        settings = {
+            cashPercentage: 30,
+            installmentPercentage: 50
+        };
     }
-
-    // Load settings
-    const savedSettings = localStorage.getItem('settings');
-    if (savedSettings) {
-        settings = JSON.parse(savedSettings);
-    }
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem('products', JSON.stringify(products));
-    localStorage.setItem('settings', JSON.stringify(settings));
 }
 
 // Settings
@@ -95,16 +111,29 @@ function initializeSettings() {
     cashPercentageInput.value = settings.cashPercentage;
     installmentPercentageInput.value = settings.installmentPercentage;
 
-    saveSettingsBtn.addEventListener('click', () => {
+    saveSettingsBtn.addEventListener('click', async () => {
         const cashPercentage = parseFloat(cashPercentageInput.value) || 0;
         const installmentPercentage = parseFloat(installmentPercentageInput.value) || 0;
 
-        settings.cashPercentage = cashPercentage;
-        settings.installmentPercentage = installmentPercentage;
-
-        saveToLocalStorage();
-        updateCurrentSettingsDisplay();
-        showToast('تنظیمات با موفقیت ذخیره شد', 'success');
+        try {
+            const res = await fetch(`${API_BASE}/settings`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cashPercentage, installmentPercentage })
+            });
+            
+            if (res.ok) {
+                settings = await res.json();
+                await loadFromAPI(); // Reload products with updated prices
+                updateCurrentSettingsDisplay();
+                showToast('تنظیمات با موفقیت ذخیره شد', 'success');
+            } else {
+                showToast('خطا در ذخیره تنظیمات', 'error');
+            }
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            showToast('خطا در ذخیره تنظیمات', 'error');
+        }
     });
 }
 
@@ -115,7 +144,9 @@ function updateCurrentSettingsDisplay() {
 
 // Products Management
 function renderProducts() {
-    if (products.length === 0) {
+    console.log('renderProducts called with', products.length, 'products');
+    
+    if (!products || products.length === 0) {
         productsGrid.innerHTML = `
             <div class="empty-state" style="grid-column: 1 / -1;">
                 <div class="empty-state-icon">📦</div>
@@ -125,7 +156,9 @@ function renderProducts() {
         return;
     }
 
-    productsGrid.innerHTML = products.map(product => `
+    productsGrid.innerHTML = products.map(product => {
+        console.log('Rendering product image:', product.image);
+        return `
         <div class="product-card">
             <img src="${product.image}" alt="${product.name}" class="product-card-image">
             <div class="product-card-content">
@@ -150,7 +183,8 @@ function renderProducts() {
                 </button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function calculatePrices(baseCost) {
@@ -206,6 +240,7 @@ function initializeProductForm() {
 
 function openProductModal(product = null) {
     editingProductId = product ? product.id : null;
+    uploadedImageFile = null;
     document.getElementById('modal-title').textContent = product ? 'ویرایش محصول' : 'افزودن محصول جدید';
     
     if (product) {
@@ -249,6 +284,7 @@ function closeProductModal() {
 function handleImageUpload(e) {
     const file = e.target.files[0];
     if (file) {
+        uploadedImageFile = file;
         const reader = new FileReader();
         reader.onload = (event) => {
             imagePreview.innerHTML = `<img src="${event.target.result}" alt="تصویر محصول">`;
@@ -278,14 +314,12 @@ function removeDescriptionField(button) {
     }
 }
 
-function handleProductSubmit(e) {
+async function handleProductSubmit(e) {
     e.preventDefault();
     
     const productId = document.getElementById('product-id').value;
     const productName = document.getElementById('product-name').value;
     const baseCost = parseFloat(document.getElementById('base-cost').value) || 0;
-    const imagePreviewImg = imagePreview.querySelector('img');
-    const productImage = imagePreviewImg ? imagePreviewImg.src : '';
     
     // Get descriptions
     const descriptionInputs = descriptionsContainer.querySelectorAll('.description-input');
@@ -298,7 +332,7 @@ function handleProductSubmit(e) {
         return;
     }
     
-    if (!productImage) {
+    if (!uploadedImageFile && !editingProductId) {
         showToast('لطفاً تصویر محصول را آپلود کنید', 'error');
         return;
     }
@@ -308,33 +342,41 @@ function handleProductSubmit(e) {
         return;
     }
     
-    const prices = calculatePrices(baseCost);
+    const formData = new FormData();
+    formData.append('name', productName);
+    formData.append('baseCost', baseCost);
+    formData.append('descriptions', JSON.stringify(descriptions));
     
-    const productData = {
-        id: productId || Date.now().toString(),
-        name: productName,
-        image: productImage,
-        descriptions: descriptions,
-        baseCost: baseCost,
-        cashPrice: prices.cashPrice,
-        installmentPrice: prices.installmentPrice,
-        createdAt: editingProductId ? products.find(p => p.id === editingProductId)?.createdAt : new Date().toISOString()
-    };
-    
-    if (editingProductId) {
-        const index = products.findIndex(p => p.id === editingProductId);
-        if (index !== -1) {
-            products[index] = productData;
-        }
-        showToast('محصول با موفقیت ویرایش شد', 'success');
-    } else {
-        products.push(productData);
-        showToast('محصول با موفقیت اضافه شد', 'success');
+    if (uploadedImageFile) {
+        formData.append('image', uploadedImageFile);
     }
     
-    saveToLocalStorage();
-    renderProducts();
-    closeProductModal();
+    try {
+        let res;
+        if (editingProductId) {
+            res = await fetch(`${API_BASE}/products/${editingProductId}`, {
+                method: 'PUT',
+                body: formData
+            });
+        } else {
+            res = await fetch(`${API_BASE}/products`, {
+                method: 'POST',
+                body: formData
+            });
+        }
+        
+        if (res.ok) {
+            await loadFromAPI();
+            renderProducts();
+            closeProductModal();
+            showToast(editingProductId ? 'محصول با موفقیت ویرایش شد' : 'محصول با موفقیت اضافه شد', 'success');
+        } else {
+            showToast('خطا در ذخیره محصول', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving product:', error);
+        showToast('خطا در ذخیره محصول', 'error');
+    }
 }
 
 function editProduct(productId) {
@@ -349,12 +391,24 @@ function confirmDeleteProduct(productId) {
     confirmModal.classList.add('active');
 }
 
-function deleteProduct() {
+async function deleteProduct() {
     if (productToDelete) {
-        products = products.filter(p => p.id !== productToDelete);
-        saveToLocalStorage();
-        renderProducts();
-        showToast('محصول با موفقیت حذف شد', 'success');
+        try {
+            const res = await fetch(`${API_BASE}/products/${productToDelete}`, {
+                method: 'DELETE'
+            });
+            
+            if (res.ok) {
+                await loadFromAPI();
+                renderProducts();
+                showToast('محصول با موفقیت حذف شد', 'success');
+            } else {
+                showToast('خطا در حذف محصول', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            showToast('خطا در حذف محصول', 'error');
+        }
         productToDelete = null;
     }
     confirmModal.classList.remove('active');
@@ -367,10 +421,10 @@ document.getElementById('cancel-delete-btn').addEventListener('click', () => {
     productToDelete = null;
 });
 
-// Save All Products
-document.getElementById('save-all-products-btn').addEventListener('click', () => {
-    saveToLocalStorage();
-    showToast('همه محصولات با موفقیت ذخیره شدند', 'success');
+// Save All Products (now reloads from API)
+document.getElementById('save-all-products-btn').addEventListener('click', async () => {
+    await loadFromAPI();
+    showToast('همه محصولات با موفقیت بروزرسانی شدند', 'success');
 });
 
 // PDF Generation
