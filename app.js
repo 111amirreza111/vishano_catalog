@@ -464,7 +464,7 @@ function createCatalogCardHTML(product) {
                     <div class="catalog-price-value">${formatPrice(product.cashPrice)}</div>
                 </div>
                 <div class="catalog-price-box installment">
-                    <div class="catalog-price-label">قیمت اقساطی دو ماهه</div>
+                    <div class="catalog-price-label">قیمت اقساطی</div>
                     <div class="catalog-price-value">${formatPrice(product.installmentPrice)}</div>
                 </div>
             </div>
@@ -526,7 +526,7 @@ function renderLiveCatalog() {
                         <div class="catalog-price-value">${formatPrice(product.cashPrice)}</div>
                     </div>
                     <div class="catalog-price-box installment">
-                        <div class="catalog-price-label">قیمت اقساطی دو ماهه</div>
+                        <div class="catalog-price-label">قیمت اقساطی</div>
                         <div class="catalog-price-value">${formatPrice(product.installmentPrice)}</div>
                     </div>
                 </div>
