@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت کاتالوگ محصولات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">پنل مدیریت کاتالوگ محصولات</h1>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-page="products">محصولات</button>
+                <button class="nav-tab" data-page="settings">تنظیمات</button>
+                <button class="nav-tab" data-page="pdf">دانلود کاتالوگ PDF</button>
+                <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Products Page -->
+            <section id="products-page" class="page active">
+                <div class="page-header">
+                    <h2>مدیریت محصولات</h2>
+                    <button class="btn btn-primary" id="add-product-btn">
+                        <span class="icon">+</span>
+                        افزودن محصول جدید
+                    </button>
+                </div>
+                
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be rendered here -->
+                </div>
+
+                <div class="global-save-section">
+                    <button class="btn btn-success btn-large" id="save-all-products-btn">
+                        <span class="icon">💾</span>
+                        ذخیره همه محصولات
+                    </button>
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section id="settings-page" class="page">
+                <div class="page-header">
+                    <h2>تنظیمات قیمت‌گذاری</h2>
+                </div>
+                
+                <div class="settings-container">
+                    <div class="form-group">
+                        <label for="cash-percentage">درصد افزایش قیمت نقدی</label>
+                        <input type="number" id="cash-percentage" class="form-input" placeholder="مثال: 30" min="0" step="1">
+                        <small class="form-hint">مثال: اگر 30 باشد، قیمت نقدی = قیمت پایه + 30%</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="installment-percentage">درصد افزایش قیمت اقساطی دو ماهه</label>
+                        <input type="number" id="installment-percentage" class="form-input" placeholder="مثال: 50" min="0" step="1">
+                        <small class="form-hint">مثال: اگر 50 باشد، قیمت اقساطی = قیمت پایه + 50%</small>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="save-settings-btn">
+                        <span class="icon">💾</span>
+                        ذخیره تنظیمات
+                    </button>
+                </div>
+
+                <div class="current-settings">
+                    <h3>تنظیمات فعلی:</h3>
+                    <p>درصد افزایش قیمت نقدی: <span id="current-cash-percentage">-</span>%</p>
+                    <p>درصد افزایش قیمت اقساطی: <span id="current-installment-percentage">-</span>%</p>
+                </div>
+            </section>
+
+            <!-- PDF Download Page -->
+            <section id="pdf-page" class="page">
+                <div class="page-header">
+                    <h2>دانلود کاتالوگ PDF</h2>
+                </div>
+                
+                <div class="pdf-container">
+                    <div class="pdf-preview" id="pdf-preview">
+                        <!-- PDF preview will be rendered here -->
+                    </div>
+                    
+                    <button class="btn btn-primary btn-large" id="download-pdf-btn">
+                        <span class="icon">📄</span>
+                        دانلود کاتالوگ PDF
+                    </button>
+                </div>
+            </section>
+
+            <!-- Live Catalog Page -->
+            <section id="live-catalog-page" class="page">
+                <div class="page-header">
+                    <h2>مشاهده لایو کاتالوگ</h2>
+                </div>
+                
+                <div class="live-catalog-grid" id="live-catalog-grid">
+                    <!-- Live catalog cards will be rendered here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">افزودن محصول جدید</h3>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            
+            <form id="product-form" class="product-form">
+                <input type="hidden" id="product-id">
+                
+                <div class="form-group">
+                    <label for="product-image">تصویر محصول</label>
+                    <input type="file" id="product-image" accept="image/*" class="form-input">
+                    <div class="image-preview" id="image-preview">
+                        <span class="preview-placeholder">تصویر پیش‌نمایش</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-name">نام محصول</label>
+                    <input type="text" id="product-name" class="form-input" placeholder="مثال: جاکلیدی" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>توضیحات محصول</label>
+                    <div id="descriptions-container" class="descriptions-container">
+                        <!-- Description inputs will be added here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" id="add-description-btn">
+                        <span class="icon">+</span>
+                        افزودن آیتم جدید
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="base-cost">قیمت تمام شده برای شرکت (تومان)</label>
+                    <input type="number" id="base-cost" class="form-input" placeholder="مثال: 200000" min="0" required>
+                    <div class="calculated-prices">
+                        <div class="price-display">
+                            <span class="price-label">قیمت نقدی:</span>
+                            <span class="price-value" id="cash-price-display">0 تومان</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="price-label">قیمت اقساطی دو ماهه:</span>
+                            <span class="price-value" id="installment-price-display">0 تومان</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">💾</span>
+                        ذخیره محصول
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-btn">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>تأیید حذف</h3>
+            </div>
+            <div class="modal-body">
+                <p>آیا مطمئن هستید که می‌خواهید این محصول را حذف کنید؟</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirm-delete-btn">بله، حذف کن</button>
+                <button class="btn btn-secondary" id="cancel-delete-btn">انصراف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-message"></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
