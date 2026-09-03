@@ -15,7 +15,6 @@ const navTabs = document.querySelectorAll('.nav-tab');
 const pages = document.querySelectorAll('.page');
 const productsGrid = document.getElementById('products-grid');
 const liveCatalogGrid = document.getElementById('live-catalog-grid');
-const pdfPreview = document.getElementById('pdf-preview');
 const productModal = document.getElementById('product-modal');
 const confirmModal = document.getElementById('confirm-modal');
 const productForm = document.getElementById('product-form');
@@ -64,9 +63,7 @@ async function switchPage(pageName) {
     });
 
     // Render specific page content
-    if (pageName === 'pdf') {
-        renderPdfPreview();
-    } else if (pageName === 'live-catalog') {
+    if (pageName === 'live-catalog') {
         renderLiveCatalog();
     } else if (pageName === 'products') {
         renderProducts();
@@ -425,78 +422,6 @@ document.getElementById('cancel-delete-btn').addEventListener('click', () => {
 document.getElementById('save-all-products-btn').addEventListener('click', async () => {
     await loadFromAPI();
     showToast('همه محصولات با موفقیت بروزرسانی شدند', 'success');
-});
-
-// PDF Generation
-function renderPdfPreview() {
-    if (products.length === 0) {
-        pdfPreview.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📦</div>
-                <p class="empty-state-text">هنوز محصولی اضافه نشده است</p>
-            </div>
-        `;
-        return;
-    }
-
-    pdfPreview.innerHTML = `
-        <div class="pdf-header">
-            <h1 style="color: #00CC77; text-align: center; margin-bottom: 2rem;">کاتالوگ محصولات</h1>
-        </div>
-        <div class="pdf-products">
-            ${products.map(product => createCatalogCardHTML(product)).join('')}
-        </div>
-    `;
-}
-
-function createCatalogCardHTML(product) {
-    return `
-        <div class="catalog-card" data-product-id="${product.id}">
-            <img src="${product.image}" alt="${product.name}" class="catalog-card-image">
-            <div class="catalog-card-divider"></div>
-            <h3 class="catalog-card-name">${product.name}</h3>
-            <div class="catalog-card-descriptions">
-                ${product.descriptions.map(desc => `<p>${desc}</p>`).join('')}
-            </div>
-            <div class="catalog-card-prices">
-                <div class="catalog-price-box cash">
-                    <div class="catalog-price-label">قیمت نقدی</div>
-                    <div class="catalog-price-value">${formatPrice(product.cashPrice)}</div>
-                </div>
-                <div class="catalog-price-box installment">
-                    <div class="catalog-price-label">قیمت اقساطی</div>
-                    <div class="catalog-price-value">${formatPrice(product.installmentPrice)}</div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-document.getElementById('download-pdf-btn').addEventListener('click', async () => {
-    if (products.length === 0) {
-        showToast('هنوز محصولی اضافه نشده است', 'error');
-        return;
-    }
-
-    showToast('در حال تولید PDF...', 'success');
-
-    const element = pdfPreview;
-    const opt = {
-        margin: 10,
-        filename: 'catalog-products.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    try {
-        await html2pdf().set(opt).from(element).save();
-        showToast('PDF با موفقیت دانلود شد', 'success');
-    } catch (error) {
-        console.error('PDF generation error:', error);
-        showToast('خطا در تولید PDF', 'error');
-    }
 });
 
 // Live Catalog

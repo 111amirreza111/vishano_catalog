@@ -355,22 +355,6 @@ body {
     color: var(--primary-green);
 }
 
-/* PDF Container */
-.pdf-container {
-    background-color: var(--white);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-}
-
-.pdf-preview {
-    min-height: 400px;
-    background-color: var(--gray-100);
-    border-radius: var(--radius);
-    margin-bottom: 2rem;
-    padding: 2rem;
-}
-
 /* Live Catalog Grid */
 .live-catalog-grid {
     display: grid;

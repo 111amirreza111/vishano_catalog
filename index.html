@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -19,7 +17,6 @@
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="products">محصولات</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
-                <button class="nav-tab" data-page="pdf">دانلود کاتالوگ PDF</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
             </nav>
         </header>
@@ -80,23 +77,6 @@
                 </div>
             </section>
 
-            <!-- PDF Download Page -->
-            <section id="pdf-page" class="page">
-                <div class="page-header">
-                    <h2>دانلود کاتالوگ PDF</h2>
-                </div>
-                
-                <div class="pdf-container">
-                    <div class="pdf-preview" id="pdf-preview">
-                        <!-- PDF preview will be rendered here -->
-                    </div>
-                    
-                    <button class="btn btn-primary btn-large" id="download-pdf-btn">
-                        <span class="icon">📄</span>
-                        دانلود کاتالوگ PDF
-                    </button>
-                </div>
-            </section>
 
             <!-- Live Catalog Page -->
             <section id="live-catalog-page" class="page">
