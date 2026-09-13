@@ -520,9 +520,9 @@ async function downloadAllCatalogAsPDF() {
     showToast('در حال آماده‌سازی PDF...', 'success');
 
     try {
-        // Hide download buttons before capturing
-        const downloadButtons = liveCatalogGrid.querySelectorAll('.download-image-btn');
-        downloadButtons.forEach(btn => btn.style.display = 'none');
+        // Add capturing class to all cards to remove size constraints
+        const allCards = liveCatalogGrid.querySelectorAll('.catalog-card');
+        allCards.forEach(card => card.classList.add('capturing'));
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -544,7 +544,6 @@ async function downloadAllCatalogAsPDF() {
         const totalPages = Math.ceil(products.length / cardsPerPage);
 
         // Store original display states
-        const allCards = liveCatalogGrid.querySelectorAll('.catalog-card');
         const originalDisplays = Array.from(allCards).map(card => card.style.display);
 
         for (let pageNum = 0; pageNum < totalPages; pageNum++) {
@@ -596,8 +595,8 @@ async function downloadAllCatalogAsPDF() {
             card.style.display = originalDisplays[index];
         });
 
-        // Show download buttons again after capturing
-        downloadButtons.forEach(btn => btn.style.display = '');
+        // Remove capturing class after capturing
+        allCards.forEach(card => card.classList.remove('capturing'));
 
         pdf.save('کاتالوگ-محصولات.pdf');
         
@@ -605,9 +604,9 @@ async function downloadAllCatalogAsPDF() {
     } catch (error) {
         console.error('PDF generation error:', error);
         showToast('خطا در ایجاد PDF', 'error');
-        // Make sure to show buttons again even if there's an error
-        const downloadButtons = liveCatalogGrid.querySelectorAll('.download-image-btn');
-        downloadButtons.forEach(btn => btn.style.display = '');
+        // Make sure to remove capturing class even if there's an error
+        const allCards = liveCatalogGrid.querySelectorAll('.catalog-card');
+        allCards.forEach(card => card.classList.remove('capturing'));
     }
 }
 
