@@ -156,7 +156,7 @@ function renderProducts() {
                 <h3 class="product-card-name">${product.name}</h3>
                 <div class="product-card-prices">
                     <div class="price-tag cash">
-                        <div class="price-tag-label">قیمت نقدی</div>
+                        <div class="price-tag-label">قیمت</div>
                         <div class="price-tag-value">${formatPrice(product.cashPrice)}</div>
                     </div>
                 </div>
@@ -432,7 +432,7 @@ function renderLiveCatalog() {
             <div class="catalog-card-footer">
                 <div class="catalog-card-prices">
                     <div class="catalog-price-box cash">
-                        <div class="catalog-price-label">قیمت نقدی</div>
+                        <div class="catalog-price-label">قیمت</div>
                         <div class="catalog-price-value">${formatPrice(product.cashPrice)}</div>
                     </div>
                 </div>
