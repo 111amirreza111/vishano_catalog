@@ -521,31 +521,74 @@ async function downloadAllCatalogAsPDF() {
         const maxWidth = pageWidth - (margin * 2);
         const maxHeight = pageHeight - (margin * 2);
 
-        // Capture the entire grid as a single screenshot
-        const canvas = await html2canvas(liveCatalogGrid, {
-            scale: 1.5,
-            useCORS: true,
-            backgroundColor: '#FFFFFF'
+        // Calculate number of columns in the grid
+        const gridStyle = window.getComputedStyle(liveCatalogGrid);
+        const gridTemplateColumns = gridStyle.gridTemplateColumns;
+        const columnCount = gridTemplateColumns.split(' ').length;
+
+        // Cards per page (2 rows)
+        const cardsPerPage = columnCount * 2;
+
+        // Split products into pages
+        const totalPages = Math.ceil(products.length / cardsPerPage);
+
+        // Store original display states
+        const allCards = liveCatalogGrid.querySelectorAll('.catalog-card');
+        const originalDisplays = Array.from(allCards).map(card => card.style.display);
+
+        for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+            const startIndex = pageNum * cardsPerPage;
+            const endIndex = Math.min(startIndex + cardsPerPage, products.length);
+            const pageProducts = products.slice(startIndex, endIndex);
+
+            // Hide all cards first
+            allCards.forEach(card => card.style.display = 'none');
+
+            // Show only cards for this page
+            pageProducts.forEach(product => {
+                const card = document.getElementById(`catalog-card-${product.id}`);
+                if (card) {
+                    card.style.display = 'flex';
+                }
+            });
+
+            // Capture this page
+            const canvas = await html2canvas(liveCatalogGrid, {
+                scale: 1.5,
+                useCORS: true,
+                backgroundColor: '#FFFFFF'
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.85);
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            // Calculate dimensions to fit on PDF page
+            const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+            const finalWidth = imgWidth * ratio;
+            const finalHeight = imgHeight * ratio;
+
+            // Center the image on the page
+            const x = (pageWidth - finalWidth) / 2;
+            const y = margin;
+
+            // Add new page if not first
+            if (pageNum > 0) {
+                pdf.addPage();
+            }
+
+            pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+        }
+
+        // Restore original display states
+        allCards.forEach((card, index) => {
+            card.style.display = originalDisplays[index];
         });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.85);
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-
-        // Calculate dimensions to fit on PDF page
-        const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
-        const finalWidth = imgWidth * ratio;
-        const finalHeight = imgHeight * ratio;
-
-        // Center the image on the page
-        const x = (pageWidth - finalWidth) / 2;
-        const y = margin;
-
-        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
-        pdf.save('کاتالوگ-محصولات.pdf');
-        
         // Show download buttons again after capturing
         downloadButtons.forEach(btn => btn.style.display = '');
+
+        pdf.save('کاتالوگ-محصولات.pdf');
         
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
