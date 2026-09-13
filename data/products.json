@@ -8,7 +8,7 @@
       "ابعاد : 7 * 5"
     ],
     "baseCost": 44000,
-    "cashPrice": 52800,
+    "cashPrice": 57200,
     "installmentPrice": 83600,
     "createdAt": "2026-09-03T09:07:31.054Z"
   },
@@ -21,7 +21,7 @@
       "ابعاد : 9 * 2"
     ],
     "baseCost": 16000,
-    "cashPrice": 19200,
+    "cashPrice": 20800,
     "installmentPrice": 30400,
     "createdAt": "2026-09-03T09:10:53.776Z"
   },
@@ -35,7 +35,7 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 76800,
-    "cashPrice": 92160,
+    "cashPrice": 99840,
     "installmentPrice": 145920,
     "createdAt": "2026-09-03T09:14:11.563Z"
   },
@@ -49,7 +49,7 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 63000,
-    "cashPrice": 75600,
+    "cashPrice": 81900,
     "installmentPrice": 119700,
     "createdAt": "2026-09-03T09:16:36.153Z"
   },
@@ -62,7 +62,7 @@
       "ابعاد : 6 * 2"
     ],
     "baseCost": 15000,
-    "cashPrice": 18000,
+    "cashPrice": 19500,
     "installmentPrice": 28500,
     "createdAt": "2026-09-03T09:19:25.885Z"
   },
@@ -76,7 +76,7 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 77000,
-    "cashPrice": 92400,
+    "cashPrice": 100100,
     "installmentPrice": 146300,
     "createdAt": "2026-09-03T09:21:39.742Z"
   },
@@ -89,7 +89,7 @@
       "ابعاد : 7 * 7"
     ],
     "baseCost": 44000,
-    "cashPrice": 52800,
+    "cashPrice": 57200,
     "installmentPrice": 83600,
     "createdAt": "2026-09-03T09:23:26.658Z"
   },
@@ -102,7 +102,7 @@
       "ابعاد : 7 * 4"
     ],
     "baseCost": 27000,
-    "cashPrice": 32400,
+    "cashPrice": 35100,
     "installmentPrice": 51300,
     "createdAt": "2026-09-03T09:26:36.450Z"
   },
@@ -115,7 +115,7 @@
       "ابعاد : 40 * 4"
     ],
     "baseCost": 72000,
-    "cashPrice": 86400,
+    "cashPrice": 93600,
     "installmentPrice": 136800,
     "createdAt": "2026-09-03T09:28:59.154Z"
   },
@@ -128,7 +128,7 @@
       "ابعاد : 20 * 7"
     ],
     "baseCost": 80000,
-    "cashPrice": 96000,
+    "cashPrice": 104000,
     "installmentPrice": 152000,
     "createdAt": "2026-09-03T09:32:04.372Z"
   },
@@ -141,7 +141,7 @@
       "ابعاد : 7"
     ],
     "baseCost": 15000,
-    "cashPrice": 18000,
+    "cashPrice": 19500,
     "installmentPrice": 28500,
     "createdAt": "2026-09-03T09:33:45.752Z"
   },
@@ -154,7 +154,7 @@
       "ابعاد : 7"
     ],
     "baseCost": 15000,
-    "cashPrice": 18000,
+    "cashPrice": 19500,
     "installmentPrice": 28500,
     "createdAt": "2026-09-03T09:35:54.010Z"
   },
@@ -167,7 +167,7 @@
       "ابعاد : 20 * 5"
     ],
     "baseCost": 80000,
-    "cashPrice": 96000,
+    "cashPrice": 104000,
     "installmentPrice": 152000,
     "createdAt": "2026-09-03T09:37:42.784Z"
   },
@@ -179,7 +179,7 @@
       "ابعاد : 15 * 16"
     ],
     "baseCost": 30000,
-    "cashPrice": 36000,
+    "cashPrice": 39000,
     "installmentPrice": 57000,
     "createdAt": "2026-09-03T09:39:40.016Z"
   },
@@ -191,7 +191,7 @@
       "ابعاد : 20 * 22"
     ],
     "baseCost": 484000,
-    "cashPrice": 580800,
+    "cashPrice": 629200,
     "installmentPrice": 919600,
     "createdAt": "2026-09-03T09:41:58.051Z"
   },
@@ -203,7 +203,7 @@
       "ابعاد : 25 * 14"
     ],
     "baseCost": 331000,
-    "cashPrice": 397200,
+    "cashPrice": 430300,
     "installmentPrice": 628900,
     "createdAt": "2026-09-03T09:45:03.676Z"
   },
@@ -215,7 +215,7 @@
       "ابعاد : 15 * 7"
     ],
     "baseCost": 115000,
-    "cashPrice": 138000,
+    "cashPrice": 149500,
     "installmentPrice": 218500,
     "createdAt": "2026-09-03T09:48:21.523Z"
   },
@@ -227,7 +227,7 @@
       "ابعاد : 23 * 13"
     ],
     "baseCost": 278000,
-    "cashPrice": 333600,
+    "cashPrice": 361400,
     "installmentPrice": 528200,
     "createdAt": "2026-09-03T09:50:31.336Z"
   },
@@ -239,7 +239,7 @@
       "ابعاد : 9 * 2"
     ],
     "baseCost": 12000,
-    "cashPrice": 14400,
+    "cashPrice": 15600,
     "installmentPrice": 22800,
     "createdAt": "2026-09-03T09:53:14.931Z"
   },
@@ -251,7 +251,7 @@
       "ابعاد : 6 * 6"
     ],
     "baseCost": 152000,
-    "cashPrice": 182400,
+    "cashPrice": 197600,
     "installmentPrice": 288800,
     "createdAt": "2026-09-03T09:55:21.645Z"
   },
@@ -263,7 +263,7 @@
       "ابعاد : 6 * 6"
     ],
     "baseCost": 144000,
-    "cashPrice": 172800,
+    "cashPrice": 187200,
     "installmentPrice": 273600,
     "createdAt": "2026-09-03T09:56:47.062Z"
   },
@@ -276,7 +276,7 @@
       "ابعاد : 16 * 2"
     ],
     "baseCost": 15000,
-    "cashPrice": 18000,
+    "cashPrice": 19500,
     "installmentPrice": 28500,
     "createdAt": "2026-09-03T09:58:46.123Z"
   },
@@ -289,7 +289,7 @@
       "ابعاد : 30 * 6"
     ],
     "baseCost": 74000,
-    "cashPrice": 88800,
+    "cashPrice": 96200,
     "installmentPrice": 140600,
     "createdAt": "2026-09-03T10:02:12.411Z"
   },
@@ -302,7 +302,7 @@
       "ابعاد : 30"
     ],
     "baseCost": 72000,
-    "cashPrice": 86400,
+    "cashPrice": 93600,
     "installmentPrice": 136800,
     "createdAt": "2026-09-03T10:04:49.733Z"
   },
@@ -314,8 +314,137 @@
       "ابعاد : 25"
     ],
     "baseCost": 76000,
-    "cashPrice": 91200,
+    "cashPrice": 98800,
     "installmentPrice": 144400,
     "createdAt": "2026-09-03T10:07:27.645Z"
+  },
+  {
+    "id": "1788443230560",
+    "name": "قاشق چوبی بزرگ",
+    "image": "/uploads/1788443230551-400377618.jpg",
+    "descriptions": [
+      "ابعاد : 30"
+    ],
+    "baseCost": 104000,
+    "cashPrice": 135200,
+    "installmentPrice": 197600,
+    "createdAt": "2026-09-03T13:47:10.560Z"
+  },
+  {
+    "id": "1788443303976",
+    "name": "کفگیر چوبی ",
+    "image": "/uploads/1788443303972-721000232.jpg",
+    "descriptions": [
+      "ابعاد : 30"
+    ],
+    "baseCost": 104000,
+    "cashPrice": 135200,
+    "installmentPrice": 197600,
+    "createdAt": "2026-09-03T13:48:23.976Z"
+  },
+  {
+    "id": "1788443372236",
+    "name": "کفگیر چوبی ",
+    "image": "/uploads/1788443372232-374806345.jpg",
+    "descriptions": [
+      "ابعاد : 20"
+    ],
+    "baseCost": 104000,
+    "cashPrice": 135200,
+    "installmentPrice": 197600,
+    "createdAt": "2026-09-03T13:49:32.236Z"
+  },
+  {
+    "id": "1788443562621",
+    "name": "اسپند دودکن دسته طرحدار ",
+    "image": "/uploads/1788443562616-87263220.jpg",
+    "descriptions": [
+      "دسته چوبی",
+      "سر فلزی مقاوم برای استفاده مداوم",
+      "ابعاد : 15 * 1.5"
+    ],
+    "baseCost": 20000,
+    "cashPrice": 26000,
+    "installmentPrice": 38000,
+    "createdAt": "2026-09-03T13:52:42.621Z"
+  },
+  {
+    "id": "1788443709580",
+    "name": "جامدادی رومیزی ",
+    "image": "/uploads/1788443709576-774013705.jpg",
+    "descriptions": [
+      "سنگ مصنوعی",
+      "ابعاد : 8 * 8"
+    ],
+    "baseCost": 48000,
+    "cashPrice": 62400,
+    "installmentPrice": 91200,
+    "createdAt": "2026-09-03T13:55:09.580Z"
+  },
+  {
+    "id": "1788443845750",
+    "name": "جا دستمال کاغذی ",
+    "image": "/uploads/1788443845743-329958143.jpg",
+    "descriptions": [
+      "سنگ مصنوعی",
+      "ابعاد : 18"
+    ],
+    "baseCost": 52000,
+    "cashPrice": 67600,
+    "installmentPrice": 98800,
+    "createdAt": "2026-09-03T13:57:25.750Z"
+  },
+  {
+    "id": "1788444372607",
+    "name": "زیر سیگاری ",
+    "image": "/uploads/1788444372598-771530550.jpg",
+    "descriptions": [
+      "سنگ مصنوعی",
+      "ابعاد : 11"
+    ],
+    "baseCost": 56000,
+    "cashPrice": 72800,
+    "installmentPrice": 106400,
+    "createdAt": "2026-09-03T14:06:12.607Z"
+  },
+  {
+    "id": "1788444563561",
+    "name": "جاکلیدی ",
+    "image": "/uploads/1788444563555-117585249.jpg",
+    "descriptions": [
+      "چوب گردو",
+      "ابعاد : 30 * 6 * 4"
+    ],
+    "baseCost": 240000,
+    "cashPrice": 312000,
+    "installmentPrice": 456000,
+    "createdAt": "2026-09-03T14:09:23.561Z"
+  },
+  {
+    "id": "1788444664641",
+    "name": "ماگ پروانه برجسته",
+    "image": "/uploads/1788444664634-393248885.jpg",
+    "descriptions": [
+      "جنس سرامیک",
+      "ابعاد : 12"
+    ],
+    "baseCost": 168000,
+    "cashPrice": 218400,
+    "installmentPrice": 319200,
+    "createdAt": "2026-09-03T14:11:04.641Z"
+  },
+  {
+    "id": "1788444791666",
+    "name": "ماگ بالشتی ",
+    "image": "/uploads/1788444791661-37492567.jpg",
+    "descriptions": [
+      "جنس سرامیک",
+      "انواع رنگبندی",
+      "ابعاد : 8"
+    ],
+    "baseCost": 173000,
+    "cashPrice": 224900,
+    "installmentPrice": 328700,
+    "createdAt": "2026-09-03T14:13:11.666Z"
   }
 ]
