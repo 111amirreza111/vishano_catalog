@@ -1,8 +1,7 @@
 // App State
 let products = [];
 let settings = {
-    cashPercentage: 30,
-    installmentPercentage: 50
+    cashPercentage: 30
 };
 let editingProductId = null;
 let productToDelete = null;
@@ -92,8 +91,7 @@ async function loadFromAPI() {
         // Set default values if loading fails
         products = [];
         settings = {
-            cashPercentage: 30,
-            installmentPercentage: 50
+            cashPercentage: 30
         };
     }
 }
@@ -101,22 +99,19 @@ async function loadFromAPI() {
 // Settings
 function initializeSettings() {
     const cashPercentageInput = document.getElementById('cash-percentage');
-    const installmentPercentageInput = document.getElementById('installment-percentage');
     const saveSettingsBtn = document.getElementById('save-settings-btn');
 
     // Load current settings
     cashPercentageInput.value = settings.cashPercentage;
-    installmentPercentageInput.value = settings.installmentPercentage;
 
     saveSettingsBtn.addEventListener('click', async () => {
         const cashPercentage = parseFloat(cashPercentageInput.value) || 0;
-        const installmentPercentage = parseFloat(installmentPercentageInput.value) || 0;
 
         try {
             const res = await fetch(`${API_BASE}/settings`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cashPercentage, installmentPercentage })
+                body: JSON.stringify({ cashPercentage })
             });
             
             if (res.ok) {
@@ -136,7 +131,6 @@ function initializeSettings() {
 
 function updateCurrentSettingsDisplay() {
     document.getElementById('current-cash-percentage').textContent = settings.cashPercentage;
-    document.getElementById('current-installment-percentage').textContent = settings.installmentPercentage;
 }
 
 // Products Management
@@ -165,10 +159,6 @@ function renderProducts() {
                         <div class="price-tag-label">قیمت نقدی</div>
                         <div class="price-tag-value">${formatPrice(product.cashPrice)}</div>
                     </div>
-                    <div class="price-tag installment">
-                        <div class="price-tag-label">قیمت اقساطی</div>
-                        <div class="price-tag-value">${formatPrice(product.installmentPrice)}</div>
-                    </div>
                 </div>
             </div>
             <div class="product-card-actions">
@@ -186,10 +176,8 @@ function renderProducts() {
 
 function calculatePrices(baseCost) {
     const cashPrice = baseCost * (1 + settings.cashPercentage / 100);
-    const installmentPrice = baseCost * (1 + settings.installmentPercentage / 100);
     return {
-        cashPrice: Math.round(cashPrice),
-        installmentPrice: Math.round(installmentPrice)
+        cashPrice: Math.round(cashPrice)
     };
 }
 
@@ -224,7 +212,6 @@ function initializeProductForm() {
         const baseCost = parseFloat(e.target.value) || 0;
         const prices = calculatePrices(baseCost);
         document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
-        document.getElementById('installment-price-display').textContent = formatPrice(prices.installmentPrice);
     });
 
     addDescriptionBtn.addEventListener('click', addDescriptionField);
@@ -248,7 +235,6 @@ function openProductModal(product = null) {
         // Update price displays
         const prices = calculatePrices(product.baseCost);
         document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
-        document.getElementById('installment-price-display').textContent = formatPrice(prices.installmentPrice);
         
         // Set image preview
         if (product.image) {
@@ -267,7 +253,6 @@ function openProductModal(product = null) {
         descriptionsContainer.innerHTML = '';
         addDescriptionField();
         document.getElementById('cash-price-display').textContent = '0 تومان';
-        document.getElementById('installment-price-display').textContent = '0 تومان';
     }
     
     productModal.classList.add('active');
@@ -449,10 +434,6 @@ function renderLiveCatalog() {
                     <div class="catalog-price-box cash">
                         <div class="catalog-price-label">قیمت نقدی</div>
                         <div class="catalog-price-value">${formatPrice(product.cashPrice)}</div>
-                    </div>
-                    <div class="catalog-price-box installment">
-                        <div class="catalog-price-label">قیمت اقساطی</div>
-                        <div class="catalog-price-value">${formatPrice(product.installmentPrice)}</div>
                     </div>
                 </div>
                 <button class="btn btn-primary download-image-btn" onclick="downloadProductImage('${product.id}', '${product.name}')">

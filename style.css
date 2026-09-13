@@ -247,10 +247,6 @@ body {
     color: var(--white);
 }
 
-.price-tag.installment {
-    background-color: var(--dark-green);
-    color: var(--white);
-}
 
 .price-tag-label {
     font-size: 0.75rem;
@@ -447,10 +443,6 @@ body {
     color: var(--primary-green);
 }
 
-.catalog-price-box.installment {
-    background-color: var(--gray-100);
-    color: var(--gray-700);
-}
 
 .catalog-price-label {
     font-size: 0.75rem;

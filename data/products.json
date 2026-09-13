@@ -8,9 +8,9 @@
       "ابعاد : 7 * 5"
     ],
     "baseCost": 46000,
-    "cashPrice": 60720,
-    "installmentPrice": 63020,
-    "createdAt": "2026-09-03T09:07:31.054Z"
+    "cashPrice": 62100,
+    "createdAt": "2026-09-03T09:07:31.054Z",
+    "installmentPrice": 46000
   },
   {
     "id": "1788426653776",
@@ -21,9 +21,9 @@
       "ابعاد : 9 * 2"
     ],
     "baseCost": 16800,
-    "cashPrice": 22176,
-    "installmentPrice": 23016,
-    "createdAt": "2026-09-03T09:10:53.776Z"
+    "cashPrice": 22680,
+    "createdAt": "2026-09-03T09:10:53.776Z",
+    "installmentPrice": 16800
   },
   {
     "id": "1788426851563",
@@ -35,9 +35,9 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 80000,
-    "cashPrice": 105600,
-    "installmentPrice": 109600,
-    "createdAt": "2026-09-03T09:14:11.563Z"
+    "cashPrice": 108000,
+    "createdAt": "2026-09-03T09:14:11.563Z",
+    "installmentPrice": 80000
   },
   {
     "id": "1788426996153",
@@ -49,9 +49,9 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 65000,
-    "cashPrice": 85800,
-    "installmentPrice": 89050,
-    "createdAt": "2026-09-03T09:16:36.153Z"
+    "cashPrice": 87750,
+    "createdAt": "2026-09-03T09:16:36.153Z",
+    "installmentPrice": 65000
   },
   {
     "id": "1788427165885",
@@ -62,9 +62,9 @@
       "ابعاد : 6 * 2"
     ],
     "baseCost": 15000,
-    "cashPrice": 19800,
-    "installmentPrice": 20550,
-    "createdAt": "2026-09-03T09:19:25.885Z"
+    "cashPrice": 20250,
+    "createdAt": "2026-09-03T09:19:25.885Z",
+    "installmentPrice": 15000
   },
   {
     "id": "1788427299742",
@@ -76,9 +76,9 @@
       "ابعاد : 15 * 6"
     ],
     "baseCost": 77000,
-    "cashPrice": 101640,
-    "installmentPrice": 105490,
-    "createdAt": "2026-09-03T09:21:39.742Z"
+    "cashPrice": 103950,
+    "createdAt": "2026-09-03T09:21:39.742Z",
+    "installmentPrice": 77000
   },
   {
     "id": "1788427406657",
@@ -89,9 +89,9 @@
       "ابعاد : 7 * 7"
     ],
     "baseCost": 45000,
-    "cashPrice": 59400,
-    "installmentPrice": 61650,
-    "createdAt": "2026-09-03T09:23:26.658Z"
+    "cashPrice": 60750,
+    "createdAt": "2026-09-03T09:23:26.658Z",
+    "installmentPrice": 45000
   },
   {
     "id": "1788427596450",
@@ -102,9 +102,9 @@
       "ابعاد : 7 * 4"
     ],
     "baseCost": 27500,
-    "cashPrice": 36300,
-    "installmentPrice": 37675,
-    "createdAt": "2026-09-03T09:26:36.450Z"
+    "cashPrice": 37125,
+    "createdAt": "2026-09-03T09:26:36.450Z",
+    "installmentPrice": 27500
   },
   {
     "id": "1788427924372",
@@ -115,9 +115,9 @@
       "ابعاد : 20 * 7"
     ],
     "baseCost": 84000,
-    "cashPrice": 110880,
-    "installmentPrice": 115080,
-    "createdAt": "2026-09-03T09:32:04.372Z"
+    "cashPrice": 113400,
+    "createdAt": "2026-09-03T09:32:04.372Z",
+    "installmentPrice": 84000
   },
   {
     "id": "1788428025752",
@@ -128,9 +128,9 @@
       "ابعاد : 7"
     ],
     "baseCost": 15000,
-    "cashPrice": 19800,
-    "installmentPrice": 20550,
-    "createdAt": "2026-09-03T09:33:45.752Z"
+    "cashPrice": 20250,
+    "createdAt": "2026-09-03T09:33:45.752Z",
+    "installmentPrice": 15000
   },
   {
     "id": "1788428154010",
@@ -141,9 +141,9 @@
       "ابعاد : 7"
     ],
     "baseCost": 15000,
-    "cashPrice": 19800,
-    "installmentPrice": 20550,
-    "createdAt": "2026-09-03T09:35:54.010Z"
+    "cashPrice": 20250,
+    "createdAt": "2026-09-03T09:35:54.010Z",
+    "installmentPrice": 15000
   },
   {
     "id": "1788428262784",
@@ -154,9 +154,9 @@
       "ابعاد : 20 * 5"
     ],
     "baseCost": 84000,
-    "cashPrice": 110880,
-    "installmentPrice": 115080,
-    "createdAt": "2026-09-03T09:37:42.784Z"
+    "cashPrice": 113400,
+    "createdAt": "2026-09-03T09:37:42.784Z",
+    "installmentPrice": 84000
   },
   {
     "id": "1788428380016",
@@ -166,9 +166,9 @@
       "ابعاد : 15 * 16"
     ],
     "baseCost": 30000,
-    "cashPrice": 39600,
-    "installmentPrice": 41100,
-    "createdAt": "2026-09-03T09:39:40.016Z"
+    "cashPrice": 40500,
+    "createdAt": "2026-09-03T09:39:40.016Z",
+    "installmentPrice": 30000
   },
   {
     "id": "1788428518051",
@@ -178,9 +178,9 @@
       "ابعاد : 20 * 22"
     ],
     "baseCost": 484000,
-    "cashPrice": 638880,
-    "installmentPrice": 663080,
-    "createdAt": "2026-09-03T09:41:58.051Z"
+    "cashPrice": 653400,
+    "createdAt": "2026-09-03T09:41:58.051Z",
+    "installmentPrice": 484000
   },
   {
     "id": "1788428703676",
@@ -190,9 +190,9 @@
       "ابعاد : 25 * 14"
     ],
     "baseCost": 331000,
-    "cashPrice": 436920,
-    "installmentPrice": 453470,
-    "createdAt": "2026-09-03T09:45:03.676Z"
+    "cashPrice": 446850,
+    "createdAt": "2026-09-03T09:45:03.676Z",
+    "installmentPrice": 331000
   },
   {
     "id": "1788428901523",
@@ -202,9 +202,9 @@
       "ابعاد : 15 * 7"
     ],
     "baseCost": 115000,
-    "cashPrice": 151800,
-    "installmentPrice": 157550,
-    "createdAt": "2026-09-03T09:48:21.523Z"
+    "cashPrice": 155250,
+    "createdAt": "2026-09-03T09:48:21.523Z",
+    "installmentPrice": 115000
   },
   {
     "id": "1788429031336",
@@ -214,9 +214,9 @@
       "ابعاد : 23 * 13"
     ],
     "baseCost": 278000,
-    "cashPrice": 366960,
-    "installmentPrice": 380860,
-    "createdAt": "2026-09-03T09:50:31.336Z"
+    "cashPrice": 375300,
+    "createdAt": "2026-09-03T09:50:31.336Z",
+    "installmentPrice": 278000
   },
   {
     "id": "1788429194931",
@@ -226,9 +226,9 @@
       "ابعاد : 9 * 2"
     ],
     "baseCost": 12000,
-    "cashPrice": 15840,
-    "installmentPrice": 16440,
-    "createdAt": "2026-09-03T09:53:14.931Z"
+    "cashPrice": 16200,
+    "createdAt": "2026-09-03T09:53:14.931Z",
+    "installmentPrice": 12000
   },
   {
     "id": "1788429321645",
@@ -238,9 +238,9 @@
       "ابعاد : 6 * 6"
     ],
     "baseCost": 152000,
-    "cashPrice": 200640,
-    "installmentPrice": 208240,
-    "createdAt": "2026-09-03T09:55:21.645Z"
+    "cashPrice": 205200,
+    "createdAt": "2026-09-03T09:55:21.645Z",
+    "installmentPrice": 152000
   },
   {
     "id": "1788429407062",
@@ -250,9 +250,9 @@
       "ابعاد : 6 * 6"
     ],
     "baseCost": 144000,
-    "cashPrice": 190080,
-    "installmentPrice": 197280,
-    "createdAt": "2026-09-03T09:56:47.062Z"
+    "cashPrice": 194400,
+    "createdAt": "2026-09-03T09:56:47.062Z",
+    "installmentPrice": 144000
   },
   {
     "id": "1788429526123",
@@ -263,9 +263,9 @@
       "ابعاد : 16 * 2"
     ],
     "baseCost": 15000,
-    "cashPrice": 19800,
-    "installmentPrice": 20550,
-    "createdAt": "2026-09-03T09:58:46.123Z"
+    "cashPrice": 20250,
+    "createdAt": "2026-09-03T09:58:46.123Z",
+    "installmentPrice": 15000
   },
   {
     "id": "1788429732411",
@@ -276,9 +276,9 @@
       "ابعاد : 30 * 6"
     ],
     "baseCost": 74000,
-    "cashPrice": 97680,
-    "installmentPrice": 101380,
-    "createdAt": "2026-09-03T10:02:12.411Z"
+    "cashPrice": 99900,
+    "createdAt": "2026-09-03T10:02:12.411Z",
+    "installmentPrice": 74000
   },
   {
     "id": "1788429889733",
@@ -289,9 +289,9 @@
       "ابعاد : 30"
     ],
     "baseCost": 72000,
-    "cashPrice": 95040,
-    "installmentPrice": 98640,
-    "createdAt": "2026-09-03T10:04:49.733Z"
+    "cashPrice": 97200,
+    "createdAt": "2026-09-03T10:04:49.733Z",
+    "installmentPrice": 72000
   },
   {
     "id": "1788430047644",
@@ -301,9 +301,9 @@
       "ابعاد : 25"
     ],
     "baseCost": 76000,
-    "cashPrice": 100320,
-    "installmentPrice": 104120,
-    "createdAt": "2026-09-03T10:07:27.645Z"
+    "cashPrice": 102600,
+    "createdAt": "2026-09-03T10:07:27.645Z",
+    "installmentPrice": 76000
   },
   {
     "id": "1788443230560",
@@ -313,9 +313,9 @@
       "ابعاد : 30"
     ],
     "baseCost": 104000,
-    "cashPrice": 137280,
-    "installmentPrice": 142480,
-    "createdAt": "2026-09-03T13:47:10.560Z"
+    "cashPrice": 140400,
+    "createdAt": "2026-09-03T13:47:10.560Z",
+    "installmentPrice": 104000
   },
   {
     "id": "1788443303976",
@@ -325,9 +325,9 @@
       "ابعاد : 30"
     ],
     "baseCost": 104000,
-    "cashPrice": 137280,
-    "installmentPrice": 142480,
-    "createdAt": "2026-09-03T13:48:23.976Z"
+    "cashPrice": 140400,
+    "createdAt": "2026-09-03T13:48:23.976Z",
+    "installmentPrice": 104000
   },
   {
     "id": "1788443372236",
@@ -337,9 +337,9 @@
       "ابعاد : 20"
     ],
     "baseCost": 104000,
-    "cashPrice": 137280,
-    "installmentPrice": 142480,
-    "createdAt": "2026-09-03T13:49:32.236Z"
+    "cashPrice": 140400,
+    "createdAt": "2026-09-03T13:49:32.236Z",
+    "installmentPrice": 104000
   },
   {
     "id": "1788443562621",
@@ -351,9 +351,9 @@
       "ابعاد : 15 * 1.5"
     ],
     "baseCost": 20000,
-    "cashPrice": 26400,
-    "installmentPrice": 27400,
-    "createdAt": "2026-09-03T13:52:42.621Z"
+    "cashPrice": 27000,
+    "createdAt": "2026-09-03T13:52:42.621Z",
+    "installmentPrice": 20000
   },
   {
     "id": "1788443709580",
@@ -364,9 +364,9 @@
       "ابعاد : 8 * 8"
     ],
     "baseCost": 53000,
-    "cashPrice": 69960,
-    "installmentPrice": 72610,
-    "createdAt": "2026-09-03T13:55:09.580Z"
+    "cashPrice": 71550,
+    "createdAt": "2026-09-03T13:55:09.580Z",
+    "installmentPrice": 53000
   },
   {
     "id": "1788443845750",
@@ -377,9 +377,9 @@
       "ابعاد : 18"
     ],
     "baseCost": 52000,
-    "cashPrice": 68640,
-    "installmentPrice": 71240,
-    "createdAt": "2026-09-03T13:57:25.750Z"
+    "cashPrice": 70200,
+    "createdAt": "2026-09-03T13:57:25.750Z",
+    "installmentPrice": 52000
   },
   {
     "id": "1788444372607",
@@ -390,9 +390,9 @@
       "ابعاد : 11"
     ],
     "baseCost": 56000,
-    "cashPrice": 73920,
-    "installmentPrice": 76720,
-    "createdAt": "2026-09-03T14:06:12.607Z"
+    "cashPrice": 75600,
+    "createdAt": "2026-09-03T14:06:12.607Z",
+    "installmentPrice": 56000
   },
   {
     "id": "1788444563561",
@@ -403,9 +403,9 @@
       "ابعاد : 30 * 6 * 4"
     ],
     "baseCost": 240000,
-    "cashPrice": 316800,
-    "installmentPrice": 328800,
-    "createdAt": "2026-09-03T14:09:23.561Z"
+    "cashPrice": 324000,
+    "createdAt": "2026-09-03T14:09:23.561Z",
+    "installmentPrice": 240000
   },
   {
     "id": "1788444664641",
@@ -416,9 +416,9 @@
       "ابعاد : 12"
     ],
     "baseCost": 168000,
-    "cashPrice": 221760,
-    "installmentPrice": 230160,
-    "createdAt": "2026-09-03T14:11:04.641Z"
+    "cashPrice": 226800,
+    "createdAt": "2026-09-03T14:11:04.641Z",
+    "installmentPrice": 168000
   },
   {
     "id": "1788444791666",
@@ -430,9 +430,9 @@
       "ابعاد : 8"
     ],
     "baseCost": 173000,
-    "cashPrice": 228360,
-    "installmentPrice": 237010,
-    "createdAt": "2026-09-03T14:13:11.666Z"
+    "cashPrice": 233550,
+    "createdAt": "2026-09-03T14:13:11.666Z",
+    "installmentPrice": 173000
   },
   {
     "id": "1789280982357",
@@ -444,9 +444,9 @@
       "در رنگ بندی"
     ],
     "baseCost": 59000,
-    "cashPrice": 77880,
-    "installmentPrice": 80830,
-    "createdAt": "2026-09-13T06:29:42.357Z"
+    "cashPrice": 79650,
+    "createdAt": "2026-09-13T06:29:42.357Z",
+    "installmentPrice": 59000
   },
   {
     "id": "1789281213178",
@@ -458,9 +458,9 @@
       "در رنگ بندی"
     ],
     "baseCost": 63000,
-    "cashPrice": 83160,
-    "installmentPrice": 86310,
-    "createdAt": "2026-09-13T06:33:33.178Z"
+    "cashPrice": 85050,
+    "createdAt": "2026-09-13T06:33:33.178Z",
+    "installmentPrice": 63000
   },
   {
     "id": "1789281369253",
@@ -472,9 +472,9 @@
       "در رنگ بندی"
     ],
     "baseCost": 57000,
-    "cashPrice": 75240,
-    "installmentPrice": 78090,
-    "createdAt": "2026-09-13T06:36:09.253Z"
+    "cashPrice": 76950,
+    "createdAt": "2026-09-13T06:36:09.253Z",
+    "installmentPrice": 57000
   },
   {
     "id": "1789281524430",
@@ -484,9 +484,9 @@
       "ابعاد : 40 * 4"
     ],
     "baseCost": 75000,
-    "cashPrice": 99000,
-    "installmentPrice": 102750,
-    "createdAt": "2026-09-13T06:38:44.430Z"
+    "cashPrice": 101250,
+    "createdAt": "2026-09-13T06:38:44.430Z",
+    "installmentPrice": 75000
   },
   {
     "id": "1789281577234",
@@ -496,9 +496,9 @@
       "ابعاد : 30 * 4"
     ],
     "baseCost": 60000,
-    "cashPrice": 79200,
-    "installmentPrice": 82200,
-    "createdAt": "2026-09-13T06:39:37.234Z"
+    "cashPrice": 81000,
+    "createdAt": "2026-09-13T06:39:37.234Z",
+    "installmentPrice": 60000
   },
   {
     "id": "1789281799566",
@@ -508,8 +508,8 @@
       "ابعاد : 40 * 4"
     ],
     "baseCost": 90500,
-    "cashPrice": 119460,
-    "installmentPrice": 123985,
-    "createdAt": "2026-09-13T06:43:19.566Z"
+    "cashPrice": 122175,
+    "createdAt": "2026-09-13T06:43:19.566Z",
+    "installmentPrice": 90500
   }
 ]

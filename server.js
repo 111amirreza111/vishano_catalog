@@ -48,8 +48,7 @@ async function ensureDirectories() {
             await fs.access(settingsPath);
         } catch {
             const defaultSettings = {
-                cashPercentage: 30,
-                installmentPercentage: 50
+                cashPercentage: 30
             };
             await fs.writeFile(settingsPath, JSON.stringify(defaultSettings, null, 2));
         }
@@ -157,7 +156,6 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
         
         const baseCostNum = parseFloat(baseCost);
         const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
-        const installmentPrice = Math.round(baseCostNum * (1 + settings.installmentPercentage / 100));
         
         const newProduct = {
             id: Date.now().toString(),
@@ -166,7 +164,6 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
             descriptions: descriptions ? JSON.parse(descriptions) : [],
             baseCost: baseCostNum,
             cashPrice,
-            installmentPrice,
             createdAt: new Date().toISOString()
         };
         
@@ -202,7 +199,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
         
         const baseCostNum = parseFloat(baseCost);
         const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
-        const installmentPrice = Math.round(baseCostNum * (1 + settings.installmentPercentage / 100));
         
         // Delete old image if new one is uploaded
         if (req.file && products[index].image) {
@@ -220,8 +216,7 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             image: req.file ? `/uploads/${req.file.filename}` : products[index].image,
             descriptions: descriptions ? JSON.parse(descriptions) : products[index].descriptions,
             baseCost: baseCostNum,
-            cashPrice,
-            installmentPrice
+            cashPrice
         };
         
         await fs.writeFile(productsPath, JSON.stringify(products, null, 2));
@@ -281,12 +276,11 @@ app.get('/api/settings', async (req, res) => {
 // Update settings
 app.put('/api/settings', async (req, res) => {
     try {
-        const { cashPercentage, installmentPercentage } = req.body;
+        const { cashPercentage } = req.body;
         
         const settingsPath = path.join(DATA_DIR, 'settings.json');
         const settings = {
-            cashPercentage: parseFloat(cashPercentage) || 0,
-            installmentPercentage: parseFloat(installmentPercentage) || 0
+            cashPercentage: parseFloat(cashPercentage) || 0
         };
         
         await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2));
@@ -298,7 +292,6 @@ app.put('/api/settings', async (req, res) => {
         
         products.forEach(product => {
             product.cashPrice = Math.round(product.baseCost * (1 + settings.cashPercentage / 100));
-            product.installmentPrice = Math.round(product.baseCost * (1 + settings.installmentPercentage / 100));
         });
         
         await fs.writeFile(productsPath, JSON.stringify(products, null, 2));
