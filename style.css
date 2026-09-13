@@ -467,6 +467,18 @@ body {
     width: 100%;
 }
 
+/* Class for capturing image without size constraints */
+.catalog-card.capturing .catalog-card-image {
+    max-height: none;
+    object-fit: contain;
+    width: auto;
+    height: auto;
+}
+
+.catalog-card.capturing .download-image-btn {
+    display: none;
+}
+
 /* Modal */
 .modal {
     display: none;

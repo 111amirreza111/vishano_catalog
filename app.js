@@ -474,20 +474,31 @@ async function downloadProductImage(productId, productName) {
     showToast('در حال آماده‌سازی تصویر...', 'success');
 
     try {
+        // Add capturing class to remove size constraints
+        card.classList.add('capturing');
+
+        // Capture the entire card with all information
         const canvas = await html2canvas(card, {
-            scale: 2,
+            scale: 2, // Higher scale for better quality
             useCORS: true,
-            backgroundColor: '#FFFFFF'
+            backgroundColor: '#FFFFFF',
+            logging: false,
+            allowTaint: true
         });
+
+        // Remove capturing class after capture
+        card.classList.remove('capturing');
 
         const link = document.createElement('a');
         link.download = `${productName}.png`;
-        link.href = canvas.toDataURL('image/png');
+        link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
 
         showToast('تصویر با موفقیت دانلود شد', 'success');
     } catch (error) {
         console.error('Image capture error:', error);
+        // Make sure to remove class even if there's an error
+        card.classList.remove('capturing');
         showToast('خطا در دانلود تصویر', 'error');
     }
 }
