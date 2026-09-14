@@ -48,10 +48,10 @@
       "مناسب آجیل",
       "ابعاد : 15 * 6"
     ],
-    "baseCost": 65000,
-    "cashPrice": 87750,
+    "baseCost": 76000,
+    "cashPrice": 102600,
     "createdAt": "2026-09-03T09:16:36.153Z",
-    "installmentPrice": 65000
+    "installmentPrice": 76000
   },
   {
     "id": "1788427165885",
@@ -540,5 +540,29 @@
     "cashPrice": 64800,
     "installmentPrice": 48000,
     "createdAt": "2026-09-14T06:29:20.771Z"
+  },
+  {
+    "id": "1789367655315",
+    "name": "زیرسیگاری",
+    "image": "/uploads/1789367655310-459699824.jpg",
+    "descriptions": [
+      "جنس: گردو - سپیدار"
+    ],
+    "baseCost": 0,
+    "cashPrice": 0,
+    "installmentPrice": 0,
+    "createdAt": "2026-09-14T06:34:15.316Z"
+  },
+  {
+    "id": "1789367696440",
+    "name": "زیرسیگاری ",
+    "image": "/uploads/1789367696432-164409391.jpg",
+    "descriptions": [
+      "جنس: گردو - سپیدار"
+    ],
+    "baseCost": 0,
+    "cashPrice": 0,
+    "installmentPrice": 0,
+    "createdAt": "2026-09-14T06:34:56.440Z"
   }
 ]
