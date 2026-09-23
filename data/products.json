@@ -456,5 +456,42 @@
     "cashPrice": 67500,
     "installmentPrice": 50000,
     "createdAt": "2026-09-14T06:34:56.440Z"
+  },
+  {
+    "id": "1790132006926",
+    "name": "فلفل ساب (نمک ساب)",
+    "image": "/uploads/1790132006921-279887687.jpeg",
+    "descriptions": [
+      "ابعاد: 16.5 * 4.7",
+      "تیغه سرامیکی"
+    ],
+    "baseCost": 280000,
+    "cashPrice": 378000,
+    "installmentPrice": 280000,
+    "createdAt": "2026-09-23T02:53:26.926Z"
+  },
+  {
+    "id": "1790132220773",
+    "name": "جاسیگاری",
+    "image": "/uploads/1790132220768-869231904.jpg",
+    "descriptions": [
+      "چوب گردو"
+    ],
+    "baseCost": 150000,
+    "cashPrice": 202500,
+    "installmentPrice": 150000,
+    "createdAt": "2026-09-23T02:57:00.773Z"
+  },
+  {
+    "id": "1790132430873",
+    "name": "ظرف نگهداری ماکارونی و برنج",
+    "image": "/uploads/1790132430869-483128415.jpg",
+    "descriptions": [
+      "ابعاد: 30 * 23"
+    ],
+    "baseCost": 200000,
+    "cashPrice": 270000,
+    "installmentPrice": 200000,
+    "createdAt": "2026-09-23T03:00:30.873Z"
   }
 ]
