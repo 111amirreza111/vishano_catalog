@@ -497,5 +497,31 @@
     "cashPrice": 270000,
     "installmentPrice": 200000,
     "createdAt": "2026-09-23T03:00:30.873Z"
+  },
+  {
+    "id": "1790134016049",
+    "name": "پایه کفگیر (جا قاشقی)",
+    "image": "/uploads/1790134016041-356207608.jpg",
+    "descriptions": [
+      "جنس : گردو",
+      "ابعاد: 15 * 10 * 10"
+    ],
+    "baseCost": 185000,
+    "cashPrice": 249750,
+    "installmentPrice": 185000,
+    "createdAt": "2026-09-23T03:26:56.049Z"
+  },
+  {
+    "id": "1790134297126",
+    "name": "نمکدان موشکی",
+    "image": "/uploads/1790134297117-253615305.png",
+    "descriptions": [
+      "جنس : گردو",
+      "ابعاد: 6.5 * 7"
+    ],
+    "baseCost": 28000,
+    "cashPrice": 37800,
+    "installmentPrice": 28000,
+    "createdAt": "2026-09-23T03:31:37.126Z"
   }
 ]
