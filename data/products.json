@@ -269,16 +269,16 @@
   },
   {
     "id": "1788429732411",
-    "name": "کفگیر چوبی ",
+    "name": "کفگیر چوبی ساده",
     "image": "/uploads/1788429732401-221371027.jpg",
     "descriptions": [
       "چوب گردو",
       "ابعاد : 30 * 6"
     ],
-    "baseCost": 74000,
-    "cashPrice": 99900,
+    "baseCost": 65000,
+    "cashPrice": 87750,
     "createdAt": "2026-09-03T10:02:12.411Z",
-    "installmentPrice": 74000
+    "installmentPrice": 65000
   },
   {
     "id": "1788429889733",
@@ -288,58 +288,58 @@
       "چوب ملچ",
       "ابعاد : 30"
     ],
-    "baseCost": 72000,
-    "cashPrice": 97200,
+    "baseCost": 82000,
+    "cashPrice": 110700,
     "createdAt": "2026-09-03T10:04:49.733Z",
-    "installmentPrice": 72000
+    "installmentPrice": 82000
   },
   {
     "id": "1788430047644",
-    "name": "قاشق چوبی کوچک ",
+    "name": "قاشق چوبی متوسط",
     "image": "/uploads/1788430047632-555825797.jpg",
     "descriptions": [
       "ابعاد : 25"
     ],
-    "baseCost": 76000,
-    "cashPrice": 102600,
+    "baseCost": 92000,
+    "cashPrice": 124200,
     "createdAt": "2026-09-03T10:07:27.645Z",
-    "installmentPrice": 76000
+    "installmentPrice": 92000
   },
   {
     "id": "1788443230560",
-    "name": "قاشق چوبی بزرگ",
+    "name": "قاشق چوبی بلند",
     "image": "/uploads/1788443230551-400377618.jpg",
     "descriptions": [
       "ابعاد : 30"
     ],
-    "baseCost": 104000,
-    "cashPrice": 140400,
+    "baseCost": 115000,
+    "cashPrice": 155250,
     "createdAt": "2026-09-03T13:47:10.560Z",
-    "installmentPrice": 104000
+    "installmentPrice": 115000
   },
   {
     "id": "1788443303976",
-    "name": "کفگیر چوبی ",
+    "name": "کفگیر پلویی دسته بلند",
     "image": "/uploads/1788443303972-721000232.jpg",
     "descriptions": [
       "ابعاد : 30"
     ],
-    "baseCost": 104000,
-    "cashPrice": 140400,
+    "baseCost": 115000,
+    "cashPrice": 155250,
     "createdAt": "2026-09-03T13:48:23.976Z",
-    "installmentPrice": 104000
+    "installmentPrice": 115000
   },
   {
     "id": "1788443372236",
-    "name": "کفگیر چوبی ",
+    "name": "کفگیر پلویی دسته کوتاه",
     "image": "/uploads/1788443372232-374806345.jpg",
     "descriptions": [
       "ابعاد : 20"
     ],
-    "baseCost": 104000,
-    "cashPrice": 140400,
+    "baseCost": 115000,
+    "cashPrice": 155250,
     "createdAt": "2026-09-03T13:49:32.236Z",
-    "installmentPrice": 104000
+    "installmentPrice": 115000
   },
   {
     "id": "1788443562621",
@@ -356,45 +356,6 @@
     "installmentPrice": 20000
   },
   {
-    "id": "1788443709580",
-    "name": "جامدادی رومیزی ",
-    "image": "/uploads/1788443709576-774013705.jpg",
-    "descriptions": [
-      "جنس : VITROC PLA",
-      "ابعاد : 8 * 8"
-    ],
-    "baseCost": 53000,
-    "cashPrice": 71550,
-    "createdAt": "2026-09-03T13:55:09.580Z",
-    "installmentPrice": 53000
-  },
-  {
-    "id": "1788443845750",
-    "name": "جا دستمال کاغذی ",
-    "image": "/uploads/1788443845743-329958143.jpg",
-    "descriptions": [
-      "سنگ مصنوعی",
-      "ابعاد : 18"
-    ],
-    "baseCost": 52000,
-    "cashPrice": 70200,
-    "createdAt": "2026-09-03T13:57:25.750Z",
-    "installmentPrice": 52000
-  },
-  {
-    "id": "1788444372607",
-    "name": "زیر سیگاری ",
-    "image": "/uploads/1788444372598-771530550.jpg",
-    "descriptions": [
-      "سنگ مصنوعی",
-      "ابعاد : 11"
-    ],
-    "baseCost": 56000,
-    "cashPrice": 75600,
-    "createdAt": "2026-09-03T14:06:12.607Z",
-    "installmentPrice": 56000
-  },
-  {
     "id": "1788444563561",
     "name": "جاکلیدی ",
     "image": "/uploads/1788444563555-117585249.jpg",
@@ -402,79 +363,10 @@
       "چوب گردو",
       "ابعاد : 30 * 6 * 4"
     ],
-    "baseCost": 240000,
-    "cashPrice": 324000,
+    "baseCost": 200000,
+    "cashPrice": 270000,
     "createdAt": "2026-09-03T14:09:23.561Z",
-    "installmentPrice": 240000
-  },
-  {
-    "id": "1788444664641",
-    "name": "ماگ پروانه برجسته",
-    "image": "/uploads/1788444664634-393248885.jpg",
-    "descriptions": [
-      "جنس سرامیک",
-      "ابعاد : 12"
-    ],
-    "baseCost": 168000,
-    "cashPrice": 226800,
-    "createdAt": "2026-09-03T14:11:04.641Z",
-    "installmentPrice": 168000
-  },
-  {
-    "id": "1788444791666",
-    "name": "ماگ بالشتی ",
-    "image": "/uploads/1788444791661-37492567.jpg",
-    "descriptions": [
-      "جنس سرامیک",
-      "انواع رنگبندی",
-      "ابعاد : 8"
-    ],
-    "baseCost": 173000,
-    "cashPrice": 233550,
-    "createdAt": "2026-09-03T14:13:11.666Z",
-    "installmentPrice": 173000
-  },
-  {
-    "id": "1789280982357",
-    "name": "جامدادی رومیزی ",
-    "image": "/uploads/1789280982348-31344313.jpg",
-    "descriptions": [
-      "جنس : VITROC PLA",
-      "ابعاد : 10 * 10",
-      "در رنگ بندی"
-    ],
-    "baseCost": 59000,
-    "cashPrice": 79650,
-    "createdAt": "2026-09-13T06:29:42.357Z",
-    "installmentPrice": 59000
-  },
-  {
-    "id": "1789281213178",
-    "name": "جامدادی رومیزی ",
-    "image": "/uploads/1789281213160-427783866.jpg",
-    "descriptions": [
-      "جنس : VITROC PLA",
-      "ابعاد : 15 * 10",
-      "در رنگ بندی"
-    ],
-    "baseCost": 63000,
-    "cashPrice": 85050,
-    "createdAt": "2026-09-13T06:33:33.178Z",
-    "installmentPrice": 63000
-  },
-  {
-    "id": "1789281369253",
-    "name": "جامدادی رومیزی ",
-    "image": "/uploads/1789281369246-39383583.jpg",
-    "descriptions": [
-      "جنس : VITROC PLA",
-      "ابعاد : 10 * 10",
-      "در رنگ بندی"
-    ],
-    "baseCost": 57000,
-    "cashPrice": 76950,
-    "createdAt": "2026-09-13T06:36:09.253Z",
-    "installmentPrice": 57000
+    "installmentPrice": 200000
   },
   {
     "id": "1789281524430",
@@ -523,9 +415,9 @@
       "15 سانتی",
       "جنس گردو"
     ],
-    "baseCost": 66000,
-    "cashPrice": 89100,
-    "installmentPrice": 66000,
+    "baseCost": 85000,
+    "cashPrice": 114750,
+    "installmentPrice": 85000,
     "createdAt": "2026-09-14T06:22:13.859Z"
   },
   {
@@ -548,9 +440,9 @@
     "descriptions": [
       "جنس: گردو - سپیدار"
     ],
-    "baseCost": 0,
-    "cashPrice": 0,
-    "installmentPrice": 0,
+    "baseCost": 50000,
+    "cashPrice": 67500,
+    "installmentPrice": 50000,
     "createdAt": "2026-09-14T06:34:15.316Z"
   },
   {
@@ -560,9 +452,9 @@
     "descriptions": [
       "جنس: گردو - سپیدار"
     ],
-    "baseCost": 0,
-    "cashPrice": 0,
-    "installmentPrice": 0,
+    "baseCost": 50000,
+    "cashPrice": 67500,
+    "installmentPrice": 50000,
     "createdAt": "2026-09-14T06:34:56.440Z"
   }
 ]
