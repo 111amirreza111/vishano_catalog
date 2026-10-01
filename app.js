@@ -879,9 +879,7 @@ function renderInvoicePreview() {
             <p>توجه: بازدید و بررسی کالا بر عهده خریدار می‌باشد. پس از خروج کالا از فروشگاه شکست و کسری پذیرفته نیست.</p>
         </div>
         
-        <div class="invoice-watermark">
-            نرم‌افزار حسابداری APEX
-        </div>
+       
     `;
 }
 
