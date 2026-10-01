@@ -675,12 +675,28 @@ function initializeInvoiceCreator() {
     const saveInvoiceBtn = document.getElementById('save-invoice-btn');
     const downloadInvoiceImageBtn = document.getElementById('download-invoice-image-btn');
 
+    // Initialize Persian number inputs
+    initializePersianNumberInputs();
+
     createInvoiceBtn.addEventListener('click', () => {
         currentInvoiceItems = [];
         currentInvoiceId = null;
         document.getElementById('invoice-customer-name').value = '';
-        document.getElementById('invoice-date').value = new Date().toLocaleDateString('fa-IR');
-        document.getElementById('invoice-time').value = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+        
+        // Set current date in Persian
+        const now = new Date();
+        const persianDate = now.toLocaleDateString('fa-IR');
+        const dateParts = persianDate.split('/');
+        document.getElementById('invoice-year').value = toPersianDigits(dateParts[0]);
+        document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
+        document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
+        
+        // Set current time in Persian
+        const persianTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+        const timeParts = persianTime.split(':');
+        document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
+        document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
+        
         renderInvoiceItems();
         renderInvoicePreview();
         switchPage('invoice-creator');
@@ -694,6 +710,7 @@ function initializeInvoiceCreator() {
         const searchTerm = e.target.value.toLowerCase();
         if (searchTerm.length < 2) {
             document.getElementById('product-search-results').innerHTML = '';
+            document.getElementById('product-search-results').classList.remove('show');
             return;
         }
 
@@ -713,6 +730,48 @@ function initializeInvoiceCreator() {
 
     saveInvoiceBtn.addEventListener('click', saveInvoice);
     downloadInvoiceImageBtn.addEventListener('click', downloadInvoiceImage);
+}
+
+function initializePersianNumberInputs() {
+    const persianInputs = document.querySelectorAll('.persian-number');
+    
+    persianInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            // Convert any English digits to Persian
+            e.target.value = toPersianDigits(e.target.value);
+        });
+        
+        input.addEventListener('keydown', (e) => {
+            // Allow only Persian digits and control keys
+            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            const key = e.key;
+            
+            // Allow control keys
+            if (['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) {
+                return;
+            }
+            
+            // Convert English digits to Persian
+            if (key >= '0' && key <= '9') {
+                e.preventDefault();
+                const persianDigit = toPersianDigits(key);
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+                e.target.value = e.target.value.slice(0, start) + persianDigit + e.target.value.slice(end);
+                e.target.setSelectionRange(start + 1, start + 1);
+            }
+            
+            // Check if it's a Persian digit
+            if (!persianDigits.includes(key) && key.length === 1) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+function toPersianDigits(str) {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return str.replace(/\d/g, d => persianDigits[d]);
 }
 
 function addProductToInvoice(productId) {
@@ -786,8 +845,14 @@ function removeInvoiceItem(index) {
 
 function renderInvoicePreview() {
     const customerName = document.getElementById('invoice-customer-name').value || 'نام مشتری';
-    const date = document.getElementById('invoice-date').value || '-';
-    const time = document.getElementById('invoice-time').value || '-';
+    const year = document.getElementById('invoice-year').value || '۱۴۰۳';
+    const month = document.getElementById('invoice-month').value || '۰۷';
+    const day = document.getElementById('invoice-day').value || '۱۰';
+    const hour = document.getElementById('invoice-hour').value || '۱۴';
+    const minute = document.getElementById('invoice-minute').value || '۳۰';
+    
+    const date = `${year}/${month}/${day}`;
+    const time = `${hour}:${minute}`;
     
     const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
@@ -891,10 +956,13 @@ function numberToPersianWords(num) {
 
 async function saveInvoice() {
     const customerName = document.getElementById('invoice-customer-name').value;
-    const date = document.getElementById('invoice-date').value;
-    const time = document.getElementById('invoice-time').value;
+    const year = document.getElementById('invoice-year').value;
+    const month = document.getElementById('invoice-month').value;
+    const day = document.getElementById('invoice-day').value;
+    const hour = document.getElementById('invoice-hour').value;
+    const minute = document.getElementById('invoice-minute').value;
 
-    if (!customerName || !date || !time) {
+    if (!customerName || !year || !month || !day || !hour || !minute) {
         showToast('لطفاً تمام فیلدها را پر کنید', 'error');
         return;
     }
@@ -904,6 +972,8 @@ async function saveInvoice() {
         return;
     }
 
+    const date = `${year}/${month}/${day}`;
+    const time = `${hour}:${minute}`;
     const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
 
@@ -969,8 +1039,21 @@ function viewInvoice(invoiceId) {
     currentInvoiceItems = [...invoice.items];
     
     document.getElementById('invoice-customer-name').value = invoice.customerName;
-    document.getElementById('invoice-date').value = invoice.date;
-    document.getElementById('invoice-time').value = invoice.time;
+    
+    // Parse date
+    const dateParts = invoice.date.split('/');
+    if (dateParts.length === 3) {
+        document.getElementById('invoice-year').value = toPersianDigits(dateParts[0]);
+        document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
+        document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
+    }
+    
+    // Parse time
+    const timeParts = invoice.time.split(':');
+    if (timeParts.length === 2) {
+        document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
+        document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
+    }
     
     renderInvoiceItems();
     renderInvoicePreview();

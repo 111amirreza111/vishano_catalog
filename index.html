@@ -81,14 +81,28 @@
                             <input type="text" id="invoice-customer-name" class="form-input" placeholder="نام مشتری را وارد کنید">
                         </div>
                         
-                        <div class="form-row">
+                        <div class="form-row three-columns">
                             <div class="form-group">
-                                <label for="invoice-date">تاریخ</label>
-                                <input type="text" id="invoice-date" class="form-input" placeholder="مثال: 1403/07/10">
+                                <label for="invoice-year">سال</label>
+                                <input type="text" id="invoice-year" class="form-input persian-number" placeholder="مثال: ۱۴۰۳" maxlength="4">
                             </div>
                             <div class="form-group">
-                                <label for="invoice-time">ساعت</label>
-                                <input type="text" id="invoice-time" class="form-input" placeholder="مثال: 14:30">
+                                <label for="invoice-month">ماه</label>
+                                <input type="text" id="invoice-month" class="form-input persian-number" placeholder="مثال: ۰۷" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="invoice-day">روز</label>
+                                <input type="text" id="invoice-day" class="form-input persian-number" placeholder="مثال: ۱۰" maxlength="2">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoice-hour">ساعت</label>
+                                <input type="text" id="invoice-hour" class="form-input persian-number" placeholder="مثال: ۱۴" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="invoice-minute">دقیقه</label>
+                                <input type="text" id="invoice-minute" class="form-input persian-number" placeholder="مثال: ۳۰" maxlength="2">
                             </div>
                         </div>
                         
