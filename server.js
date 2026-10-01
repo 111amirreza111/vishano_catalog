@@ -60,6 +60,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(productsPath, JSON.stringify([], null, 2));
         }
+        
+        // Initialize invoices.json if it doesn't exist
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        try {
+            await fs.access(invoicesPath);
+        } catch {
+            await fs.writeFile(invoicesPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -300,6 +308,96 @@ app.put('/api/settings', async (req, res) => {
     } catch (error) {
         console.error('Error updating settings:', error);
         res.status(500).json({ error: 'Failed to update settings' });
+    }
+});
+
+// Invoice API Routes
+
+// Get all invoices
+app.get('/api/invoices', async (req, res) => {
+    try {
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+        res.json(invoices);
+    } catch (error) {
+        console.error('Error reading invoices:', error);
+        res.status(500).json({ error: 'Failed to read invoices' });
+    }
+});
+
+// Get single invoice
+app.get('/api/invoices/:id', async (req, res) => {
+    try {
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+        const invoice = invoices.find(i => i.id === req.params.id);
+        
+        if (!invoice) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+        
+        res.json(invoice);
+    } catch (error) {
+        console.error('Error reading invoice:', error);
+        res.status(500).json({ error: 'Failed to read invoice' });
+    }
+});
+
+// Create invoice
+app.post('/api/invoices', async (req, res) => {
+    try {
+        const { customerName, date, time, items, totalAmount, totalQuantity } = req.body;
+        
+        if (!customerName || !date || !time || !items || items.length === 0) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+        
+        const newInvoice = {
+            id: Date.now().toString(),
+            customerName,
+            date,
+            time,
+            items,
+            totalAmount,
+            totalQuantity,
+            createdAt: new Date().toISOString()
+        };
+        
+        invoices.push(newInvoice);
+        await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
+        
+        res.json(newInvoice);
+    } catch (error) {
+        console.error('Error creating invoice:', error);
+        res.status(500).json({ error: 'Failed to create invoice' });
+    }
+});
+
+// Delete invoice
+app.delete('/api/invoices/:id', async (req, res) => {
+    try {
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+        
+        const index = invoices.findIndex(i => i.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+        
+        invoices.splice(index, 1);
+        await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
+        
+        res.json({ message: 'Invoice deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting invoice:', error);
+        res.status(500).json({ error: 'Failed to delete invoice' });
     }
 });
 

@@ -752,3 +752,408 @@ body {
         flex-direction: column;
     }
 }
+
+/* Invoice Styles */
+.invoices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.invoice-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.invoice-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.invoice-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.invoice-card-customer {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+.invoice-card-number {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    background-color: var(--gray-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.invoice-card-details {
+    margin-bottom: 1rem;
+}
+
+.invoice-card-details p {
+    margin-bottom: 0.5rem;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+.invoice-total {
+    font-weight: 600;
+    color: var(--primary-green);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.invoice-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.invoice-card-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Invoice Creator */
+.invoice-creator-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.invoice-form-section {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.invoice-preview-section {
+    background-color: var(--gray-100);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.product-search-results {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.product-search-results.show {
+    display: block;
+}
+
+.search-result-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.search-result-item:hover {
+    background-color: var(--light-green);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-name {
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.search-result-price {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+.invoice-items-section {
+    margin-top: 1.5rem;
+}
+
+.invoice-items-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+}
+
+.invoice-items-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.empty-items {
+    text-align: center;
+    color: var(--gray-500);
+    padding: 2rem;
+}
+
+.invoice-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--gray-100);
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+}
+
+.invoice-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.invoice-item-name {
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+.invoice-item-price {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.invoice-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 1rem;
+}
+
+.invoice-item-quantity {
+    font-weight: 600;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.invoice-item-total {
+    font-weight: 600;
+    color: var(--primary-green);
+    min-width: 100px;
+    text-align: left;
+}
+
+.invoice-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.invoice-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Printable Invoice Document */
+.invoice-document {
+    background-color: var(--white);
+    padding: 2rem;
+    border: 1px solid var(--gray-300);
+    box-shadow: var(--shadow);
+    min-width: 210mm;
+    max-width: 210mm;
+    margin: 0 auto;
+    direction: rtl;
+}
+
+.invoice-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 1rem;
+}
+
+.invoice-meta {
+    text-align: left;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.invoice-meta p {
+    margin-bottom: 0.25rem;
+}
+
+.invoice-title-section {
+    margin-top: 1rem;
+}
+
+.invoice-quote {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.invoice-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+.invoice-company-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #000;
+}
+
+.invoice-customer,
+.invoice-company {
+    flex: 1;
+}
+
+.invoice-customer p,
+.invoice-company p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    direction: rtl;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border: 1px solid #000;
+    padding: 0.75rem 0.5rem;
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+.invoice-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+.invoice-summary-row {
+    background-color: #f9f9f9;
+}
+
+.invoice-total-section {
+    padding: 1rem;
+    border: 2px solid #000;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.invoice-total-section p {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.amount-in-words {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.invoice-signature-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.signature-box,
+.notes-box {
+    border: 1px solid #000;
+    padding: 1rem;
+    min-height: 80px;
+    text-align: center;
+}
+
+.signature-box p,
+.notes-box p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.notes-box {
+    grid-column: span 1;
+}
+
+.invoice-payment-method {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border: 1px solid #000;
+    margin-bottom: 1.5rem;
+}
+
+.invoice-payment-method p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.invoice-footer {
+    text-align: center;
+    padding: 1rem;
+    border: 2px solid #000;
+    background-color: #f9f9f9;
+    margin-bottom: 1rem;
+}
+
+.invoice-footer p {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.invoice-watermark {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 0.75rem;
+    color: #ccc;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 2px;
+}
+
+/* Responsive Invoice Creator */
+@media (max-width: 1024px) {
+    .invoice-creator-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .invoice-document {
+        max-width: 100%;
+    }
+}

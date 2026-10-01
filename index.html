@@ -18,6 +18,7 @@
             <h1 class="app-title">پنل مدیریت کاتالوگ محصولات</h1>
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="products">محصولات</button>
+                <button class="nav-tab" data-page="invoices">صورتحساب</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
             </nav>
@@ -44,6 +45,86 @@
                         <span class="icon">💾</span>
                         ذخیره همه محصولات
                     </button>
+                </div>
+            </section>
+
+            <!-- Invoices Page -->
+            <section id="invoices-page" class="page">
+                <div class="page-header">
+                    <h2>مدیریت صورتحساب</h2>
+                    <button class="btn btn-primary" id="create-invoice-btn">
+                        <span class="icon">+</span>
+                        ایجاد صورتحساب جدید
+                    </button>
+                </div>
+                
+                <div class="invoices-grid" id="invoices-grid">
+                    <!-- Invoices will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Invoice Creator Page -->
+            <section id="invoice-creator-page" class="page">
+                <div class="page-header">
+                    <h2>ایجاد صورتحساب</h2>
+                    <button class="btn btn-secondary" id="back-to-invoices-btn">
+                        <span class="icon">←</span>
+                        بازگشت به لیست
+                    </button>
+                </div>
+                
+                <div class="invoice-creator-container">
+                    <!-- Invoice Form -->
+                    <div class="invoice-form-section">
+                        <div class="form-group">
+                            <label for="invoice-customer-name">نام مشتری</label>
+                            <input type="text" id="invoice-customer-name" class="form-input" placeholder="نام مشتری را وارد کنید">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoice-date">تاریخ</label>
+                                <input type="text" id="invoice-date" class="form-input" placeholder="مثال: 1403/07/10">
+                            </div>
+                            <div class="form-group">
+                                <label for="invoice-time">ساعت</label>
+                                <input type="text" id="invoice-time" class="form-input" placeholder="مثال: 14:30">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="product-search">جستجوی محصول</label>
+                            <input type="text" id="product-search" class="form-input" placeholder="نام محصول را جستجو کنید...">
+                            <div class="product-search-results" id="product-search-results">
+                                <!-- Search results will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="invoice-items-section">
+                            <h3>اقلام صورتحساب</h3>
+                            <div class="invoice-items-list" id="invoice-items-list">
+                                <!-- Invoice items will be added here -->
+                            </div>
+                        </div>
+                        
+                        <div class="invoice-actions">
+                            <button class="btn btn-primary" id="save-invoice-btn">
+                                <span class="icon">💾</span>
+                                ذخیره صورتحساب
+                            </button>
+                            <button class="btn btn-success" id="download-invoice-image-btn">
+                                <span class="icon">📥</span>
+                                دانلود تصویر
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Preview -->
+                    <div class="invoice-preview-section">
+                        <div id="invoice-preview" class="invoice-document">
+                            <!-- Invoice will be rendered here -->
+                        </div>
+                    </div>
                 </div>
             </section>
 

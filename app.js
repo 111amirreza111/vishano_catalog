@@ -1,11 +1,14 @@
 // App State
 let products = [];
+let invoices = [];
 let settings = {
     cashPercentage: 30
 };
 let editingProductId = null;
 let productToDelete = null;
 let uploadedImageFile = null;
+let currentInvoiceItems = [];
+let currentInvoiceId = null;
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -14,6 +17,7 @@ const navTabs = document.querySelectorAll('.nav-tab');
 const pages = document.querySelectorAll('.page');
 const productsGrid = document.getElementById('products-grid');
 const liveCatalogGrid = document.getElementById('live-catalog-grid');
+const invoicesGrid = document.getElementById('invoices-grid');
 const productModal = document.getElementById('product-modal');
 const confirmModal = document.getElementById('confirm-modal');
 const productForm = document.getElementById('product-form');
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeNavigation();
     initializeProductForm();
     initializeSettings();
+    initializeInvoiceCreator();
     renderProducts();
     updateCurrentSettingsDisplay();
 });
@@ -66,6 +71,8 @@ async function switchPage(pageName) {
         renderLiveCatalog();
     } else if (pageName === 'products') {
         renderProducts();
+    } else if (pageName === 'invoices') {
+        renderInvoices();
     }
 }
 
@@ -73,9 +80,10 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
-            fetch(`${API_BASE}/settings`)
+            fetch(`${API_BASE}/settings`),
+            fetch(`${API_BASE}/invoices`)
         ]);
         
         if (!productsRes.ok || !settingsRes.ok) {
@@ -84,12 +92,16 @@ async function loadFromAPI() {
         
         products = await productsRes.json();
         settings = await settingsRes.json();
-        console.log('Data loaded successfully:', { productsCount: products.length, settings });
+        if (invoicesRes.ok) {
+            invoices = await invoicesRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
         // Set default values if loading fails
         products = [];
+        invoices = [];
         settings = {
             cashPercentage: 30
         };
@@ -618,3 +630,376 @@ confirmModal.addEventListener('click', (e) => {
         productToDelete = null;
     }
 });
+
+// Invoice Management
+
+function renderInvoices() {
+    if (!invoices || invoices.length === 0) {
+        invoicesGrid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">📄</div>
+                <p class="empty-state-text">هنوز صورتحسابی ایجاد نشده است</p>
+            </div>
+        `;
+        return;
+    }
+
+    invoicesGrid.innerHTML = invoices.map(invoice => `
+        <div class="invoice-card">
+            <div class="invoice-card-header">
+                <h3 class="invoice-card-customer">${invoice.customerName}</h3>
+                <span class="invoice-card-number">#${invoice.id.slice(-6)}</span>
+            </div>
+            <div class="invoice-card-details">
+                <p>تاریخ: ${invoice.date}</p>
+                <p>ساعت: ${invoice.time}</p>
+                <p>تعداد اقلام: ${invoice.items.length}</p>
+                <p class="invoice-total">مبلغ کل: ${formatPrice(invoice.totalAmount)}</p>
+            </div>
+            <div class="invoice-card-actions">
+                <button class="btn btn-secondary" onclick="viewInvoice('${invoice.id}')">
+                    مشاهده
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteInvoice('${invoice.id}')">
+                    حذف
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function initializeInvoiceCreator() {
+    const createInvoiceBtn = document.getElementById('create-invoice-btn');
+    const backToInvoicesBtn = document.getElementById('back-to-invoices-btn');
+    const productSearch = document.getElementById('product-search');
+    const saveInvoiceBtn = document.getElementById('save-invoice-btn');
+    const downloadInvoiceImageBtn = document.getElementById('download-invoice-image-btn');
+
+    createInvoiceBtn.addEventListener('click', () => {
+        currentInvoiceItems = [];
+        currentInvoiceId = null;
+        document.getElementById('invoice-customer-name').value = '';
+        document.getElementById('invoice-date').value = new Date().toLocaleDateString('fa-IR');
+        document.getElementById('invoice-time').value = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+        renderInvoiceItems();
+        renderInvoicePreview();
+        switchPage('invoice-creator');
+    });
+
+    backToInvoicesBtn.addEventListener('click', () => {
+        switchPage('invoices');
+    });
+
+    productSearch.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        if (searchTerm.length < 2) {
+            document.getElementById('product-search-results').innerHTML = '';
+            return;
+        }
+
+        const filteredProducts = products.filter(p =>
+            p.name.toLowerCase().includes(searchTerm)
+        );
+
+        document.getElementById('product-search-results').innerHTML = filteredProducts.map(product => `
+            <div class="search-result-item" onclick="addProductToInvoice('${product.id}')">
+                <span class="search-result-name">${product.name}</span>
+                <span class="search-result-price">${formatPrice(product.cashPrice)}</span>
+            </div>
+        `).join('');
+        
+        document.getElementById('product-search-results').classList.add('show');
+    });
+
+    saveInvoiceBtn.addEventListener('click', saveInvoice);
+    downloadInvoiceImageBtn.addEventListener('click', downloadInvoiceImage);
+}
+
+function addProductToInvoice(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = currentInvoiceItems.find(item => item.productId === productId);
+    if (existingItem) {
+        existingItem.quantity += 1;
+        existingItem.total = existingItem.quantity * existingItem.unitPrice;
+    } else {
+        currentInvoiceItems.push({
+            productId: product.id,
+            name: product.name,
+            quantity: 1,
+            unitPrice: product.cashPrice,
+            total: product.cashPrice
+        });
+    }
+
+    document.getElementById('product-search').value = '';
+    document.getElementById('product-search-results').innerHTML = '';
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function renderInvoiceItems() {
+    const itemsList = document.getElementById('invoice-items-list');
+    
+    if (currentInvoiceItems.length === 0) {
+        itemsList.innerHTML = '<p class="empty-items">هیچ آیتمی اضافه نشده است</p>';
+        return;
+    }
+
+    itemsList.innerHTML = currentInvoiceItems.map((item, index) => `
+        <div class="invoice-item">
+            <div class="invoice-item-info">
+                <span class="invoice-item-name">${item.name}</span>
+                <span class="invoice-item-price">${formatPrice(item.unitPrice)}</span>
+            </div>
+            <div class="invoice-item-controls">
+                <button class="btn btn-small btn-secondary" onclick="updateInvoiceItemQuantity(${index}, -1)">-</button>
+                <span class="invoice-item-quantity">${item.quantity}</span>
+                <button class="btn btn-small btn-secondary" onclick="updateInvoiceItemQuantity(${index}, 1)">+</button>
+                <button class="btn btn-small btn-danger" onclick="removeInvoiceItem(${index})">×</button>
+            </div>
+            <div class="invoice-item-total">${formatPrice(item.total)}</div>
+        </div>
+    `).join('');
+}
+
+function updateInvoiceItemQuantity(index, change) {
+    const item = currentInvoiceItems[index];
+    item.quantity += change;
+    
+    if (item.quantity <= 0) {
+        removeInvoiceItem(index);
+        return;
+    }
+    
+    item.total = item.quantity * item.unitPrice;
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function removeInvoiceItem(index) {
+    currentInvoiceItems.splice(index, 1);
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function renderInvoicePreview() {
+    const customerName = document.getElementById('invoice-customer-name').value || 'نام مشتری';
+    const date = document.getElementById('invoice-date').value || '-';
+    const time = document.getElementById('invoice-time').value || '-';
+    
+    const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
+    const totalAmountInWords = numberToPersianWords(totalAmount);
+
+    const invoicePreview = document.getElementById('invoice-preview');
+    
+    invoicePreview.innerHTML = `
+        <div class="invoice-header">
+            <div class="invoice-meta">
+                <p>شماره: ${currentInvoiceId ? '#' + currentInvoiceId.slice(-6) : '...'}</p>
+                <p>تاریخ: ${date} - ساعت: ${time}</p>
+            </div>
+            <div class="invoice-title-section">
+                <p class="invoice-quote">راه در جهان یکیست و آن راه، راستی‌ست</p>
+                <h1 class="invoice-title">صورتحساب فروش</h1>
+            </div>
+        </div>
+        
+        <div class="invoice-company-info">
+            <div class="invoice-customer">
+                <p>صورتحساب آقای/خانم: ${customerName}</p>
+                <p>مهلت تسویه: نقدی</p>
+            </div>
+            <div class="invoice-company">
+                <p>فناور گستر ایرانیان</p>
+                <p>شماره ثبت: 5021</p>
+            </div>
+        </div>
+        
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام کالا</th>
+                    <th>تعداد</th>
+                    <th>بهای واحد</th>
+                    <th>مبلغ کل</th>
+                    <th>شرح کالا</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${currentInvoiceItems.map((item, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>${formatPrice(item.unitPrice)}</td>
+                        <td>${formatPrice(item.total)} T</td>
+                        <td>-</td>
+                    </tr>
+                `).join('')}
+                <tr class="invoice-summary-row">
+                    <td colspan="2"><strong>جمع کل فاکتور</strong></td>
+                    <td><strong>${totalQuantity}</strong></td>
+                    <td></td>
+                    <td><strong>${formatPrice(totalAmount)} T</strong></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="invoice-total-section">
+            <p><strong>مبلغ فاکتور: ${formatPrice(totalAmount)} T</strong></p>
+            <p class="amount-in-words">${totalAmountInWords} تومان</p>
+        </div>
+        
+        <div class="invoice-signature-section">
+            <div class="signature-box">
+                <p>صادر کننده: امیر حسینی</p>
+            </div>
+            <div class="signature-box">
+                <p>مهر و امضاء فروشنده</p>
+            </div>
+            <div class="signature-box">
+                <p>مهر و امضاء تحویل گیرنده</p>
+            </div>
+            <div class="notes-box">
+                <p>توضیحات:</p>
+            </div>
+        </div>
+        
+        <div class="invoice-payment-method">
+            <p>نحوه تسویه: نقدی</p>
+            <p>مانده فاکتور: 0 T</p>
+        </div>
+        
+        <div class="invoice-footer">
+            <p>توجه: بازدید و بررسی کالا بر عهده خریدار می‌باشد. پس از خروج کالا از فروشگاه شکست و کسری پذیرفته نیست.</p>
+        </div>
+        
+        <div class="invoice-watermark">
+            نرم‌افزار حسابداری APEX
+        </div>
+    `;
+}
+
+function numberToPersianWords(num) {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const numStr = num.toString();
+    return numStr.replace(/\d/g, d => persianDigits[d]);
+}
+
+async function saveInvoice() {
+    const customerName = document.getElementById('invoice-customer-name').value;
+    const date = document.getElementById('invoice-date').value;
+    const time = document.getElementById('invoice-time').value;
+
+    if (!customerName || !date || !time) {
+        showToast('لطفاً تمام فیلدها را پر کنید', 'error');
+        return;
+    }
+
+    if (currentInvoiceItems.length === 0) {
+        showToast('لطفاً حداقل یک محصول به صورتحساب اضافه کنید', 'error');
+        return;
+    }
+
+    const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
+    const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
+
+    try {
+        const res = await fetch(`${API_BASE}/invoices`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                customerName,
+                date,
+                time,
+                items: currentInvoiceItems,
+                totalAmount,
+                totalQuantity
+            })
+        });
+
+        if (res.ok) {
+            const savedInvoice = await res.json();
+            currentInvoiceId = savedInvoice.id;
+            await loadFromAPI();
+            showToast('صورتحساب با موفقیت ذخیره شد', 'success');
+        } else {
+            showToast('خطا در ذخیره صورتحساب', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving invoice:', error);
+        showToast('خطا در ذخیره صورتحساب', 'error');
+    }
+}
+
+async function downloadInvoiceImage() {
+    const invoicePreview = document.getElementById('invoice-preview');
+    
+    try {
+        showToast('در حال آماده‌سازی تصویر...', 'success');
+        
+        const canvas = await html2canvas(invoicePreview, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#FFFFFF',
+            logging: false
+        });
+
+        const link = document.createElement('a');
+        const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
+        link.download = `صورتحساب-${customerName}-${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+
+        showToast('تصویر با موفقیت دانلود شد', 'success');
+    } catch (error) {
+        console.error('Image capture error:', error);
+        showToast('خطا در دانلود تصویر', 'error');
+    }
+}
+
+function viewInvoice(invoiceId) {
+    const invoice = invoices.find(i => i.id === invoiceId);
+    if (!invoice) return;
+
+    currentInvoiceId = invoice.id;
+    currentInvoiceItems = [...invoice.items];
+    
+    document.getElementById('invoice-customer-name').value = invoice.customerName;
+    document.getElementById('invoice-date').value = invoice.date;
+    document.getElementById('invoice-time').value = invoice.time;
+    
+    renderInvoiceItems();
+    renderInvoicePreview();
+    switchPage('invoice-creator');
+}
+
+function confirmDeleteInvoice(invoiceId) {
+    if (confirm('آیا مطمئن هستید که می‌خواهید این صورتحساب را حذف کنید؟')) {
+        deleteInvoice(invoiceId);
+    }
+}
+
+async function deleteInvoice(invoiceId) {
+    try {
+        const res = await fetch(`${API_BASE}/invoices/${invoiceId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderInvoices();
+            showToast('صورتحساب با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف صورتحساب', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting invoice:', error);
+        showToast('خطا در حذف صورتحساب', 'error');
+    }
+}
