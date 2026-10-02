@@ -917,7 +917,7 @@ function renderInvoicePreview() {
         
         <div class="invoice-total-section">
             <p><strong>مبلغ فاکتور: ${formatPrice(totalAmount)} T</strong></p>
-            <p class="amount-in-words">${totalAmountInWords} تومان</p>
+          
         </div>
         
         <div class="invoice-signature-section">
