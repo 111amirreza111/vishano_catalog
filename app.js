@@ -814,13 +814,21 @@ function renderInvoiceItems() {
             </div>
             <div class="invoice-item-controls">
                 <button class="btn btn-small btn-secondary" onclick="updateInvoiceItemQuantity(${index}, -1)">-</button>
-                <span class="invoice-item-quantity">${item.quantity}</span>
+                <input type="text" 
+                       class="form-input invoice-quantity-input persian-number" 
+                       value="${toPersianDigits(item.quantity.toString())}" 
+                       min="1"
+                       onchange="updateInvoiceItemQuantityDirect(${index}, this.value)"
+                       onkeydown="handleQuantityInputKeydown(event, ${index}, this)">
                 <button class="btn btn-small btn-secondary" onclick="updateInvoiceItemQuantity(${index}, 1)">+</button>
                 <button class="btn btn-small btn-danger" onclick="removeInvoiceItem(${index})">×</button>
             </div>
             <div class="invoice-item-total">${formatPrice(item.total)}</div>
         </div>
     `).join('');
+    
+    // Initialize Persian number inputs for newly rendered items
+    initializePersianNumberInputs();
 }
 
 function updateInvoiceItemQuantity(index, change) {
@@ -835,6 +843,33 @@ function updateInvoiceItemQuantity(index, change) {
     item.total = item.quantity * item.unitPrice;
     renderInvoiceItems();
     renderInvoicePreview();
+}
+
+function updateInvoiceItemQuantityDirect(index, value) {
+    const item = currentInvoiceItems[index];
+    const quantity = parseInt(persianToEnglishDigits(value)) || 0;
+    
+    if (quantity <= 0) {
+        removeInvoiceItem(index);
+        return;
+    }
+    
+    item.quantity = quantity;
+    item.total = item.quantity * item.unitPrice;
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function handleQuantityInputKeydown(event, index, input) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        updateInvoiceItemQuantityDirect(index, input.value);
+    }
+}
+
+function persianToEnglishDigits(str) {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return str.replace(/[۰-۹]/g, d => persianDigits.indexOf(d));
 }
 
 function removeInvoiceItem(index) {
