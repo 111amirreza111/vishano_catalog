@@ -401,6 +401,44 @@ app.delete('/api/invoices/:id', async (req, res) => {
     }
 });
 
+// Update invoice
+app.put('/api/invoices/:id', async (req, res) => {
+    try {
+        const { customerName, date, time, items, totalAmount, totalQuantity } = req.body;
+        
+        if (!customerName || !date || !time || !items || items.length === 0) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+        
+        const index = invoices.findIndex(i => i.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+        
+        invoices[index] = {
+            ...invoices[index],
+            customerName,
+            date,
+            time,
+            items,
+            totalAmount,
+            totalQuantity,
+            updatedAt: new Date().toISOString()
+        };
+        
+        await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
+        
+        res.json(invoices[index]);
+    } catch (error) {
+        console.error('Error updating invoice:', error);
+        res.status(500).json({ error: 'Failed to update invoice' });
+    }
+});
+
 // Start server
 ensureDirectories().then(() => {
     app.listen(PORT, () => {

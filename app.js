@@ -657,8 +657,8 @@ function renderInvoices() {
                 <p class="invoice-total">مبلغ کل: ${formatPrice(invoice.totalAmount)}</p>
             </div>
             <div class="invoice-card-actions">
-                <button class="btn btn-secondary" onclick="viewInvoice('${invoice.id}')">
-                    مشاهده
+                <button class="btn btn-secondary" onclick="editInvoice('${invoice.id}')">
+                    ایجاد تغییرات
                 </button>
                 <button class="btn btn-danger" onclick="confirmDeleteInvoice('${invoice.id}')">
                     حذف
@@ -1013,24 +1013,42 @@ async function saveInvoice() {
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
 
     try {
-        const res = await fetch(`${API_BASE}/invoices`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                customerName,
-                date,
-                time,
-                items: currentInvoiceItems,
-                totalAmount,
-                totalQuantity
-            })
-        });
+        let res;
+        if (currentInvoiceId) {
+            // Update existing invoice
+            res = await fetch(`${API_BASE}/invoices/${currentInvoiceId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customerName,
+                    date,
+                    time,
+                    items: currentInvoiceItems,
+                    totalAmount,
+                    totalQuantity
+                })
+            });
+        } else {
+            // Create new invoice
+            res = await fetch(`${API_BASE}/invoices`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customerName,
+                    date,
+                    time,
+                    items: currentInvoiceItems,
+                    totalAmount,
+                    totalQuantity
+                })
+            });
+        }
 
         if (res.ok) {
             const savedInvoice = await res.json();
             currentInvoiceId = savedInvoice.id;
             await loadFromAPI();
-            showToast('صورتحساب با موفقیت ذخیره شد', 'success');
+            showToast(currentInvoiceId ? 'صورتحساب با موفقیت ویرایش شد' : 'صورتحساب با موفقیت ذخیره شد', 'success');
         } else {
             showToast('خطا در ذخیره صورتحساب', 'error');
         }
@@ -1066,7 +1084,7 @@ async function downloadInvoiceImage() {
     }
 }
 
-function viewInvoice(invoiceId) {
+function editInvoice(invoiceId) {
     const invoice = invoices.find(i => i.id === invoiceId);
     if (!invoice) return;
 

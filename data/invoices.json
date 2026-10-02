@@ -8,13 +8,14 @@
       {
         "productId": "1788426653776",
         "name": "پیمانه منحنی 9 سانت",
-        "quantity": 100,
+        "quantity": 10,
         "unitPrice": 22680,
-        "total": 2268000
+        "total": 226800
       }
     ],
-    "totalAmount": 2268000,
-    "totalQuantity": 100,
-    "createdAt": "2026-10-02T14:54:10.268Z"
+    "totalAmount": 226800,
+    "totalQuantity": 10,
+    "createdAt": "2026-10-02T14:54:10.268Z",
+    "updatedAt": "2026-10-02T14:58:10.434Z"
   }
 ]
