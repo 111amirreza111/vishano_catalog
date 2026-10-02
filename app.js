@@ -996,8 +996,8 @@ function renderInvoicePreview() {
                     <th>تعداد</th>
                     <th>بهای واحد</th>
                     <th>مبلغ کل</th>
-                    <th>تخفیف</th>
-                    <th>مبلغ نهایی</th>
+                    ${totalDiscount > 0 ? '<th>تخفیف</th>' : ''}
+                    ${totalDiscount > 0 ? '<th>مبلغ نهایی</th>' : ''}
                     <th>شرح کالا</th>
                 </tr>
             </thead>
@@ -1009,8 +1009,8 @@ function renderInvoicePreview() {
                         <td>${item.quantity}</td>
                         <td>${formatPrice(item.unitPrice)}</td>
                         <td>${formatPrice(item.total)} T</td>
-                        <td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>
-                        <td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>
+                        ${totalDiscount > 0 ? `<td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>` : ''}
+                        ${totalDiscount > 0 ? `<td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>` : ''}
                         <td>-</td>
                     </tr>
                 `).join('')}
@@ -1019,8 +1019,8 @@ function renderInvoicePreview() {
                     <td><strong>${totalQuantity}</strong></td>
                     <td></td>
                     <td><strong>${formatPrice(totalAmount)} T</strong></td>
-                    <td><strong>${totalDiscount > 0 ? formatPrice(totalDiscount) + ' T' : '-'}</strong></td>
-                    <td><strong>${formatPrice(finalAmount)} T</strong></td>
+                    ${totalDiscount > 0 ? `<td><strong>${formatPrice(totalDiscount)} T</strong></td>` : ''}
+                    ${totalDiscount > 0 ? `<td><strong>${formatPrice(finalAmount)} T</strong></td>` : ''}
                     <td></td>
                 </tr>
             </tbody>
