@@ -348,7 +348,7 @@ app.get('/api/invoices/:id', async (req, res) => {
 // Create invoice
 app.post('/api/invoices', async (req, res) => {
     try {
-        const { customerName, date, time, items, totalAmount, totalQuantity } = req.body;
+        const { customerName, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
         
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -365,6 +365,8 @@ app.post('/api/invoices', async (req, res) => {
             time,
             items,
             totalAmount,
+            totalDiscount: totalDiscount || 0,
+            finalAmount: finalAmount || totalAmount,
             totalQuantity,
             createdAt: new Date().toISOString()
         };
@@ -404,7 +406,7 @@ app.delete('/api/invoices/:id', async (req, res) => {
 // Update invoice
 app.put('/api/invoices/:id', async (req, res) => {
     try {
-        const { customerName, date, time, items, totalAmount, totalQuantity } = req.body;
+        const { customerName, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
         
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -426,6 +428,8 @@ app.put('/api/invoices/:id', async (req, res) => {
             time,
             items,
             totalAmount,
+            totalDiscount: totalDiscount || 0,
+            finalAmount: finalAmount || totalAmount,
             totalQuantity,
             updatedAt: new Date().toISOString()
         };

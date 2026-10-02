@@ -782,13 +782,20 @@ function addProductToInvoice(productId) {
     if (existingItem) {
         existingItem.quantity += 1;
         existingItem.total = existingItem.quantity * existingItem.unitPrice;
+        if (existingItem.hasDiscount) {
+            recalculateItemDiscount(existingItem);
+        }
     } else {
         currentInvoiceItems.push({
             productId: product.id,
             name: product.name,
             quantity: 1,
             unitPrice: product.cashPrice,
-            total: product.cashPrice
+            total: product.cashPrice,
+            hasDiscount: false,
+            discountPercentage: 0,
+            discountAmount: 0,
+            finalTotal: product.cashPrice
         });
     }
 
@@ -823,7 +830,28 @@ function renderInvoiceItems() {
                 <button class="btn btn-small btn-secondary" onclick="updateInvoiceItemQuantity(${index}, 1)">+</button>
                 <button class="btn btn-small btn-danger" onclick="removeInvoiceItem(${index})">×</button>
             </div>
-            <div class="invoice-item-total">${formatPrice(item.total)}</div>
+            <div class="invoice-item-discount-section">
+                <label class="discount-checkbox">
+                    <input type="checkbox" 
+                           ${item.hasDiscount ? 'checked' : ''} 
+                           onchange="toggleItemDiscount(${index}, this.checked)">
+                    <span>تخفیف</span>
+                </label>
+                ${item.hasDiscount ? `
+                    <input type="text" 
+                           class="form-input discount-percentage-input persian-number" 
+                           value="${toPersianDigits(item.discountPercentage?.toString() || '0')}" 
+                           placeholder="درصد"
+                           onchange="updateItemDiscountPercentage(${index}, this.value)">
+                    <span class="discount-symbol">%</span>
+                ` : ''}
+            </div>
+            <div class="invoice-item-total">
+                ${item.hasDiscount ? `
+                    <div class="original-price">${formatPrice(item.total)}</div>
+                    <div class="discounted-price">${formatPrice(item.finalTotal || item.total)}</div>
+                ` : formatPrice(item.total)}
+            </div>
         </div>
     `).join('');
     
@@ -841,6 +869,9 @@ function updateInvoiceItemQuantity(index, change) {
     }
     
     item.total = item.quantity * item.unitPrice;
+    if (item.hasDiscount) {
+        recalculateItemDiscount(item);
+    }
     renderInvoiceItems();
     renderInvoicePreview();
 }
@@ -856,6 +887,9 @@ function updateInvoiceItemQuantityDirect(index, value) {
     
     item.quantity = quantity;
     item.total = item.quantity * item.unitPrice;
+    if (item.hasDiscount) {
+        recalculateItemDiscount(item);
+    }
     renderInvoiceItems();
     renderInvoicePreview();
 }
@@ -865,6 +899,40 @@ function handleQuantityInputKeydown(event, index, input) {
         event.preventDefault();
         updateInvoiceItemQuantityDirect(index, input.value);
     }
+}
+
+function toggleItemDiscount(index, hasDiscount) {
+    const item = currentInvoiceItems[index];
+    item.hasDiscount = hasDiscount;
+    
+    if (hasDiscount) {
+        item.discountPercentage = 0;
+        item.discountAmount = 0;
+        item.finalTotal = item.total;
+    } else {
+        item.discountPercentage = 0;
+        item.discountAmount = 0;
+        item.finalTotal = item.total;
+    }
+    
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function updateItemDiscountPercentage(index, value) {
+    const item = currentInvoiceItems[index];
+    const percentage = parseInt(persianToEnglishDigits(value)) || 0;
+    
+    item.discountPercentage = Math.min(100, Math.max(0, percentage));
+    recalculateItemDiscount(item);
+    
+    renderInvoiceItems();
+    renderInvoicePreview();
+}
+
+function recalculateItemDiscount(item) {
+    item.discountAmount = Math.round(item.total * (item.discountPercentage / 100));
+    item.finalTotal = item.total - item.discountAmount;
 }
 
 function persianToEnglishDigits(str) {
@@ -891,7 +959,9 @@ function renderInvoicePreview() {
     
     const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
-    const totalAmountInWords = numberToPersianWords(totalAmount);
+    const totalDiscount = currentInvoiceItems.reduce((sum, item) => sum + (item.discountAmount || 0), 0);
+    const finalAmount = totalAmount - totalDiscount;
+    const totalAmountInWords = numberToPersianWords(finalAmount);
 
     const invoicePreview = document.getElementById('invoice-preview');
     
@@ -926,6 +996,8 @@ function renderInvoicePreview() {
                     <th>تعداد</th>
                     <th>بهای واحد</th>
                     <th>مبلغ کل</th>
+                    <th>تخفیف</th>
+                    <th>مبلغ نهایی</th>
                     <th>شرح کالا</th>
                 </tr>
             </thead>
@@ -937,6 +1009,8 @@ function renderInvoicePreview() {
                         <td>${item.quantity}</td>
                         <td>${formatPrice(item.unitPrice)}</td>
                         <td>${formatPrice(item.total)} T</td>
+                        <td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>
+                        <td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>
                         <td>-</td>
                     </tr>
                 `).join('')}
@@ -945,14 +1019,19 @@ function renderInvoicePreview() {
                     <td><strong>${totalQuantity}</strong></td>
                     <td></td>
                     <td><strong>${formatPrice(totalAmount)} T</strong></td>
+                    <td><strong>${totalDiscount > 0 ? formatPrice(totalDiscount) + ' T' : '-'}</strong></td>
+                    <td><strong>${formatPrice(finalAmount)} T</strong></td>
                     <td></td>
                 </tr>
             </tbody>
         </table>
         
         <div class="invoice-total-section">
-            <p><strong>مبلغ فاکتور: ${formatPrice(totalAmount)} T</strong></p>
-          
+            <p><strong>مبلغ کل: ${formatPrice(totalAmount)} T</strong></p>
+            ${totalDiscount > 0 ? `
+                <p><strong>مجموع تخفیف: ${formatPrice(totalDiscount)} T</strong></p>
+                <p><strong>مبلغ نهایی قابل پرداخت: ${formatPrice(finalAmount)} T</strong></p>
+            ` : ''}
         </div>
         
         <div class="invoice-signature-section">
@@ -1011,6 +1090,8 @@ async function saveInvoice() {
     const time = `${hour}:${minute}`;
     const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
+    const totalDiscount = currentInvoiceItems.reduce((sum, item) => sum + (item.discountAmount || 0), 0);
+    const finalAmount = totalAmount - totalDiscount;
 
     try {
         let res;
@@ -1025,6 +1106,8 @@ async function saveInvoice() {
                     time,
                     items: currentInvoiceItems,
                     totalAmount,
+                    totalDiscount,
+                    finalAmount,
                     totalQuantity
                 })
             });
@@ -1039,6 +1122,8 @@ async function saveInvoice() {
                     time,
                     items: currentInvoiceItems,
                     totalAmount,
+                    totalDiscount,
+                    finalAmount,
                     totalQuantity
                 })
             });
@@ -1089,7 +1174,13 @@ function editInvoice(invoiceId) {
     if (!invoice) return;
 
     currentInvoiceId = invoice.id;
-    currentInvoiceItems = [...invoice.items];
+    currentInvoiceItems = invoice.items.map(item => ({
+        ...item,
+        hasDiscount: item.hasDiscount || false,
+        discountPercentage: item.discountPercentage || 0,
+        discountAmount: item.discountAmount || 0,
+        finalTotal: item.finalTotal || item.total
+    }));
     
     document.getElementById('invoice-customer-name').value = invoice.customerName;
     
