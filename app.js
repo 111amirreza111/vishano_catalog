@@ -736,6 +736,11 @@ function initializePersianNumberInputs() {
     const persianInputs = document.querySelectorAll('.persian-number');
     
     persianInputs.forEach(input => {
+        // Skip discount percentage inputs to allow real-time updates
+        if (input.classList.contains('discount-percentage-input')) {
+            return;
+        }
+        
         input.addEventListener('input', (e) => {
             // Convert any English digits to Persian
             e.target.value = toPersianDigits(e.target.value);
@@ -839,9 +844,10 @@ function renderInvoiceItems() {
                 </label>
                 ${item.hasDiscount ? `
                     <input type="text" 
-                           class="form-input discount-percentage-input persian-number" 
-                           value="${toPersianDigits(item.discountPercentage?.toString() || '0')}" 
+                           class="form-input discount-percentage-input" 
+                           value="${item.discountPercentage || 0}" 
                            placeholder="درصد"
+                           oninput="updateItemDiscountPercentage(${index}, this.value)"
                            onchange="updateItemDiscountPercentage(${index}, this.value)">
                     <span class="discount-symbol">%</span>
                 ` : ''}
@@ -905,14 +911,21 @@ function toggleItemDiscount(index, hasDiscount) {
     const item = currentInvoiceItems[index];
     item.hasDiscount = hasDiscount;
     
-    if (hasDiscount) {
+    if (!hasDiscount) {
         item.discountPercentage = 0;
         item.discountAmount = 0;
         item.finalTotal = item.total;
     } else {
-        item.discountPercentage = 0;
-        item.discountAmount = 0;
-        item.finalTotal = item.total;
+        // Keep existing discount percentage if it exists, otherwise set to 0
+        if (!item.discountPercentage) {
+            item.discountPercentage = 0;
+        }
+        if (!item.discountAmount) {
+            item.discountAmount = 0;
+        }
+        if (!item.finalTotal) {
+            item.finalTotal = item.total;
+        }
     }
     
     renderInvoiceItems();
@@ -926,8 +939,23 @@ function updateItemDiscountPercentage(index, value) {
     item.discountPercentage = Math.min(100, Math.max(0, percentage));
     recalculateItemDiscount(item);
     
-    renderInvoiceItems();
+    // Only update the preview, don't re-render items to preserve input focus
     renderInvoicePreview();
+    
+    // Update the total display for this specific item
+    const totalDisplay = document.querySelectorAll('.invoice-item-total')[index];
+    if (totalDisplay && item.hasDiscount) {
+        totalDisplay.innerHTML = `
+            <div class="original-price">${formatPrice(item.total)}</div>
+            <div class="discounted-price">${formatPrice(item.finalTotal || item.total)}</div>
+        `;
+    }
+    
+    // Update the input value to show the actual percentage being applied
+    const input = document.querySelectorAll('.discount-percentage-input')[index];
+    if (input) {
+        input.value = item.discountPercentage;
+    }
 }
 
 function recalculateItemDiscount(item) {
@@ -962,6 +990,7 @@ function renderInvoicePreview() {
     const totalDiscount = currentInvoiceItems.reduce((sum, item) => sum + (item.discountAmount || 0), 0);
     const finalAmount = totalAmount - totalDiscount;
     const totalAmountInWords = numberToPersianWords(finalAmount);
+    const hasAnyDiscount = currentInvoiceItems.some(item => item.hasDiscount);
 
     const invoicePreview = document.getElementById('invoice-preview');
     
@@ -996,8 +1025,8 @@ function renderInvoicePreview() {
                     <th>تعداد</th>
                     <th>بهای واحد</th>
                     <th>مبلغ کل</th>
-                    ${totalDiscount > 0 ? '<th>تخفیف</th>' : ''}
-                    ${totalDiscount > 0 ? '<th>مبلغ نهایی</th>' : ''}
+                    ${hasAnyDiscount ? '<th>تخفیف</th>' : ''}
+                    ${hasAnyDiscount ? '<th>مبلغ نهایی</th>' : ''}
                     <th>شرح کالا</th>
                 </tr>
             </thead>
@@ -1009,8 +1038,8 @@ function renderInvoicePreview() {
                         <td>${item.quantity}</td>
                         <td>${formatPrice(item.unitPrice)}</td>
                         <td>${formatPrice(item.total)} T</td>
-                        ${totalDiscount > 0 ? `<td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>` : ''}
-                        ${totalDiscount > 0 ? `<td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>` : ''}
+                        ${hasAnyDiscount ? `<td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>` : ''}
+                        ${hasAnyDiscount ? `<td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>` : ''}
                         <td>-</td>
                     </tr>
                 `).join('')}
@@ -1019,8 +1048,8 @@ function renderInvoicePreview() {
                     <td><strong>${totalQuantity}</strong></td>
                     <td></td>
                     <td><strong>${formatPrice(totalAmount)} T</strong></td>
-                    ${totalDiscount > 0 ? `<td><strong>${formatPrice(totalDiscount)} T</strong></td>` : ''}
-                    ${totalDiscount > 0 ? `<td><strong>${formatPrice(finalAmount)} T</strong></td>` : ''}
+                    ${hasAnyDiscount ? `<td><strong>${formatPrice(totalDiscount)} T</strong></td>` : ''}
+                    ${hasAnyDiscount ? `<td><strong>${formatPrice(finalAmount)} T</strong></td>` : ''}
                     <td></td>
                 </tr>
             </tbody>
@@ -1198,6 +1227,13 @@ function editInvoice(invoiceId) {
         document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
         document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
     }
+    
+    // Recalculate discounts for items that have discount enabled
+    currentInvoiceItems.forEach(item => {
+        if (item.hasDiscount && item.discountPercentage > 0) {
+            recalculateItemDiscount(item);
+        }
+    });
     
     renderInvoiceItems();
     renderInvoicePreview();
