@@ -10,7 +10,8 @@
     "baseCost": 46000,
     "cashPrice": 62100,
     "createdAt": "2026-09-03T09:07:31.054Z",
-    "installmentPrice": 46000
+    "installmentPrice": 46000,
+    "category": "1791014817011"
   },
   {
     "id": "1788426653776",
@@ -23,7 +24,8 @@
     "baseCost": 16800,
     "cashPrice": 22680,
     "createdAt": "2026-09-03T09:10:53.776Z",
-    "installmentPrice": 16800
+    "installmentPrice": 16800,
+    "category": "cat1"
   },
   {
     "id": "1788426851563",
@@ -37,7 +39,8 @@
     "baseCost": 95000,
     "cashPrice": 128250,
     "createdAt": "2026-09-03T09:14:11.563Z",
-    "installmentPrice": 80000
+    "installmentPrice": 80000,
+    "category": "cat1"
   },
   {
     "id": "1788426996153",
@@ -51,7 +54,8 @@
     "baseCost": 95000,
     "cashPrice": 128250,
     "createdAt": "2026-09-03T09:16:36.153Z",
-    "installmentPrice": 76000
+    "installmentPrice": 76000,
+    "category": "cat1"
   },
   {
     "id": "1788427165885",
@@ -64,7 +68,8 @@
     "baseCost": 15000,
     "cashPrice": 20250,
     "createdAt": "2026-09-03T09:19:25.885Z",
-    "installmentPrice": 15000
+    "installmentPrice": 15000,
+    "category": "cat1"
   },
   {
     "id": "1788427299742",
@@ -78,7 +83,8 @@
     "baseCost": 95000,
     "cashPrice": 128250,
     "createdAt": "2026-09-03T09:21:39.742Z",
-    "installmentPrice": 77000
+    "installmentPrice": 77000,
+    "category": "cat1"
   },
   {
     "id": "1788427406657",
@@ -91,7 +97,8 @@
     "baseCost": 45000,
     "cashPrice": 60750,
     "createdAt": "2026-09-03T09:23:26.658Z",
-    "installmentPrice": 45000
+    "installmentPrice": 45000,
+    "category": "cat2"
   },
   {
     "id": "1788427596450",
@@ -104,7 +111,8 @@
     "baseCost": 29000,
     "cashPrice": 39150,
     "createdAt": "2026-09-03T09:26:36.450Z",
-    "installmentPrice": 27500
+    "installmentPrice": 27500,
+    "category": "cat2"
   },
   {
     "id": "1788427924372",
@@ -117,7 +125,8 @@
     "baseCost": 95000,
     "cashPrice": 128250,
     "createdAt": "2026-09-03T09:32:04.372Z",
-    "installmentPrice": 84000
+    "installmentPrice": 84000,
+    "category": "cat3"
   },
   {
     "id": "1788428025752",
@@ -130,7 +139,8 @@
     "baseCost": 17000,
     "cashPrice": 22950,
     "createdAt": "2026-09-03T09:33:45.752Z",
-    "installmentPrice": 15000
+    "installmentPrice": 15000,
+    "category": "cat1"
   },
   {
     "id": "1788428154010",
@@ -143,7 +153,8 @@
     "baseCost": 17000,
     "cashPrice": 22950,
     "createdAt": "2026-09-03T09:35:54.010Z",
-    "installmentPrice": 15000
+    "installmentPrice": 15000,
+    "category": "cat1"
   },
   {
     "id": "1788428262784",
@@ -156,7 +167,8 @@
     "baseCost": 95000,
     "cashPrice": 128250,
     "createdAt": "2026-09-03T09:37:42.784Z",
-    "installmentPrice": 100000
+    "installmentPrice": 100000,
+    "category": "cat3"
   },
   {
     "id": "1788428380016",
@@ -168,7 +180,8 @@
     "baseCost": 30000,
     "cashPrice": 40500,
     "createdAt": "2026-09-03T09:39:40.016Z",
-    "installmentPrice": 30000
+    "installmentPrice": 30000,
+    "category": "cat6"
   },
   {
     "id": "1788428518051",
@@ -180,7 +193,8 @@
     "baseCost": 484000,
     "cashPrice": 653400,
     "createdAt": "2026-09-03T09:41:58.051Z",
-    "installmentPrice": 484000
+    "installmentPrice": 484000,
+    "category": "cat5"
   },
   {
     "id": "1788428703676",
@@ -192,7 +206,8 @@
     "baseCost": 331000,
     "cashPrice": 446850,
     "createdAt": "2026-09-03T09:45:03.676Z",
-    "installmentPrice": 331000
+    "installmentPrice": 331000,
+    "category": "cat6"
   },
   {
     "id": "1788428901523",
@@ -204,7 +219,8 @@
     "baseCost": 115000,
     "cashPrice": 155250,
     "createdAt": "2026-09-03T09:48:21.523Z",
-    "installmentPrice": 115000
+    "installmentPrice": 115000,
+    "category": "cat5"
   },
   {
     "id": "1788429031336",
@@ -216,7 +232,8 @@
     "baseCost": 278000,
     "cashPrice": 375300,
     "createdAt": "2026-09-03T09:50:31.336Z",
-    "installmentPrice": 278000
+    "installmentPrice": 278000,
+    "category": "cat5"
   },
   {
     "id": "1788429194931",
@@ -228,7 +245,8 @@
     "baseCost": 12000,
     "cashPrice": 16200,
     "createdAt": "2026-09-03T09:53:14.931Z",
-    "installmentPrice": 12000
+    "installmentPrice": 12000,
+    "category": "cat4"
   },
   {
     "id": "1788429321645",
@@ -240,7 +258,8 @@
     "baseCost": 152000,
     "cashPrice": 205200,
     "createdAt": "2026-09-03T09:55:21.645Z",
-    "installmentPrice": 152000
+    "installmentPrice": 152000,
+    "category": "cat7"
   },
   {
     "id": "1788429407062",
@@ -252,7 +271,8 @@
     "baseCost": 144000,
     "cashPrice": 194400,
     "createdAt": "2026-09-03T09:56:47.062Z",
-    "installmentPrice": 144000
+    "installmentPrice": 144000,
+    "category": "cat7"
   },
   {
     "id": "1788429526123",
@@ -265,7 +285,8 @@
     "baseCost": 15000,
     "cashPrice": 20250,
     "createdAt": "2026-09-03T09:58:46.123Z",
-    "installmentPrice": 15000
+    "installmentPrice": 15000,
+    "category": "cat4"
   },
   {
     "id": "1788429732411",
@@ -278,7 +299,8 @@
     "baseCost": 65000,
     "cashPrice": 87750,
     "createdAt": "2026-09-03T10:02:12.411Z",
-    "installmentPrice": 65000
+    "installmentPrice": 65000,
+    "category": "cat3"
   },
   {
     "id": "1788429889733",
@@ -291,7 +313,8 @@
     "baseCost": 85000,
     "cashPrice": 114750,
     "createdAt": "2026-09-03T10:04:49.733Z",
-    "installmentPrice": 82000
+    "installmentPrice": 82000,
+    "category": "cat3"
   },
   {
     "id": "1788430047644",
@@ -304,7 +327,8 @@
     "baseCost": 92000,
     "cashPrice": 124200,
     "createdAt": "2026-09-03T10:07:27.645Z",
-    "installmentPrice": 92000
+    "installmentPrice": 92000,
+    "category": "cat4"
   },
   {
     "id": "1788443230560",
@@ -317,7 +341,8 @@
     "baseCost": 115000,
     "cashPrice": 155250,
     "createdAt": "2026-09-03T13:47:10.560Z",
-    "installmentPrice": 115000
+    "installmentPrice": 115000,
+    "category": "cat4"
   },
   {
     "id": "1788443303976",
@@ -330,7 +355,8 @@
     "baseCost": 115000,
     "cashPrice": 155250,
     "createdAt": "2026-09-03T13:48:23.976Z",
-    "installmentPrice": 115000
+    "installmentPrice": 115000,
+    "category": "cat3"
   },
   {
     "id": "1788443372236",
@@ -343,7 +369,8 @@
     "baseCost": 115000,
     "cashPrice": 155250,
     "createdAt": "2026-09-03T13:49:32.236Z",
-    "installmentPrice": 115000
+    "installmentPrice": 115000,
+    "category": "cat3"
   },
   {
     "id": "1788443562621",
@@ -357,7 +384,8 @@
     "baseCost": 20000,
     "cashPrice": 27000,
     "createdAt": "2026-09-03T13:52:42.621Z",
-    "installmentPrice": 13000
+    "installmentPrice": 13000,
+    "category": "cat10"
   },
   {
     "id": "1788444563561",
@@ -370,7 +398,8 @@
     "baseCost": 200000,
     "cashPrice": 270000,
     "createdAt": "2026-09-03T14:09:23.561Z",
-    "installmentPrice": 200000
+    "installmentPrice": 200000,
+    "category": "cat10"
   },
   {
     "id": "1789281524430",
@@ -383,7 +412,8 @@
     "baseCost": 90000,
     "cashPrice": 121500,
     "createdAt": "2026-09-13T06:38:44.430Z",
-    "installmentPrice": 82000
+    "installmentPrice": 82000,
+    "category": "cat8"
   },
   {
     "id": "1789281577234",
@@ -396,7 +426,8 @@
     "baseCost": 70000,
     "cashPrice": 94500,
     "createdAt": "2026-09-13T06:39:37.234Z",
-    "installmentPrice": 65000
+    "installmentPrice": 65000,
+    "category": "cat8"
   },
   {
     "id": "1789281799566",
@@ -409,7 +440,8 @@
     "baseCost": 100000,
     "cashPrice": 135000,
     "createdAt": "2026-09-13T06:43:19.566Z",
-    "installmentPrice": 110000
+    "installmentPrice": 110000,
+    "category": "cat8"
   },
   {
     "id": "1789366933859",
@@ -422,7 +454,8 @@
     "baseCost": 85000,
     "cashPrice": 114750,
     "installmentPrice": 85000,
-    "createdAt": "2026-09-14T06:22:13.859Z"
+    "createdAt": "2026-09-14T06:22:13.859Z",
+    "category": "cat8"
   },
   {
     "id": "1789367360771",
@@ -435,7 +468,8 @@
     "baseCost": 48000,
     "cashPrice": 64800,
     "installmentPrice": 48000,
-    "createdAt": "2026-09-14T06:29:20.771Z"
+    "createdAt": "2026-09-14T06:29:20.771Z",
+    "category": "cat8"
   },
   {
     "id": "1789367655315",
@@ -447,7 +481,8 @@
     "baseCost": 70000,
     "cashPrice": 94500,
     "installmentPrice": 70000,
-    "createdAt": "2026-09-14T06:34:15.316Z"
+    "createdAt": "2026-09-14T06:34:15.316Z",
+    "category": "cat9"
   },
   {
     "id": "1789367696440",
@@ -459,7 +494,8 @@
     "baseCost": 70000,
     "cashPrice": 94500,
     "installmentPrice": 70000,
-    "createdAt": "2026-09-14T06:34:56.440Z"
+    "createdAt": "2026-09-14T06:34:56.440Z",
+    "category": "cat9"
   },
   {
     "id": "1790132006926",
@@ -472,7 +508,8 @@
     "baseCost": 350000,
     "cashPrice": 472500,
     "installmentPrice": 280000,
-    "createdAt": "2026-09-23T02:53:26.926Z"
+    "createdAt": "2026-09-23T02:53:26.926Z",
+    "category": "cat10"
   },
   {
     "id": "1790132220773",
@@ -484,7 +521,8 @@
     "baseCost": 150000,
     "cashPrice": 202500,
     "installmentPrice": 150000,
-    "createdAt": "2026-09-23T02:57:00.773Z"
+    "createdAt": "2026-09-23T02:57:00.773Z",
+    "category": "cat9"
   },
   {
     "id": "1790132430873",
@@ -496,7 +534,8 @@
     "baseCost": 200000,
     "cashPrice": 270000,
     "installmentPrice": 200000,
-    "createdAt": "2026-09-23T03:00:30.873Z"
+    "createdAt": "2026-09-23T03:00:30.873Z",
+    "category": "cat10"
   },
   {
     "id": "1790134016049",
@@ -509,7 +548,8 @@
     "baseCost": 200000,
     "cashPrice": 270000,
     "installmentPrice": 200000,
-    "createdAt": "2026-09-23T03:26:56.049Z"
+    "createdAt": "2026-09-23T03:26:56.049Z",
+    "category": "cat6"
   },
   {
     "id": "1790134297126",
@@ -522,7 +562,8 @@
     "baseCost": 29000,
     "cashPrice": 39150,
     "installmentPrice": 28000,
-    "createdAt": "2026-09-23T03:31:37.126Z"
+    "createdAt": "2026-09-23T03:31:37.126Z",
+    "category": "cat2"
   },
   {
     "id": "1790666946305",
@@ -534,7 +575,8 @@
     "baseCost": 55000,
     "cashPrice": 74250,
     "installmentPrice": 50000,
-    "createdAt": "2026-09-29T07:29:06.305Z"
+    "createdAt": "2026-09-29T07:29:06.305Z",
+    "category": "cat10"
   },
   {
     "id": "1791006163592",
@@ -546,7 +588,8 @@
     ],
     "baseCost": 85000,
     "cashPrice": 114750,
-    "createdAt": "2026-10-03T05:42:43.592Z"
+    "createdAt": "2026-10-03T05:42:43.592Z",
+    "category": "cat8"
   },
   {
     "id": "1791006509105",
@@ -558,7 +601,8 @@
     ],
     "baseCost": 98000,
     "cashPrice": 132300,
-    "createdAt": "2026-10-03T05:48:29.105Z"
+    "createdAt": "2026-10-03T05:48:29.105Z",
+    "category": "cat7"
   },
   {
     "id": "1791007584682",
@@ -570,6 +614,7 @@
     ],
     "baseCost": 35000,
     "cashPrice": 47250,
-    "createdAt": "2026-10-03T06:06:24.682Z"
+    "createdAt": "2026-10-03T06:06:24.682Z",
+    "category": "cat2"
   }
 ]
