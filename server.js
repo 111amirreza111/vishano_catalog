@@ -68,6 +68,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(invoicesPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize categories.json if it doesn't exist
+        const categoriesPath = path.join(DATA_DIR, 'categories.json');
+        try {
+            await fs.access(categoriesPath);
+        } catch {
+            await fs.writeFile(categoriesPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -144,27 +152,27 @@ app.get('/api/products/:id', async (req, res) => {
 // Create product
 app.post('/api/products', upload.single('image'), async (req, res) => {
     try {
-        const { name, baseCost, descriptions } = req.body;
-        
+        const { name, baseCost, descriptions, category } = req.body;
+
         if (!name || !baseCost) {
             return res.status(400).json({ error: 'Name and base cost are required' });
         }
-        
+
         if (!req.file) {
             return res.status(400).json({ error: 'Image is required' });
         }
-        
+
         const productsPath = path.join(DATA_DIR, 'products.json');
         const data = await fs.readFile(productsPath, 'utf8');
         const products = JSON.parse(data);
-        
+
         const settingsPath = path.join(DATA_DIR, 'settings.json');
         const settingsData = await fs.readFile(settingsPath, 'utf8');
         const settings = JSON.parse(settingsData);
-        
+
         const baseCostNum = parseFloat(baseCost);
         const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
-        
+
         const newProduct = {
             id: Date.now().toString(),
             name,
@@ -172,14 +180,15 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
             descriptions: descriptions ? JSON.parse(descriptions) : [],
             baseCost: baseCostNum,
             cashPrice,
+            category: category || null,
             createdAt: new Date().toISOString()
         };
-        
+
         console.log('Saving product with image path:', newProduct.image);
-        
+
         products.push(newProduct);
         await fs.writeFile(productsPath, JSON.stringify(products, null, 2));
-        
+
         res.json(newProduct);
     } catch (error) {
         console.error('Error creating product:', error);
@@ -190,24 +199,24 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
 // Update product
 app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     try {
-        const { name, baseCost, descriptions } = req.body;
-        
+        const { name, baseCost, descriptions, category } = req.body;
+
         const productsPath = path.join(DATA_DIR, 'products.json');
         const data = await fs.readFile(productsPath, 'utf8');
         const products = JSON.parse(data);
-        
+
         const index = products.findIndex(p => p.id === req.params.id);
         if (index === -1) {
             return res.status(404).json({ error: 'Product not found' });
         }
-        
+
         const settingsPath = path.join(DATA_DIR, 'settings.json');
         const settingsData = await fs.readFile(settingsPath, 'utf8');
         const settings = JSON.parse(settingsData);
-        
+
         const baseCostNum = parseFloat(baseCost);
         const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
-        
+
         // Delete old image if new one is uploaded
         if (req.file && products[index].image) {
             const oldImagePath = path.join(__dirname, products[index].image);
@@ -217,18 +226,19 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
                 console.error('Error deleting old image:', err);
             }
         }
-        
+
         products[index] = {
             ...products[index],
             name,
             image: req.file ? `/uploads/${req.file.filename}` : products[index].image,
             descriptions: descriptions ? JSON.parse(descriptions) : products[index].descriptions,
             baseCost: baseCostNum,
-            cashPrice
+            cashPrice,
+            category: category !== undefined ? category : products[index].category
         };
-        
+
         await fs.writeFile(productsPath, JSON.stringify(products, null, 2));
-        
+
         res.json(products[index]);
     } catch (error) {
         console.error('Error updating product:', error);
@@ -407,20 +417,20 @@ app.delete('/api/invoices/:id', async (req, res) => {
 app.put('/api/invoices/:id', async (req, res) => {
     try {
         const { customerName, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
-        
+
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
+
         const invoicesPath = path.join(DATA_DIR, 'invoices.json');
         const data = await fs.readFile(invoicesPath, 'utf8');
         const invoices = JSON.parse(data);
-        
+
         const index = invoices.findIndex(i => i.id === req.params.id);
         if (index === -1) {
             return res.status(404).json({ error: 'Invoice not found' });
         }
-        
+
         invoices[index] = {
             ...invoices[index],
             customerName,
@@ -433,13 +443,79 @@ app.put('/api/invoices/:id', async (req, res) => {
             totalQuantity,
             updatedAt: new Date().toISOString()
         };
-        
+
         await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
-        
+
         res.json(invoices[index]);
     } catch (error) {
         console.error('Error updating invoice:', error);
         res.status(500).json({ error: 'Failed to update invoice' });
+    }
+});
+
+// Category API Routes
+
+// Get all categories
+app.get('/api/categories', async (req, res) => {
+    try {
+        const categoriesPath = path.join(DATA_DIR, 'categories.json');
+        const data = await fs.readFile(categoriesPath, 'utf8');
+        const categories = JSON.parse(data);
+        res.json(categories);
+    } catch (error) {
+        console.error('Error reading categories:', error);
+        res.status(500).json({ error: 'Failed to read categories' });
+    }
+});
+
+// Create category
+app.post('/api/categories', async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
+
+        const categoriesPath = path.join(DATA_DIR, 'categories.json');
+        const data = await fs.readFile(categoriesPath, 'utf8');
+        const categories = JSON.parse(data);
+
+        const newCategory = {
+            id: Date.now().toString(),
+            name,
+            createdAt: new Date().toISOString()
+        };
+
+        categories.push(newCategory);
+        await fs.writeFile(categoriesPath, JSON.stringify(categories, null, 2));
+
+        res.json(newCategory);
+    } catch (error) {
+        console.error('Error creating category:', error);
+        res.status(500).json({ error: 'Failed to create category' });
+    }
+});
+
+// Delete category
+app.delete('/api/categories/:id', async (req, res) => {
+    try {
+        const categoriesPath = path.join(DATA_DIR, 'categories.json');
+        const data = await fs.readFile(categoriesPath, 'utf8');
+        const categories = JSON.parse(data);
+
+        const index = categories.findIndex(c => c.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        categories.splice(index, 1);
+        await fs.writeFile(categoriesPath, JSON.stringify(categories, null, 2));
+
+        res.json({ message: 'Category deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ error: 'Failed to delete category' });
     }
 });
 

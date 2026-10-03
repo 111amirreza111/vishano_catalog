@@ -117,6 +117,12 @@ body {
     gap: 1rem;
 }
 
+.page-header-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .page-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
@@ -187,6 +193,24 @@ body {
 .btn-small {
     padding: 0.5rem 1rem;
     font-size: 0.85rem;
+}
+
+/* Category Header Bar */
+.category-header {
+    background-color: var(--primary-green);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0 1.5rem 0;
+    border-radius: var(--radius);
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-header:first-child {
+    margin-top: 0;
 }
 
 /* Products Grid */
@@ -353,10 +377,17 @@ body {
 
 /* Live Catalog Grid */
 .live-catalog-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.live-catalog-grid-category {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     align-items: stretch;
+    margin-bottom: 2rem;
 }
 
 /* Catalog Card Design */

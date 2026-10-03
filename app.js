@@ -1,6 +1,7 @@
 // App State
 let products = [];
 let invoices = [];
+let categories = [];
 let settings = {
     cashPercentage: 30
 };
@@ -20,7 +21,9 @@ const liveCatalogGrid = document.getElementById('live-catalog-grid');
 const invoicesGrid = document.getElementById('invoices-grid');
 const productModal = document.getElementById('product-modal');
 const confirmModal = document.getElementById('confirm-modal');
+const categoryModal = document.getElementById('category-modal');
 const productForm = document.getElementById('product-form');
+const categoryForm = document.getElementById('category-form');
 const descriptionsContainer = document.getElementById('descriptions-container');
 const imagePreview = document.getElementById('image-preview');
 const toast = document.getElementById('toast');
@@ -30,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadFromAPI();
     initializeNavigation();
     initializeProductForm();
+    initializeCategoryForm();
     initializeSettings();
     initializeInvoiceCreator();
     renderProducts();
@@ -80,28 +84,33 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, categoriesRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
-            fetch(`${API_BASE}/invoices`)
+            fetch(`${API_BASE}/invoices`),
+            fetch(`${API_BASE}/categories`)
         ]);
-        
+
         if (!productsRes.ok || !settingsRes.ok) {
             throw new Error('API request failed');
         }
-        
+
         products = await productsRes.json();
         settings = await settingsRes.json();
         if (invoicesRes.ok) {
             invoices = await invoicesRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length });
+        if (categoriesRes.ok) {
+            categories = await categoriesRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
         // Set default values if loading fails
         products = [];
         invoices = [];
+        categories = [];
         settings = {
             cashPercentage: 30
         };
@@ -238,21 +247,25 @@ function openProductModal(product = null) {
     editingProductId = product ? product.id : null;
     uploadedImageFile = null;
     document.getElementById('modal-title').textContent = product ? 'ویرایش محصول' : 'افزودن محصول جدید';
-    
+
+    // Populate category dropdown
+    populateCategoryDropdown();
+
     if (product) {
         document.getElementById('product-id').value = product.id;
         document.getElementById('product-name').value = product.name;
         document.getElementById('base-cost').value = product.baseCost;
-        
+        document.getElementById('product-category').value = product.category || '';
+
         // Update price displays
         const prices = calculatePrices(product.baseCost);
         document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
-        
+
         // Set image preview
         if (product.image) {
             imagePreview.innerHTML = `<img src="${product.image}" alt="تصویر محصول">`;
         }
-        
+
         // Set descriptions
         descriptionsContainer.innerHTML = '';
         product.descriptions.forEach(desc => {
@@ -265,8 +278,9 @@ function openProductModal(product = null) {
         descriptionsContainer.innerHTML = '';
         addDescriptionField();
         document.getElementById('cash-price-display').textContent = '0 تومان';
+        document.getElementById('product-category').value = '';
     }
-    
+
     productModal.classList.add('active');
 }
 
@@ -299,6 +313,69 @@ function addDescriptionField(value = '') {
     descriptionsContainer.appendChild(descriptionItem);
 }
 
+function populateCategoryDropdown() {
+    const categorySelect = document.getElementById('product-category');
+    categorySelect.innerHTML = '<option value="">بدون دسته‌بندی</option>';
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.id;
+        option.textContent = category.name;
+        categorySelect.appendChild(option);
+    });
+}
+
+// Category Form
+function initializeCategoryForm() {
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    const categoryModalCloseBtn = document.getElementById('category-modal-close-btn');
+    const cancelCategoryBtn = document.getElementById('cancel-category-btn');
+
+    addCategoryBtn.addEventListener('click', () => {
+        categoryModal.classList.add('active');
+        document.getElementById('category-name').value = '';
+    });
+
+    categoryModalCloseBtn.addEventListener('click', () => {
+        categoryModal.classList.remove('active');
+    });
+
+    cancelCategoryBtn.addEventListener('click', () => {
+        categoryModal.classList.remove('active');
+    });
+
+    categoryForm.addEventListener('submit', handleCategorySubmit);
+}
+
+async function handleCategorySubmit(e) {
+    e.preventDefault();
+
+    const categoryName = document.getElementById('category-name').value.trim();
+
+    if (!categoryName) {
+        showToast('لطفاً نام دسته‌بندی را وارد کنید', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/categories`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: categoryName })
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            categoryModal.classList.remove('active');
+            showToast('دسته‌بندی با موفقیت اضافه شد', 'success');
+        } else {
+            showToast('خطا در ذخیره دسته‌بندی', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving category:', error);
+        showToast('خطا در ذخیره دسته‌بندی', 'error');
+    }
+}
+
 function removeDescriptionField(button) {
     const descriptionItems = descriptionsContainer.querySelectorAll('.description-item');
     if (descriptionItems.length > 1) {
@@ -310,41 +387,43 @@ function removeDescriptionField(button) {
 
 async function handleProductSubmit(e) {
     e.preventDefault();
-    
+
     const productId = document.getElementById('product-id').value;
     const productName = document.getElementById('product-name').value;
     const baseCost = parseFloat(document.getElementById('base-cost').value) || 0;
-    
+    const productCategory = document.getElementById('product-category').value;
+
     // Get descriptions
     const descriptionInputs = descriptionsContainer.querySelectorAll('.description-input');
     const descriptions = Array.from(descriptionInputs)
         .map(input => input.value.trim())
         .filter(value => value !== '');
-    
+
     if (!productName) {
         showToast('لطفاً نام محصول را وارد کنید', 'error');
         return;
     }
-    
+
     if (!uploadedImageFile && !editingProductId) {
         showToast('لطفاً تصویر محصول را آپلود کنید', 'error');
         return;
     }
-    
+
     if (descriptions.length === 0) {
         showToast('لطفاً حداقل یک توضیح وارد کنید', 'error');
         return;
     }
-    
+
     const formData = new FormData();
     formData.append('name', productName);
     formData.append('baseCost', baseCost);
     formData.append('descriptions', JSON.stringify(descriptions));
-    
+    formData.append('category', productCategory);
+
     if (uploadedImageFile) {
         formData.append('image', uploadedImageFile);
     }
-    
+
     try {
         let res;
         if (editingProductId) {
@@ -358,7 +437,7 @@ async function handleProductSubmit(e) {
                 body: formData
             });
         }
-        
+
         if (res.ok) {
             await loadFromAPI();
             renderProducts();
@@ -433,7 +512,54 @@ function renderLiveCatalog() {
         return;
     }
 
-    liveCatalogGrid.innerHTML = products.map(product => `
+    // Group products by category
+    const groupedProducts = {};
+    products.forEach(product => {
+        const categoryId = product.category || 'uncategorized';
+        if (!groupedProducts[categoryId]) {
+            groupedProducts[categoryId] = [];
+        }
+        groupedProducts[categoryId].push(product);
+    });
+
+    let html = '';
+
+    // Render products by category
+    categories.forEach(category => {
+        if (groupedProducts[category.id] && groupedProducts[category.id].length > 0) {
+            html += `<div class="category-header">
+                <span class="icon">📁</span>
+                ${category.name}
+            </div>`;
+            html += `<div class="live-catalog-grid-category">`;
+            groupedProducts[category.id].forEach(product => {
+                html += renderCatalogCard(product);
+            });
+            html += `</div>`;
+        }
+    });
+
+    // Render uncategorized products
+    if (groupedProducts['uncategorized'] && groupedProducts['uncategorized'].length > 0) {
+        html += `<div class="category-header">
+            <span class="icon">📦</span>
+            بدون دسته‌بندی
+        </div>`;
+        html += `<div class="live-catalog-grid-category">`;
+        groupedProducts['uncategorized'].forEach(product => {
+            html += renderCatalogCard(product);
+        });
+        html += `</div>`;
+    }
+
+    liveCatalogGrid.innerHTML = html;
+
+    // Initialize download all PDF button
+    initializeDownloadAllPDF();
+}
+
+function renderCatalogCard(product) {
+    return `
         <div class="catalog-card" id="catalog-card-${product.id}">
             <img src="${product.image}" alt="${product.name}" class="catalog-card-image">
             <div class="catalog-card-divider"></div>
@@ -454,10 +580,7 @@ function renderLiveCatalog() {
                 </button>
             </div>
         </div>
-    `).join('');
-
-    // Initialize download all PDF button
-    initializeDownloadAllPDF();
+    `;
 }
 
 async function downloadProductImage(productId, productName) {
@@ -525,35 +648,25 @@ async function downloadAllCatalogAsPDF() {
         const maxWidth = pageWidth - (margin * 2);
         const maxHeight = pageHeight - (margin * 2);
 
-        // Calculate number of columns in the grid
-        const gridStyle = window.getComputedStyle(liveCatalogGrid);
-        const gridTemplateColumns = gridStyle.gridTemplateColumns;
-        const columnCount = gridTemplateColumns.split(' ').length;
-
-        // Cards per page (2 rows)
-        const cardsPerPage = columnCount * 2;
-
-        // Split products into pages
-        const totalPages = Math.ceil(products.length / cardsPerPage);
-
-        // Store original display states
-        const originalDisplays = Array.from(allCards).map(card => card.style.display);
+        // Get all category sections
+        const categorySections = liveCatalogGrid.querySelectorAll('.live-catalog-grid-category');
+        const totalPages = categorySections.length;
 
         for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-            const startIndex = pageNum * cardsPerPage;
-            const endIndex = Math.min(startIndex + cardsPerPage, products.length);
-            const pageProducts = products.slice(startIndex, endIndex);
+            const section = categorySections[pageNum];
 
-            // Hide all cards first
-            allCards.forEach(card => card.style.display = 'none');
+            // Hide all sections first
+            categorySections.forEach(s => s.style.display = 'none');
+            // Hide all category headers
+            const allHeaders = liveCatalogGrid.querySelectorAll('.category-header');
+            allHeaders.forEach(h => h.style.display = 'none');
 
-            // Show only cards for this page
-            pageProducts.forEach(product => {
-                const card = document.getElementById(`catalog-card-${product.id}`);
-                if (card) {
-                    card.style.display = 'flex';
-                }
-            });
+            // Show only current section and its header
+            section.style.display = 'grid';
+            const header = section.previousElementSibling;
+            if (header && header.classList.contains('category-header')) {
+                header.style.display = 'flex';
+            }
 
             // Capture this page
             const canvas = await html2canvas(liveCatalogGrid, {
@@ -583,16 +696,16 @@ async function downloadAllCatalogAsPDF() {
             pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
         }
 
-        // Restore original display states
-        allCards.forEach((card, index) => {
-            card.style.display = originalDisplays[index];
-        });
+        // Restore all sections and headers
+        categorySections.forEach(s => s.style.display = 'grid');
+        const allHeaders = liveCatalogGrid.querySelectorAll('.category-header');
+        allHeaders.forEach(h => h.style.display = 'flex');
 
         // Remove capturing class after capturing
         allCards.forEach(card => card.classList.remove('capturing'));
 
         pdf.save('کاتالوگ-محصولات.pdf');
-        
+
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
         console.error('PDF generation error:', error);
