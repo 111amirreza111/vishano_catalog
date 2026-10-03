@@ -481,9 +481,13 @@ app.post('/api/categories', async (req, res) => {
         const data = await fs.readFile(categoriesPath, 'utf8');
         const categories = JSON.parse(data);
 
+        // Calculate next order
+        const maxOrder = categories.length > 0 ? Math.max(...categories.map(c => c.order || 0)) : 0;
+
         const newCategory = {
             id: Date.now().toString(),
             name,
+            order: maxOrder + 1,
             createdAt: new Date().toISOString()
         };
 
@@ -516,6 +520,35 @@ app.delete('/api/categories/:id', async (req, res) => {
     } catch (error) {
         console.error('Error deleting category:', error);
         res.status(500).json({ error: 'Failed to delete category' });
+    }
+});
+
+// Update category
+app.put('/api/categories/:id', async (req, res) => {
+    try {
+        const { name, order } = req.body;
+
+        const categoriesPath = path.join(DATA_DIR, 'categories.json');
+        const data = await fs.readFile(categoriesPath, 'utf8');
+        const categories = JSON.parse(data);
+
+        const index = categories.findIndex(c => c.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        categories[index] = {
+            ...categories[index],
+            name: name !== undefined ? name : categories[index].name,
+            order: order !== undefined ? order : categories[index].order
+        };
+
+        await fs.writeFile(categoriesPath, JSON.stringify(categories, null, 2));
+
+        res.json(categories[index]);
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ error: 'Failed to update category' });
     }
 });
 

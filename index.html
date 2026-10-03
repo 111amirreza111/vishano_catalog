@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -274,25 +275,34 @@
 
     <!-- Category Modal -->
     <div class="modal" id="category-modal">
-        <div class="modal-content modal-small">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>افزودن دسته‌بندی جدید</h3>
+                <h3>مدیریت دسته‌بندی‌ها</h3>
                 <button class="modal-close" id="category-modal-close-btn">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="category-form">
-                    <div class="form-group">
-                        <label for="category-name">نام دسته‌بندی</label>
-                        <input type="text" id="category-name" class="form-input" placeholder="مثال: اسباب‌بازی" required>
+                <div class="category-form-section">
+                    <h4>افزودن دسته‌بندی جدید</h4>
+                    <form id="category-form">
+                        <div class="form-group">
+                            <label for="category-name">نام دسته‌بندی</label>
+                            <input type="text" id="category-name" class="form-input" placeholder="مثال: اسباب‌بازی" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="icon">💾</span>
+                                ذخیره دسته‌بندی
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="category-list-section">
+                    <h4>لیست دسته‌بندی‌ها</h4>
+                    <div class="category-list" id="category-list">
+                        <!-- Categories will be rendered here -->
                     </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <span class="icon">💾</span>
-                            ذخیره دسته‌بندی
-                        </button>
-                        <button type="button" class="btn btn-secondary" id="cancel-category-btn">انصراف</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

@@ -328,22 +328,145 @@ function populateCategoryDropdown() {
 function initializeCategoryForm() {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const categoryModalCloseBtn = document.getElementById('category-modal-close-btn');
-    const cancelCategoryBtn = document.getElementById('cancel-category-btn');
 
     addCategoryBtn.addEventListener('click', () => {
         categoryModal.classList.add('active');
         document.getElementById('category-name').value = '';
+        renderCategoryList();
     });
 
     categoryModalCloseBtn.addEventListener('click', () => {
         categoryModal.classList.remove('active');
     });
 
-    cancelCategoryBtn.addEventListener('click', () => {
-        categoryModal.classList.remove('active');
-    });
-
     categoryForm.addEventListener('submit', handleCategorySubmit);
+}
+
+function renderCategoryList() {
+    const categoryList = document.getElementById('category-list');
+    if (!categoryList) return;
+
+    // Sort categories by order
+    const sortedCategories = [...categories].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    categoryList.innerHTML = sortedCategories.map(category => `
+        <div class="category-item" data-category-id="${category.id}">
+            <span class="category-item-drag-handle">⋮⋮</span>
+            <input type="text" class="category-item-name-input" value="${category.name}" onchange="updateCategoryName('${category.id}', this.value)">
+            <div class="category-item-actions">
+                <button class="btn btn-danger" onclick="deleteCategory('${category.id}')">حذف</button>
+            </div>
+        </div>
+    `).join('');
+
+    // Initialize Sortable
+    if (window.Sortable) {
+        new Sortable(categoryList, {
+            animation: 150,
+            handle: '.category-item',
+            onEnd: async function(evt) {
+                const categoryItems = categoryList.querySelectorAll('.category-item');
+                const updates = [];
+
+                categoryItems.forEach((item, index) => {
+                    const categoryId = item.dataset.categoryId;
+                    const newOrder = index + 1;
+                    updates.push({ categoryId, newOrder });
+                });
+
+                // Update all categories
+                for (const update of updates) {
+                    try {
+                        await fetch(`${API_BASE}/categories/${update.categoryId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ order: update.newOrder })
+                        });
+                    } catch (error) {
+                        console.error('Error updating category order:', error);
+                    }
+                }
+
+                // Reload data
+                await loadFromAPI();
+                renderCategoryList();
+                showToast('ترتیب دسته‌بندی‌ها تغییر کرد', 'success');
+            }
+        });
+    }
+}
+
+async function updateCategoryName(categoryId, newName) {
+    if (!newName.trim()) {
+        showToast('نام دسته‌بندی نمی‌تواند خالی باشد', 'error');
+        renderCategoryList();
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/categories/${categoryId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: newName.trim() })
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderCategoryList();
+            populateCategoryDropdown();
+            showToast('نام دسته‌بندی تغییر کرد', 'success');
+        } else {
+            showToast('خطا در تغییر نام دسته‌بندی', 'error');
+            renderCategoryList();
+        }
+    } catch (error) {
+        console.error('Error updating category name:', error);
+        showToast('خطا در تغییر نام دسته‌بندی', 'error');
+        renderCategoryList();
+    }
+}
+
+async function deleteCategory(categoryId) {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این دسته‌بندی را حذف کنید؟ محصولات این دسته‌بندی به \"بدون دسته‌بندی\" منتقل می‌شوند.')) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/categories/${categoryId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            // Update products to remove category
+            const productsRes = await fetch(`${API_BASE}/products`);
+            const allProducts = await productsRes.json();
+
+            for (const product of allProducts) {
+                if (product.category === categoryId) {
+                    const formData = new FormData();
+                    formData.append('name', product.name);
+                    formData.append('baseCost', product.baseCost);
+                    formData.append('descriptions', JSON.stringify(product.descriptions));
+                    formData.append('category', '');
+
+                    await fetch(`${API_BASE}/products/${product.id}`, {
+                        method: 'PUT',
+                        body: formData
+                    });
+                }
+            }
+
+            await loadFromAPI();
+            renderCategoryList();
+            populateCategoryDropdown();
+            showToast('دسته‌بندی با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف دسته‌بندی', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        showToast('خطا در حذف دسته‌بندی', 'error');
+    }
 }
 
 async function handleCategorySubmit(e) {
@@ -524,8 +647,11 @@ function renderLiveCatalog() {
 
     let html = '';
 
-    // Render products by category
-    categories.forEach(category => {
+    // Sort categories by order
+    const sortedCategories = [...categories].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    // Render products by category (sorted by order)
+    sortedCategories.forEach(category => {
         if (groupedProducts[category.id] && groupedProducts[category.id].length > 0) {
             html += `<div class="category-header">
                 <span class="icon">📁</span>
