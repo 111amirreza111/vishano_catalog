@@ -243,17 +243,6 @@
         "finalTotal": 94500
       },
       {
-        "productId": "1788429889733",
-        "name": "کفگیر چوبی دسته بلند راش",
-        "quantity": 100,
-        "unitPrice": 114750,
-        "total": 11475000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 114750
-      },
-      {
         "productId": "1788426451054",
         "name": "شات بشکه ای ",
         "quantity": 100,
@@ -296,14 +285,25 @@
         "discountPercentage": 0,
         "discountAmount": 0,
         "finalTotal": 74250
+      },
+      {
+        "productId": "1788427924372",
+        "name": "گوشتکوب دو تیکه",
+        "quantity": 200,
+        "unitPrice": 128250,
+        "total": 25650000,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 128250
       }
     ],
-    "totalAmount": 62910000,
+    "totalAmount": 77085000,
     "totalDiscount": 0,
-    "finalAmount": 62910000,
-    "totalQuantity": 600,
+    "finalAmount": 77085000,
+    "totalQuantity": 700,
     "createdAt": "2026-10-03T07:12:52.194Z",
-    "updatedAt": "2026-10-03T07:13:10.277Z"
+    "updatedAt": "2026-10-03T07:37:28.387Z"
   },
   {
     "id": "1791011776113",
