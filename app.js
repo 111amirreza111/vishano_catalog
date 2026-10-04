@@ -1282,7 +1282,7 @@ function renderInvoicePreview() {
                         ${hasAnyDiscount ? `<td>${item.hasDiscount ? formatPrice(item.finalTotal / item.quantity) : '-'}</td>` : ''}
                         <td>${formatPrice(item.total)} T</td>
                         ${hasAnyDiscount ? `<td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>` : ''}
-                        ${hasAnyDiscount ? `<td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>` : ''}
+                        ${hasAnyDiscount ? `<td><strong>${item.hasDiscount ? formatPrice(item.finalTotal) : formatPrice(item.total)} T</strong></td>` : ''}
                         <td>-</td>
                     </tr>
                 `).join('')}
