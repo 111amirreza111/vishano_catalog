@@ -223,7 +223,7 @@
     "finalAmount": 94608000,
     "totalQuantity": 1410,
     "createdAt": "2026-10-03T05:58:48.818Z",
-    "updatedAt": "2026-10-04T08:22:25.439Z"
+    "updatedAt": "2026-10-04T08:30:27.867Z"
   },
   {
     "id": "1791011572194",
@@ -265,17 +265,6 @@
         "finalTotal": 11542500
       },
       {
-        "productId": "1788443303976",
-        "name": "کفگیر پلویی دسته بلند راش",
-        "quantity": 100,
-        "unitPrice": 155250,
-        "total": 15525000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 155250
-      },
-      {
         "productId": "1790666946305",
         "name": "گیره لباس 12 عددی",
         "quantity": 100,
@@ -298,12 +287,12 @@
         "finalTotal": 23085000
       }
     ],
-    "totalAmount": 77085000,
+    "totalAmount": 61560000,
     "totalDiscount": 4441500,
-    "finalAmount": 72643500,
-    "totalQuantity": 700,
+    "finalAmount": 57118500,
+    "totalQuantity": 600,
     "createdAt": "2026-10-03T07:12:52.194Z",
-    "updatedAt": "2026-10-04T07:49:59.732Z"
+    "updatedAt": "2026-10-04T08:32:12.509Z"
   },
   {
     "id": "1791011776113",

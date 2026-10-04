@@ -913,6 +913,7 @@ function initializeInvoiceCreator() {
     const productSearch = document.getElementById('product-search');
     const saveInvoiceBtn = document.getElementById('save-invoice-btn');
     const downloadInvoiceImageBtn = document.getElementById('download-invoice-image-btn');
+    const downloadInvoicePdfBtn = document.getElementById('download-invoice-pdf-btn');
 
     // Initialize Persian number inputs
     initializePersianNumberInputs();
@@ -969,6 +970,7 @@ function initializeInvoiceCreator() {
 
     saveInvoiceBtn.addEventListener('click', saveInvoice);
     downloadInvoiceImageBtn.addEventListener('click', downloadInvoiceImage);
+    downloadInvoicePdfBtn.addEventListener('click', downloadInvoicePDF);
 }
 
 function initializePersianNumberInputs() {
@@ -1416,10 +1418,10 @@ async function saveInvoice() {
 
 async function downloadInvoiceImage() {
     const invoicePreview = document.getElementById('invoice-preview');
-    
+
     try {
         showToast('در حال آماده‌سازی تصویر...', 'success');
-        
+
         const canvas = await html2canvas(invoicePreview, {
             scale: 2,
             useCORS: true,
@@ -1437,6 +1439,51 @@ async function downloadInvoiceImage() {
     } catch (error) {
         console.error('Image capture error:', error);
         showToast('خطا در دانلود تصویر', 'error');
+    }
+}
+
+async function downloadInvoicePDF() {
+    const invoicePreview = document.getElementById('invoice-preview');
+
+    try {
+        showToast('در حال آماده‌سازی PDF...', 'success');
+
+        const canvas = await html2canvas(invoicePreview, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#FFFFFF',
+            logging: false
+        });
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2);
+
+        const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+        const finalWidth = imgWidth * ratio;
+        const finalHeight = imgHeight * ratio;
+
+        const x = (pageWidth - finalWidth) / 2;
+        const y = margin;
+
+        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+
+        const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
+        pdf.save(`صورتحساب-${customerName}-${Date.now()}.pdf`);
+
+        showToast('PDF با موفقیت دانلود شد', 'success');
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        showToast('خطا در ایجاد PDF', 'error');
     }
 }
 
