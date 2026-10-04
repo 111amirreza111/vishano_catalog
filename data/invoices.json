@@ -91,10 +91,10 @@
         "quantity": 100,
         "unitPrice": 128250,
         "total": 12825000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 128250
+        "hasDiscount": true,
+        "discountPercentage": 5,
+        "discountAmount": 641250,
+        "finalTotal": 12183750
       },
       {
         "productId": "1788428262784",
@@ -102,10 +102,10 @@
         "quantity": 100,
         "unitPrice": 128250,
         "total": 12825000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 128250
+        "hasDiscount": true,
+        "discountPercentage": 5,
+        "discountAmount": 641250,
+        "finalTotal": 12183750
       },
       {
         "productId": "1788443562621",
@@ -124,10 +124,10 @@
         "quantity": 100,
         "unitPrice": 121500,
         "total": 12150000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 121500
+        "hasDiscount": true,
+        "discountPercentage": 7,
+        "discountAmount": 850500,
+        "finalTotal": 11299500
       },
       {
         "productId": "1788429321645",
@@ -210,20 +210,20 @@
         "productId": "1791006509105",
         "name": "زعفرون ساب (هاون)",
         "quantity": 30,
-        "unitPrice": 132300,
-        "total": 3969000,
+        "unitPrice": 148500,
+        "total": 4455000,
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 132300
+        "finalTotal": 148500
       }
     ],
-    "totalAmount": 96849000,
-    "totalDiscount": 594000,
-    "finalAmount": 96255000,
+    "totalAmount": 97335000,
+    "totalDiscount": 2727000,
+    "finalAmount": 94608000,
     "totalQuantity": 1410,
     "createdAt": "2026-10-03T05:58:48.818Z",
-    "updatedAt": "2026-10-03T07:07:53.651Z"
+    "updatedAt": "2026-10-04T08:22:25.439Z"
   },
   {
     "id": "1791011572194",
@@ -259,10 +259,10 @@
         "quantity": 100,
         "unitPrice": 128250,
         "total": 12825000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 128250
+        "hasDiscount": true,
+        "discountPercentage": 10,
+        "discountAmount": 1282500,
+        "finalTotal": 11542500
       },
       {
         "productId": "1788443303976",
@@ -281,10 +281,10 @@
         "quantity": 100,
         "unitPrice": 74250,
         "total": 7425000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 74250
+        "hasDiscount": true,
+        "discountPercentage": 8,
+        "discountAmount": 594000,
+        "finalTotal": 6831000
       },
       {
         "productId": "1788427924372",
@@ -292,18 +292,18 @@
         "quantity": 200,
         "unitPrice": 128250,
         "total": 25650000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 128250
+        "hasDiscount": true,
+        "discountPercentage": 10,
+        "discountAmount": 2565000,
+        "finalTotal": 23085000
       }
     ],
     "totalAmount": 77085000,
-    "totalDiscount": 0,
-    "finalAmount": 77085000,
+    "totalDiscount": 4441500,
+    "finalAmount": 72643500,
     "totalQuantity": 700,
     "createdAt": "2026-10-03T07:12:52.194Z",
-    "updatedAt": "2026-10-03T07:37:28.387Z"
+    "updatedAt": "2026-10-04T07:49:59.732Z"
   },
   {
     "id": "1791011776113",
