@@ -1263,6 +1263,7 @@ function renderInvoicePreview() {
                     <th>نام کالا</th>
                     <th>تعداد</th>
                     <th>بهای واحد</th>
+                    ${hasAnyDiscount ? '<th>بهای واحد بعد تخفیف</th>' : ''}
                     <th>مبلغ کل</th>
                     ${hasAnyDiscount ? '<th>تخفیف</th>' : ''}
                     ${hasAnyDiscount ? '<th>مبلغ نهایی</th>' : ''}
@@ -1276,6 +1277,7 @@ function renderInvoicePreview() {
                         <td>${item.name}</td>
                         <td>${item.quantity}</td>
                         <td>${formatPrice(item.unitPrice)}</td>
+                        ${hasAnyDiscount ? `<td>${item.hasDiscount ? formatPrice(item.finalTotal / item.quantity) : '-'}</td>` : ''}
                         <td>${formatPrice(item.total)} T</td>
                         ${hasAnyDiscount ? `<td>${item.hasDiscount ? item.discountPercentage + '%' : '-'}</td>` : ''}
                         ${hasAnyDiscount ? `<td><strong>${formatPrice(item.finalTotal || item.total)} T</strong></td>` : ''}
@@ -1286,6 +1288,7 @@ function renderInvoicePreview() {
                     <td colspan="2"><strong>جمع کل فاکتور</strong></td>
                     <td><strong>${totalQuantity}</strong></td>
                     <td></td>
+                    ${hasAnyDiscount ? '<td></td>' : ''}
                     <td><strong>${formatPrice(totalAmount)} T</strong></td>
                     ${hasAnyDiscount ? `<td><strong>${formatPrice(totalDiscount)} T</strong></td>` : ''}
                     ${hasAnyDiscount ? `<td><strong>${formatPrice(finalAmount)} T</strong></td>` : ''}
