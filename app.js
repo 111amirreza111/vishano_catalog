@@ -1718,32 +1718,34 @@ async function recordDelivery(productId) {
         return;
     }
 
-    // Update delivered quantity
-    need.totalDelivered += quantity;
-
-    // Save to server (we'll need to add this API endpoint)
+    // Save to server
     try {
+        const newTotalDelivered = need.totalDelivered + quantity;
         const res = await fetch(`${API_BASE}/production/${productId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                totalDelivered: need.totalDelivered
+                totalDelivered: newTotalDelivered
             })
         });
 
         if (res.ok) {
+            // Reload production records from server
+            const productionRes = await fetch(`${API_BASE}/production`);
+            if (productionRes.ok) {
+                productionRecords = await productionRes.json();
+            }
+
+            // Clear input and re-render
+            input.value = '';
             renderProductionList();
             showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
         } else {
-            // If API doesn't exist yet, just update locally for now
-            renderProductionList();
-            showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+            showToast('خطا در ثبت تحویل', 'error');
         }
     } catch (error) {
         console.error('Error recording delivery:', error);
-        // Update locally even if API fails
-        renderProductionList();
-        showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+        showToast('خطا در ثبت تحویل', 'error');
     }
 }
 
