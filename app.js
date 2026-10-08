@@ -1575,6 +1575,41 @@ function initializeProductionPage() {
             showToast('لیست بروزرسانی شد', 'success');
         });
     }
+
+    const copyBtn = document.getElementById('copy-production-needs-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', copyProductionNeeds);
+    }
+}
+
+function copyProductionNeeds() {
+    const needs = calculateProductionNeeds();
+
+    if (needs.length === 0) {
+        showToast('هیچ نیازی برای کپی وجود ندارد', 'error');
+        return;
+    }
+
+    let text = 'لیست نیازهای تولید:\n';
+    text += '==================\n\n';
+
+    needs.forEach(need => {
+        const remaining = need.totalNeeded - need.totalDelivered;
+        if (remaining > 0) {
+            text += `${need.productName}: ${remaining} عدد\n`;
+        }
+    });
+
+    text += '\n------------------\n';
+    text += `تعداد کل اقلام مورد نیاز: ${needs.reduce((sum, need) => sum + (need.totalNeeded - need.totalDelivered), 0)} عدد`;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('لیست نیازها کپی شد', 'success');
+    }).catch(err => {
+        console.error('Error copying text:', err);
+        showToast('خطا در کپی کردن لیست', 'error');
+    });
 }
 
 function calculateProductionNeeds() {
