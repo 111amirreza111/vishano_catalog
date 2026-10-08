@@ -20,6 +20,7 @@
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="products">محصولات</button>
                 <button class="nav-tab" data-page="invoices">صورتحساب</button>
+                <button class="nav-tab" data-page="production">مدیریت تولید</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
             </nav>
@@ -64,9 +65,44 @@
                         ایجاد صورتحساب جدید
                     </button>
                 </div>
-                
+
                 <div class="invoices-grid" id="invoices-grid">
                     <!-- Invoices will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Production Management Page -->
+            <section id="production-page" class="page">
+                <div class="page-header">
+                    <h2>مدیریت تولید</h2>
+                    <button class="btn btn-secondary" id="refresh-production-btn">
+                        <span class="icon">🔄</span>
+                        بروزرسانی
+                    </button>
+                </div>
+
+                <div class="production-container">
+                    <div class="production-summary">
+                        <h3>خلاصه وضعیت تولید</h3>
+                        <div class="summary-stats">
+                            <div class="stat-card">
+                                <div class="stat-label">کل محصولات لازم</div>
+                                <div class="stat-value" id="total-needed">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">تحویل گرفته شده</div>
+                                <div class="stat-value" id="total-delivered">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">باقی‌مانده</div>
+                                <div class="stat-value" id="total-remaining">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="production-list" id="production-list">
+                        <!-- Production items will be rendered here -->
+                    </div>
                 </div>
             </section>
 

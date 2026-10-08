@@ -76,6 +76,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(categoriesPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize production.json if it doesn't exist
+        const productionPath = path.join(DATA_DIR, 'production.json');
+        try {
+            await fs.access(productionPath);
+        } catch {
+            await fs.writeFile(productionPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -549,6 +557,55 @@ app.put('/api/categories/:id', async (req, res) => {
     } catch (error) {
         console.error('Error updating category:', error);
         res.status(500).json({ error: 'Failed to update category' });
+    }
+});
+
+// Production API Routes
+
+// Get all production records
+app.get('/api/production', async (req, res) => {
+    try {
+        const productionPath = path.join(DATA_DIR, 'production.json');
+        const data = await fs.readFile(productionPath, 'utf8');
+        const production = JSON.parse(data);
+        res.json(production);
+    } catch (error) {
+        console.error('Error reading production:', error);
+        res.status(500).json({ error: 'Failed to read production' });
+    }
+});
+
+// Update production record for a product
+app.put('/api/production/:productId', async (req, res) => {
+    try {
+        const { totalDelivered } = req.body;
+
+        const productionPath = path.join(DATA_DIR, 'production.json');
+        const data = await fs.readFile(productionPath, 'utf8');
+        const production = JSON.parse(data);
+
+        const index = production.findIndex(p => p.productId === req.params.productId);
+        if (index === -1) {
+            // Create new record if it doesn't exist
+            production.push({
+                productId: req.params.productId,
+                totalDelivered: totalDelivered || 0,
+                updatedAt: new Date().toISOString()
+            });
+        } else {
+            production[index] = {
+                ...production[index],
+                totalDelivered: totalDelivered !== undefined ? totalDelivered : production[index].totalDelivered,
+                updatedAt: new Date().toISOString()
+            };
+        }
+
+        await fs.writeFile(productionPath, JSON.stringify(production, null, 2));
+
+        res.json(production.find(p => p.productId === req.params.productId));
+    } catch (error) {
+        console.error('Error updating production:', error);
+        res.status(500).json({ error: 'Failed to update production' });
     }
 });
 

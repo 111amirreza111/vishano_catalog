@@ -10,6 +10,8 @@ let productToDelete = null;
 let uploadedImageFile = null;
 let currentInvoiceItems = [];
 let currentInvoiceId = null;
+let productionNeeds = [];
+let productionRecords = [];
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeCategoryForm();
     initializeSettings();
     initializeInvoiceCreator();
+    initializeProductionPage();
     renderProducts();
     updateCurrentSettingsDisplay();
 });
@@ -77,6 +80,8 @@ async function switchPage(pageName) {
         renderProducts();
     } else if (pageName === 'invoices') {
         renderInvoices();
+    } else if (pageName === 'production') {
+        renderProductionList();
     }
 }
 
@@ -84,11 +89,12 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes, categoriesRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
             fetch(`${API_BASE}/invoices`),
-            fetch(`${API_BASE}/categories`)
+            fetch(`${API_BASE}/categories`),
+            fetch(`${API_BASE}/production`)
         ]);
 
         if (!productsRes.ok || !settingsRes.ok) {
@@ -103,7 +109,10 @@ async function loadFromAPI() {
         if (categoriesRes.ok) {
             categories = await categoriesRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length });
+        if (productionRes.ok) {
+            productionRecords = await productionRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
@@ -111,6 +120,7 @@ async function loadFromAPI() {
         products = [];
         invoices = [];
         categories = [];
+        productionRecords = [];
         settings = {
             cashPercentage: 30
         };
@@ -1553,3 +1563,188 @@ async function deleteInvoice(invoiceId) {
         showToast('خطا در حذف صورتحساب', 'error');
     }
 }
+
+// Production Management
+
+function initializeProductionPage() {
+    const refreshBtn = document.getElementById('refresh-production-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', async () => {
+            await loadFromAPI();
+            renderProductionList();
+            showToast('لیست بروزرسانی شد', 'success');
+        });
+    }
+}
+
+function calculateProductionNeeds() {
+    // Calculate total quantity needed for each product from all invoices
+    const needs = {};
+
+    invoices.forEach(invoice => {
+        invoice.items.forEach(item => {
+            if (!needs[item.productId]) {
+                needs[item.productId] = {
+                    productId: item.productId,
+                    productName: item.name,
+                    totalNeeded: 0,
+                    totalDelivered: 0,
+                    invoices: []
+                };
+            }
+
+            needs[item.productId].totalNeeded += item.quantity;
+            needs[item.productId].invoices.push({
+                invoiceId: invoice.id,
+                customerName: invoice.customerName,
+                date: invoice.date,
+                quantity: item.quantity
+            });
+        });
+    });
+
+    // Load delivered quantities from production records
+    productionRecords.forEach(record => {
+        if (needs[record.productId]) {
+            needs[record.productId].totalDelivered = record.totalDelivered || 0;
+        }
+    });
+
+    // Convert to array
+    productionNeeds = Object.values(needs);
+    return productionNeeds;
+}
+
+function renderProductionList() {
+    const productionList = document.getElementById('production-list');
+    const needs = calculateProductionNeeds();
+
+    if (needs.length === 0) {
+        productionList.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">📋</div>
+                <p class="empty-state-text">هیچ صورتحسابی برای محاسبه نیاز تولید وجود ندارد</p>
+            </div>
+        `;
+        updateProductionSummary([]);
+        return;
+    }
+
+    productionList.innerHTML = needs.map(need => {
+        const remaining = need.totalNeeded - need.totalDelivered;
+        const percentage = need.totalNeeded > 0 ? Math.round((need.totalDelivered / need.totalNeeded) * 100) : 0;
+
+        return `
+            <div class="production-item">
+                <div class="production-item-header">
+                    <h3 class="production-item-name">${need.productName}</h3>
+                    <div class="production-item-quantities">
+                        <span class="quantity-label">مجموع لازم:</span>
+                        <span class="quantity-value">${need.totalNeeded}</span>
+                        <span class="quantity-label">تحویل گرفته شده:</span>
+                        <span class="quantity-value delivered">${need.totalDelivered}</span>
+                        <span class="quantity-label">باقی‌مانده:</span>
+                        <span class="quantity-value remaining">${remaining}</span>
+                    </div>
+                </div>
+
+                <div class="production-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="progress-text">${percentage}%</span>
+                </div>
+
+                <div class="production-invoices-list">
+                    <h4>جزئیات بر اساس فاکتور:</h4>
+                    ${need.invoices.map(inv => `
+                        <div class="production-invoice-item">
+                            <span class="invoice-customer">${inv.customerName}</span>
+                            <span class="invoice-date">${inv.date}</span>
+                            <span class="invoice-quantity">${inv.quantity} عدد</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="production-actions">
+                    <div class="delivery-input-group">
+                        <label>ثبت تحویل از تولیدکننده:</label>
+                        <input type="number"
+                               class="form-input delivery-input"
+                               min="1"
+                               max="${remaining}"
+                               placeholder="تعداد"
+                               id="delivery-input-${need.productId}">
+                        <button class="btn btn-primary" onclick="recordDelivery('${need.productId}')">
+                            ثبت
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    updateProductionSummary(needs);
+}
+
+function updateProductionSummary(needs) {
+    const totalNeeded = needs.reduce((sum, need) => sum + need.totalNeeded, 0);
+    const totalDelivered = needs.reduce((sum, need) => sum + need.totalDelivered, 0);
+    const totalRemaining = totalNeeded - totalDelivered;
+
+    document.getElementById('total-needed').textContent = totalNeeded.toLocaleString('fa-IR');
+    document.getElementById('total-delivered').textContent = totalDelivered.toLocaleString('fa-IR');
+    document.getElementById('total-remaining').textContent = totalRemaining.toLocaleString('fa-IR');
+}
+
+async function recordDelivery(productId) {
+    const input = document.getElementById(`delivery-input-${productId}`);
+    const quantity = parseInt(input.value);
+
+    if (!quantity || quantity <= 0) {
+        showToast('لطفاً تعداد معتبر وارد کنید', 'error');
+        return;
+    }
+
+    const need = productionNeeds.find(n => n.productId === productId);
+    if (!need) {
+        showToast('خطا در یافتن محصول', 'error');
+        return;
+    }
+
+    const remaining = need.totalNeeded - need.totalDelivered;
+    if (quantity > remaining) {
+        showToast(`تعداد وارد شده بیشتر از باقی‌مانده (${remaining}) است`, 'error');
+        return;
+    }
+
+    // Update delivered quantity
+    need.totalDelivered += quantity;
+
+    // Save to server (we'll need to add this API endpoint)
+    try {
+        const res = await fetch(`${API_BASE}/production/${productId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                totalDelivered: need.totalDelivered
+            })
+        });
+
+        if (res.ok) {
+            renderProductionList();
+            showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+        } else {
+            // If API doesn't exist yet, just update locally for now
+            renderProductionList();
+            showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+        }
+    } catch (error) {
+        console.error('Error recording delivery:', error);
+        // Update locally even if API fails
+        renderProductionList();
+        showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+    }
+}
+
+

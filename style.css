@@ -1109,6 +1109,234 @@ body {
     cursor: pointer;
 }
 
+/* Production Management Styles */
+.production-container {
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+}
+
+.production-summary {
+    background-color: var(--light-green);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+}
+
+.production-summary h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stat-card {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.production-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.production-item {
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.production-item:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-green);
+}
+
+.production-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.production-item-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.production-item-quantities {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.quantity-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.quantity-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.quantity-value.delivered {
+    color: var(--primary-green);
+}
+
+.quantity-value.remaining {
+    color: #DC3545;
+}
+
+.production-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background-color: var(--gray-300);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-green);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-green);
+    min-width: 40px;
+    text-align: left;
+}
+
+.production-invoices-list {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+}
+
+.production-invoices-list h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.75rem;
+}
+
+.production-invoice-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--gray-100);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.production-invoice-item:last-child {
+    margin-bottom: 0;
+}
+
+.invoice-customer {
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+.invoice-date {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.invoice-quantity {
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+.production-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.delivery-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.delivery-input-group label {
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.delivery-input {
+    width: 100px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .production-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .production-item-quantities {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .delivery-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .delivery-input {
+        width: 100%;
+    }
+}
+
 .discount-percentage-input {
     width: 60px;
     padding: 0.25rem 0.5rem;
