@@ -39,28 +39,6 @@
         "finalTotal": 12312000
       },
       {
-        "productId": "1789281524430",
-        "name": "وردنه 40 سانتی گردو",
-        "quantity": 200,
-        "unitPrice": 121500,
-        "total": 24300000,
-        "hasDiscount": true,
-        "discountPercentage": 5,
-        "discountAmount": 1215000,
-        "finalTotal": 23085000
-      },
-      {
-        "productId": "1791006163592",
-        "name": "وردنه 40 سانتی جنگلی",
-        "quantity": 200,
-        "unitPrice": 114750,
-        "total": 22950000,
-        "hasDiscount": true,
-        "discountPercentage": 5,
-        "discountAmount": 1147500,
-        "finalTotal": 21802500
-      },
-      {
         "productId": "1791006509105",
         "name": "زعفرون ساب (هاون)",
         "quantity": 100,
@@ -72,12 +50,12 @@
         "finalTotal": 12568500
       }
     ],
-    "totalAmount": 124740000,
-    "totalDiscount": 6237000,
-    "finalAmount": 118503000,
-    "totalQuantity": 1100,
+    "totalAmount": 77490000,
+    "totalDiscount": 3874500,
+    "finalAmount": 73615500,
+    "totalQuantity": 700,
     "createdAt": "2026-10-03T05:38:19.623Z",
-    "updatedAt": "2026-10-03T06:43:53.713Z"
+    "updatedAt": "2026-10-15T15:55:22.778Z"
   },
   {
     "id": "1791007128818",
