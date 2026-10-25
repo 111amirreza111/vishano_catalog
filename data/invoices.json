@@ -210,17 +210,6 @@
     "time": "۱۰:۴۰",
     "items": [
       {
-        "productId": "1789367655315",
-        "name": "زیرسیگاری گردو",
-        "quantity": 100,
-        "unitPrice": 94500,
-        "total": 9450000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 94500
-      },
-      {
         "productId": "1788426451054",
         "name": "شات بشکه ای ",
         "quantity": 100,
@@ -265,12 +254,12 @@
         "finalTotal": 23085000
       }
     ],
-    "totalAmount": 61560000,
+    "totalAmount": 52110000,
     "totalDiscount": 4441500,
-    "finalAmount": 57118500,
-    "totalQuantity": 600,
+    "finalAmount": 47668500,
+    "totalQuantity": 500,
     "createdAt": "2026-10-03T07:12:52.194Z",
-    "updatedAt": "2026-10-04T08:32:12.509Z"
+    "updatedAt": "2026-10-21T09:52:13.650Z"
   },
   {
     "id": "1791011776113",
@@ -381,17 +370,6 @@
         "finalTotal": 39150
       },
       {
-        "productId": "1791007584682",
-        "name": "نمکدان الماسی",
-        "quantity": 100,
-        "unitPrice": 47250,
-        "total": 4725000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 47250
-      },
-      {
         "productId": "1790134297126",
         "name": "نمکدان موشکی",
         "quantity": 100,
@@ -403,28 +381,6 @@
         "finalTotal": 39150
       },
       {
-        "productId": "1789366933859",
-        "name": "وردنه قلتکی 15 سانتی",
-        "quantity": 100,
-        "unitPrice": 114750,
-        "total": 11475000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 114750
-      },
-      {
-        "productId": "1790132220773",
-        "name": "جاسیگاری",
-        "quantity": 100,
-        "unitPrice": 202500,
-        "total": 20250000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 202500
-      },
-      {
         "productId": "1789367655315",
         "name": "زیرسیگاری گردو",
         "quantity": 100,
@@ -434,28 +390,6 @@
         "discountPercentage": 0,
         "discountAmount": 0,
         "finalTotal": 94500
-      },
-      {
-        "productId": "1790132006926",
-        "name": "فلفل ساب (نمک ساب)",
-        "quantity": 100,
-        "unitPrice": 472500,
-        "total": 47250000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 472500
-      },
-      {
-        "productId": "1788443562621",
-        "name": "اسپند دودکن ",
-        "quantity": 100,
-        "unitPrice": 27000,
-        "total": 2700000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 27000
       },
       {
         "productId": "1790666946305",
@@ -515,9 +449,9 @@
       {
         "productId": "1788427165885",
         "name": "پیمانه سرگرد",
-        "quantity": 100,
+        "quantity": 200,
         "unitPrice": 20250,
-        "total": 2025000,
+        "total": 4050000,
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
@@ -535,61 +469,6 @@
         "finalTotal": 22950
       },
       {
-        "productId": "1788428154010",
-        "name": "پیمانه حلزونی 7 سانتی",
-        "quantity": 100,
-        "unitPrice": 22950,
-        "total": 2295000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 22950
-      },
-      {
-        "productId": "1788430047644",
-        "name": "قاشق چوبی متوسط راش",
-        "quantity": 100,
-        "unitPrice": 124200,
-        "total": 12420000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 124200
-      },
-      {
-        "productId": "1788443230560",
-        "name": "قاشق چوبی بلند راش",
-        "quantity": 100,
-        "unitPrice": 155250,
-        "total": 15525000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 155250
-      },
-      {
-        "productId": "1788429031336",
-        "name": "سبد میوه یا نان ",
-        "quantity": 50,
-        "unitPrice": 375300,
-        "total": 18765000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 375300
-      },
-      {
-        "productId": "1788428518051",
-        "name": "سبد 2 دسته بزرگ ",
-        "quantity": 50,
-        "unitPrice": 653400,
-        "total": 32670000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 653400
-      },
-      {
         "productId": "1788428901523",
         "name": "سبد سبزی دایره ای ",
         "quantity": 50,
@@ -599,17 +478,6 @@
         "discountPercentage": 0,
         "discountAmount": 0,
         "finalTotal": 155250
-      },
-      {
-        "productId": "1788428380016",
-        "name": "جا قاشقی 4 قسمتی ",
-        "quantity": 50,
-        "unitPrice": 40500,
-        "total": 2025000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 40500
       },
       {
         "productId": "1788428703676",
@@ -632,13 +500,24 @@
         "discountPercentage": 0,
         "discountAmount": 0,
         "finalTotal": 148500
+      },
+      {
+        "productId": "1788428380016",
+        "name": "جا قاشقی 4 قسمتی ",
+        "quantity": 49,
+        "unitPrice": 402300,
+        "total": 19712700,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 402300
       }
     ],
-    "totalAmount": 290898000,
+    "totalAmount": 142535700,
     "totalDiscount": 0,
-    "finalAmount": 290898000,
-    "totalQuantity": 2250,
+    "finalAmount": 142535700,
+    "totalQuantity": 1449,
     "createdAt": "2026-10-06T05:43:24.080Z",
-    "updatedAt": "2026-10-06T05:43:43.571Z"
+    "updatedAt": "2026-10-21T09:57:04.019Z"
   }
 ]

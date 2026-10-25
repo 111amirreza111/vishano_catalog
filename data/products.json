@@ -289,20 +289,6 @@
     "category": "cat4"
   },
   {
-    "id": "1788429732411",
-    "name": "کفگیر چوبی ساده",
-    "image": "/uploads/1788429732401-221371027.jpg",
-    "descriptions": [
-      "چوب گردو",
-      "ابعاد : 30 * 6"
-    ],
-    "baseCost": 65000,
-    "cashPrice": 87750,
-    "createdAt": "2026-09-03T10:02:12.411Z",
-    "installmentPrice": 65000,
-    "category": "cat3"
-  },
-  {
     "id": "1788429889733",
     "name": "کفگیر چوبی دسته بلند راش",
     "image": "/uploads/1788429889730-49676166.jpg",
@@ -388,20 +374,6 @@
     "category": "cat10"
   },
   {
-    "id": "1788444563561",
-    "name": "جاکلیدی ",
-    "image": "/uploads/1788444563555-117585249.jpg",
-    "descriptions": [
-      "چوب گردو",
-      "ابعاد : 23 * 6 * 4"
-    ],
-    "baseCost": 200000,
-    "cashPrice": 270000,
-    "createdAt": "2026-09-03T14:09:23.561Z",
-    "installmentPrice": 200000,
-    "category": "cat10"
-  },
-  {
     "id": "1789281524430",
     "name": "وردنه 40 سانتی گردو",
     "image": "/uploads/1789281524425-881616893.jpg",
@@ -444,20 +416,6 @@
     "category": "cat8"
   },
   {
-    "id": "1789366933859",
-    "name": "وردنه قلتکی 15 سانتی",
-    "image": "/uploads/1789366933851-352737062.jpg",
-    "descriptions": [
-      "15 سانتی",
-      "جنس گردو"
-    ],
-    "baseCost": 85000,
-    "cashPrice": 114750,
-    "installmentPrice": 85000,
-    "createdAt": "2026-09-14T06:22:13.859Z",
-    "category": "cat8"
-  },
-  {
     "id": "1789367360771",
     "name": "وردنه 40 سانتی سپیدار",
     "image": "/uploads/1789367360766-694124566.jpg",
@@ -483,73 +441,6 @@
     "installmentPrice": 70000,
     "createdAt": "2026-09-14T06:34:15.316Z",
     "category": "cat9"
-  },
-  {
-    "id": "1789367696440",
-    "name": "زیرسیگاری گردو",
-    "image": "/uploads/1789367696432-164409391.jpg",
-    "descriptions": [
-      "جنس: گردو"
-    ],
-    "baseCost": 70000,
-    "cashPrice": 94500,
-    "installmentPrice": 70000,
-    "createdAt": "2026-09-14T06:34:56.440Z",
-    "category": "cat9"
-  },
-  {
-    "id": "1790132006926",
-    "name": "فلفل ساب (نمک ساب)",
-    "image": "/uploads/1790132006921-279887687.jpeg",
-    "descriptions": [
-      "ابعاد: 16.5 * 4.7",
-      "تیغه سرامیکی"
-    ],
-    "baseCost": 350000,
-    "cashPrice": 472500,
-    "installmentPrice": 280000,
-    "createdAt": "2026-09-23T02:53:26.926Z",
-    "category": "cat10"
-  },
-  {
-    "id": "1790132220773",
-    "name": "جاسیگاری",
-    "image": "/uploads/1790132220768-869231904.jpg",
-    "descriptions": [
-      "چوب گردو"
-    ],
-    "baseCost": 150000,
-    "cashPrice": 202500,
-    "installmentPrice": 150000,
-    "createdAt": "2026-09-23T02:57:00.773Z",
-    "category": "cat9"
-  },
-  {
-    "id": "1790132430873",
-    "name": "ظرف نگهداری ماکارونی و برنج",
-    "image": "/uploads/1790132430869-483128415.jpg",
-    "descriptions": [
-      "ابعاد: 30 * 23"
-    ],
-    "baseCost": 200000,
-    "cashPrice": 270000,
-    "installmentPrice": 200000,
-    "createdAt": "2026-09-23T03:00:30.873Z",
-    "category": "cat10"
-  },
-  {
-    "id": "1790134016049",
-    "name": "پایه کفگیر (جا قاشقی)",
-    "image": "/uploads/1790134016041-356207608.jpg",
-    "descriptions": [
-      "جنس : گردو",
-      "ابعاد: 15 * 10 * 10"
-    ],
-    "baseCost": 200000,
-    "cashPrice": 270000,
-    "installmentPrice": 200000,
-    "createdAt": "2026-09-23T03:26:56.049Z",
-    "category": "cat6"
   },
   {
     "id": "1790134297126",
