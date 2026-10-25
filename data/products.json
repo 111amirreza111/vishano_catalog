@@ -423,8 +423,8 @@
       "جنس: سپیدار",
       "ابعاد: 40 * 4"
     ],
-    "baseCost": 48000,
-    "cashPrice": 64800,
+    "baseCost": 55000,
+    "cashPrice": 74250,
     "installmentPrice": 48000,
     "createdAt": "2026-09-14T06:29:20.771Z",
     "category": "cat8"
@@ -484,14 +484,14 @@
   },
   {
     "id": "1791006509105",
-    "name": "زعفرون ساب (هاون)",
+    "name": "زعفرون ساب طرح C",
     "image": "/uploads/1791006509088-254325067.png",
     "descriptions": [
       "ابعاد : 7.5 * 6",
       "جنس گردو"
     ],
-    "baseCost": 110000,
-    "cashPrice": 148500,
+    "baseCost": 120000,
+    "cashPrice": 162000,
     "createdAt": "2026-10-03T05:48:29.105Z",
     "category": "cat7"
   },
@@ -507,5 +507,17 @@
     "cashPrice": 47250,
     "createdAt": "2026-10-03T06:06:24.682Z",
     "category": "cat2"
+  },
+  {
+    "id": "1792915515001",
+    "name": "گوشت کوب دسته بلند ",
+    "image": "/uploads/1792915514993-230553676.jpg",
+    "descriptions": [
+      "ابعاد 7 در 22"
+    ],
+    "baseCost": 110000,
+    "cashPrice": 148500,
+    "category": "cat3",
+    "createdAt": "2026-10-25T08:05:15.001Z"
   }
 ]
