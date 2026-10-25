@@ -21,8 +21,8 @@
       "چوب گردو",
       "ابعاد : 9 * 2"
     ],
-    "baseCost": 15000,
-    "cashPrice": 21000,
+    "baseCost": 16000,
+    "cashPrice": 22400,
     "createdAt": "2026-09-03T09:10:53.776Z",
     "installmentPrice": 16800,
     "category": "cat1"
@@ -94,8 +94,8 @@
       "چوب گردو",
       "ابعاد : 7 * 7"
     ],
-    "baseCost": 47000,
-    "cashPrice": 65800,
+    "baseCost": 48000,
+    "cashPrice": 67200,
     "createdAt": "2026-09-03T09:23:26.658Z",
     "installmentPrice": 45000,
     "category": "cat2"
@@ -108,8 +108,8 @@
       "چوب گردو",
       "ابعاد : 7 * 4"
     ],
-    "baseCost": 26000,
-    "cashPrice": 36400,
+    "baseCost": 30000,
+    "cashPrice": 42000,
     "createdAt": "2026-09-03T09:26:36.450Z",
     "installmentPrice": 27500,
     "category": "cat2"
@@ -341,8 +341,8 @@
       "سر فلزی مقاوم برای استفاده مداوم",
       "ابعاد : 15 * 1.5"
     ],
-    "baseCost": 20000,
-    "cashPrice": 28000,
+    "baseCost": 18000,
+    "cashPrice": 25200,
     "createdAt": "2026-09-03T13:52:42.621Z",
     "installmentPrice": 13000,
     "category": "cat10"
@@ -369,8 +369,8 @@
       "ابعاد : 30 * 4",
       "جنس گردو"
     ],
-    "baseCost": 70000,
-    "cashPrice": 98000,
+    "baseCost": 80000,
+    "cashPrice": 112000,
     "createdAt": "2026-09-13T06:39:37.234Z",
     "installmentPrice": 65000,
     "category": "cat8"
@@ -383,8 +383,8 @@
       "ابعاد : 40 * 4",
       "جنس گردو"
     ],
-    "baseCost": 100000,
-    "cashPrice": 140000,
+    "baseCost": 110000,
+    "cashPrice": 154000,
     "createdAt": "2026-09-13T06:43:19.566Z",
     "installmentPrice": 110000,
     "category": "cat8"
@@ -397,8 +397,8 @@
       "جنس: سپیدار",
       "ابعاد: 40 * 4"
     ],
-    "baseCost": 55000,
-    "cashPrice": 77000,
+    "baseCost": 47000,
+    "cashPrice": 65800,
     "installmentPrice": 48000,
     "createdAt": "2026-09-14T06:29:20.771Z",
     "category": "cat8"
@@ -464,8 +464,8 @@
       "جنس گردو",
       "ابعاد: 6.5 * 7"
     ],
-    "baseCost": 29000,
-    "cashPrice": 40600,
+    "baseCost": 31000,
+    "cashPrice": 43400,
     "createdAt": "2026-10-03T06:06:24.682Z",
     "category": "cat2"
   },
