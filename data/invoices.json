@@ -519,5 +519,52 @@
     "totalQuantity": 1449,
     "createdAt": "2026-10-06T05:43:24.080Z",
     "updatedAt": "2026-10-21T09:57:04.019Z"
+  },
+  {
+    "id": "1793182609266",
+    "customerName": "بابایی شوش",
+    "date": "۱۴۰۵/۸/۶",
+    "time": "۱۳:۴۴",
+    "items": [
+      {
+        "productId": "1789367655315",
+        "name": "زیرسیگاری گردو",
+        "quantity": 50,
+        "unitPrice": 98000,
+        "total": 4900000,
+        "hasDiscount": true,
+        "discountPercentage": 31,
+        "discountAmount": 1519000,
+        "finalTotal": 3381000
+      },
+      {
+        "productId": "1790666946305",
+        "name": "گیره لباس 12 عددی",
+        "quantity": 500,
+        "unitPrice": 70000,
+        "total": 35000000,
+        "hasDiscount": true,
+        "discountPercentage": 2,
+        "discountAmount": 700000,
+        "finalTotal": 34300000
+      },
+      {
+        "productId": "1792915515001",
+        "name": "گوشت کوب دسته بلند ",
+        "quantity": 10,
+        "unitPrice": 154000,
+        "total": 1540000,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 154000
+      }
+    ],
+    "totalAmount": 41440000,
+    "totalDiscount": 2219000,
+    "finalAmount": 39221000,
+    "totalQuantity": 560,
+    "createdAt": "2026-10-28T10:16:49.266Z",
+    "updatedAt": "2026-10-29T09:18:01.468Z"
   }
 ]
