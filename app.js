@@ -1772,6 +1772,16 @@ function editCustomer(customerId) {
 }
 
 function confirmDeleteCustomer(customerId) {
+    // Check if customer has any invoices
+    const customerInvoices = invoices.filter(inv =>
+        inv.customerId === customerId || inv.customerName === customers.find(c => c.id === customerId)?.name
+    );
+
+    if (customerInvoices.length > 0) {
+        showToast(`این مشتری ${customerInvoices.length} فاکتور دارد. ابتدا فاکتورها را حذف کنید.`, 'error');
+        return;
+    }
+
     if (confirm('آیا مطمئن هستید که می‌خواهید این مشتری را حذف کنید؟')) {
         deleteCustomer(customerId);
     }

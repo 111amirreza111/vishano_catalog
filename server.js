@@ -732,6 +732,23 @@ app.delete('/api/customers/:id', async (req, res) => {
             return res.status(404).json({ error: 'Customer not found' });
         }
 
+        const customer = customers[index];
+
+        // Check if customer has any invoices
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const invoicesData = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(invoicesData);
+
+        const customerInvoices = invoices.filter(inv =>
+            inv.customerId === req.params.id || inv.customerName === customer.name
+        );
+
+        if (customerInvoices.length > 0) {
+            return res.status(400).json({
+                error: `Customer has ${customerInvoices.length} invoice(s). Please delete invoices first.`
+            });
+        }
+
         customers.splice(index, 1);
         await fs.writeFile(customersPath, JSON.stringify(customers, null, 2));
 
