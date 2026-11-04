@@ -1602,8 +1602,302 @@ body {
     .invoice-creator-container {
         grid-template-columns: 1fr;
     }
-    
+
     .invoice-document {
         max-width: 100%;
+    }
+}
+
+/* Finance Page Styles */
+.finance-container {
+    padding: 1rem;
+}
+
+.finance-view {
+    display: none;
+}
+
+.finance-view.active {
+    display: block;
+}
+
+.finance-summary {
+    background-color: var(--light-green);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+}
+
+.finance-summary h3 {
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.finance-summary .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.finance-summary .stat-card {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.finance-summary .stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.finance-summary .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.finance-customers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.finance-customer-card {
+    background-color: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.finance-customer-card:hover {
+    border-color: var(--primary-green);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.finance-customer-info {
+    margin-bottom: 1rem;
+}
+
+.finance-customer-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.finance-customer-phone {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.finance-customer-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.finance-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.finance-stat:last-child {
+    border-bottom: none;
+}
+
+.finance-stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.finance-stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.finance-stat-value.debt {
+    color: #DC3545;
+}
+
+.finance-stat-value.payment {
+    color: var(--primary-green);
+}
+
+.finance-stat-value.remaining-debt {
+    color: #DC3545;
+}
+
+.finance-stat-value.paid {
+    color: var(--primary-green);
+}
+
+/* Customer Detail View */
+.customer-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.customer-info-card {
+    background-color: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.customer-info-card h3 {
+    font-size: 1.5rem;
+    color: var(--gray-800);
+    margin-bottom: 1.5rem;
+}
+
+.customer-detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.customer-detail-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.customer-detail-stats .stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.customer-detail-stats .stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.customer-detail-stats .stat-value.debt {
+    color: #DC3545;
+}
+
+.customer-detail-stats .stat-value.payment {
+    color: var(--primary-green);
+}
+
+.customer-detail-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.detail-section {
+    background-color: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.detail-section h4 {
+    font-size: 1.25rem;
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-header h4 {
+    margin-bottom: 0;
+}
+
+.customer-invoices-list,
+.customer-payments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.customer-invoice-item,
+.customer-payment-item {
+    background-color: var(--gray-100);
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+}
+
+.invoice-item-header,
+.payment-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.invoice-item-number,
+.payment-item-date {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.invoice-item-date {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.invoice-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.invoice-item-details p {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.invoice-item-amount,
+.payment-item-amount {
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+.payment-item-note {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin: 0.5rem 0 0.5rem 0;
+    font-style: italic;
+}
+
+/* Payment Form */
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Responsive Finance Page */
+@media (max-width: 768px) {
+    .customer-detail-sections {
+        grid-template-columns: 1fr;
+    }
+
+    .finance-customers-list {
+        grid-template-columns: 1fr;
     }
 }

@@ -3,6 +3,7 @@ let products = [];
 let invoices = [];
 let categories = [];
 let customers = [];
+let payments = [];
 let settings = {
     cashPercentage: 30
 };
@@ -14,6 +15,7 @@ let currentInvoiceId = null;
 let productionNeeds = [];
 let productionRecords = [];
 let editingCustomerId = null;
+let currentFinanceCustomerId = null;
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -28,9 +30,11 @@ const productModal = document.getElementById('product-modal');
 const confirmModal = document.getElementById('confirm-modal');
 const categoryModal = document.getElementById('category-modal');
 const customerModal = document.getElementById('customer-modal');
+const paymentModal = document.getElementById('payment-modal');
 const productForm = document.getElementById('product-form');
 const categoryForm = document.getElementById('category-form');
 const customerForm = document.getElementById('customer-form');
+const paymentForm = document.getElementById('payment-form');
 const descriptionsContainer = document.getElementById('descriptions-container');
 const imagePreview = document.getElementById('image-preview');
 const toast = document.getElementById('toast');
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeSettings();
     initializeInvoiceCreator();
     initializeProductionPage();
+    initializeFinancePage();
     renderProducts();
     updateCurrentSettingsDisplay();
 });
@@ -88,6 +93,8 @@ async function switchPage(pageName) {
         renderInvoices();
     } else if (pageName === 'customers') {
         renderCustomers();
+    } else if (pageName === 'finance') {
+        renderFinancePage();
     } else if (pageName === 'invoice-creator') {
         populateCustomerDropdown();
 
@@ -115,13 +122,14 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes, paymentsRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
             fetch(`${API_BASE}/invoices`),
             fetch(`${API_BASE}/categories`),
             fetch(`${API_BASE}/production`),
-            fetch(`${API_BASE}/customers`)
+            fetch(`${API_BASE}/customers`),
+            fetch(`${API_BASE}/payments`)
         ]);
 
         if (!productsRes.ok || !settingsRes.ok) {
@@ -142,7 +150,10 @@ async function loadFromAPI() {
         if (customersRes.ok) {
             customers = await customersRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length });
+        if (paymentsRes.ok) {
+            payments = await paymentsRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length, paymentsCount: payments.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
@@ -152,6 +163,7 @@ async function loadFromAPI() {
         categories = [];
         productionRecords = [];
         customers = [];
+        payments = [];
         settings = {
             cashPercentage: 30
         };
@@ -1810,6 +1822,374 @@ async function deleteCustomer(customerId) {
 customerModal.addEventListener('click', (e) => {
     if (e.target === customerModal) {
         closeCustomerModal();
+    }
+});
+
+// Finance Management
+
+function initializeFinancePage() {
+    const backToFinanceListBtn = document.getElementById('back-to-finance-list-btn');
+    const addPaymentBtn = document.getElementById('add-payment-btn');
+    const paymentModalCloseBtn = document.getElementById('payment-modal-close-btn');
+    const cancelPaymentBtn = document.getElementById('cancel-payment-btn');
+
+    if (backToFinanceListBtn) {
+        backToFinanceListBtn.addEventListener('click', () => {
+            showFinanceDebtListView();
+        });
+    }
+
+    if (addPaymentBtn) {
+        addPaymentBtn.addEventListener('click', () => {
+            openPaymentModal();
+        });
+    }
+
+    if (paymentModalCloseBtn) {
+        paymentModalCloseBtn.addEventListener('click', () => {
+            closePaymentModal();
+        });
+    }
+
+    if (cancelPaymentBtn) {
+        cancelPaymentBtn.addEventListener('click', () => {
+            closePaymentModal();
+        });
+    }
+
+    paymentForm.addEventListener('submit', handlePaymentSubmit);
+
+    // Initialize Persian number inputs for payment form
+    const paymentDateInput = document.getElementById('payment-date');
+    if (paymentDateInput) {
+        paymentDateInput.addEventListener('input', (e) => {
+            e.target.value = toPersianDigits(e.target.value);
+        });
+    }
+}
+
+function renderFinancePage() {
+    showFinanceDebtListView();
+}
+
+function showFinanceDebtListView() {
+    document.getElementById('finance-debt-list-view').classList.add('active');
+    document.getElementById('finance-customer-detail-view').classList.remove('active');
+    renderFinanceDebtList();
+}
+
+function showFinanceCustomerDetailView(customerId) {
+    currentFinanceCustomerId = customerId;
+    document.getElementById('finance-debt-list-view').classList.remove('active');
+    document.getElementById('finance-customer-detail-view').classList.add('active');
+    renderCustomerFinanceDetail(customerId);
+}
+
+function calculateCustomerFinance(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) {
+        return {
+            totalDebt: 0,
+            totalPaid: 0,
+            remaining: 0,
+            invoices: [],
+            payments: []
+        };
+    }
+
+    // Find invoices by customerId OR by customerName (for old invoices)
+    const customerInvoices = invoices.filter(inv =>
+        inv.customerId === customerId || inv.customerName === customer.name
+    );
+    const customerPayments = payments.filter(pay => pay.customerId === customerId);
+
+    const totalDebt = customerInvoices.reduce((sum, inv) => sum + (inv.finalAmount || inv.totalAmount), 0);
+    const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
+    const remaining = totalDebt - totalPaid;
+
+    return {
+        totalDebt,
+        totalPaid,
+        remaining,
+        invoices: customerInvoices,
+        payments: customerPayments
+    };
+}
+
+function renderFinanceDebtList() {
+    const financeCustomersList = document.getElementById('finance-customers-list');
+
+    // Helper function to normalize names for comparison
+    const normalizeName = (name) => {
+        return name.trim().replace(/\s+/g, ' ');
+    };
+
+    // Get unique customer names from invoices
+    const uniqueCustomerNames = [...new Set(invoices.map(inv => inv.customerName))];
+
+    console.log('Unique customer names from invoices:', uniqueCustomerNames);
+    console.log('Registered customers:', customers.map(c => c.name));
+
+    // Create a list of all customers (both registered and unregistered)
+    const allCustomersData = uniqueCustomerNames.map(customerName => {
+        // Try to find registered customer with flexible matching
+        const registeredCustomer = customers.find(c => normalizeName(c.name) === normalizeName(customerName));
+
+        console.log(`Matching "${customerName}" (normalized: "${normalizeName(customerName)}") - Found:`, registeredCustomer ? registeredCustomer.name : 'NOT FOUND');
+
+        // Find all invoices for this customer name (flexible matching)
+        const customerInvoices = invoices.filter(inv => normalizeName(inv.customerName) === normalizeName(customerName));
+
+        // Find payments (only for registered customers)
+        const customerPayments = registeredCustomer
+            ? payments.filter(pay => pay.customerId === registeredCustomer.id)
+            : [];
+
+        const totalDebt = customerInvoices.reduce((sum, inv) => sum + (inv.finalAmount || inv.totalAmount), 0);
+        const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
+        const remaining = totalDebt - totalPaid;
+
+        return {
+            id: registeredCustomer ? registeredCustomer.id : 'unregistered-' + customerName,
+            name: customerName,
+            phone: registeredCustomer ? registeredCustomer.phone : 'در سیستم ثبت نشده',
+            isRegistered: !!registeredCustomer,
+            totalDebt,
+            totalPaid,
+            remaining,
+            invoices: customerInvoices,
+            payments: customerPayments
+        };
+    }).filter(c => c.invoices.length > 0);
+
+    if (allCustomersData.length === 0) {
+        financeCustomersList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">💰</div>
+                <p class="empty-state-text">هنوز مشتری بدهکاری وجود ندارد</p>
+            </div>
+        `;
+
+        document.getElementById('total-debt').textContent = '0 تومان';
+        document.getElementById('total-payments').textContent = '0 تومان';
+        document.getElementById('total-remaining').textContent = '0 تومان';
+        return;
+    }
+
+    // Calculate totals
+    const totalDebt = allCustomersData.reduce((sum, c) => sum + c.totalDebt, 0);
+    const totalPayments = allCustomersData.reduce((sum, c) => sum + c.totalPaid, 0);
+    const totalRemaining = totalDebt - totalPayments;
+
+    document.getElementById('total-debt').textContent = formatPrice(totalDebt);
+    document.getElementById('total-payments').textContent = formatPrice(totalPayments);
+    document.getElementById('total-remaining').textContent = formatPrice(totalRemaining);
+
+    financeCustomersList.innerHTML = allCustomersData.map(customer => `
+        <div class="finance-customer-card" onclick="showFinanceCustomerDetailView('${customer.id}')" ${!customer.isRegistered ? 'style="border-color: #FFA500;"' : ''}>
+            <div class="finance-customer-info">
+                <h3 class="finance-customer-name">${customer.name}</h3>
+                <p class="finance-customer-phone">${customer.phone}</p>
+                ${!customer.isRegistered ? '<p style="color: #FFA500; font-size: 0.85rem; margin-top: 0.25rem;">⚠ مشتری در سیستم ثبت نشده است</p>' : ''}
+            </div>
+            <div class="finance-customer-stats">
+                <div class="finance-stat">
+                    <span class="finance-stat-label">بدهکاری:</span>
+                    <span class="finance-stat-value debt">${formatPrice(customer.totalDebt)}</span>
+                </div>
+                <div class="finance-stat">
+                    <span class="finance-stat-label">پرداختی:</span>
+                    <span class="finance-stat-value payment">${formatPrice(customer.totalPaid)}</span>
+                </div>
+                <div class="finance-stat">
+                    <span class="finance-stat-label">باقی‌مانده:</span>
+                    <span class="finance-stat-value ${customer.remaining > 0 ? 'remaining-debt' : 'paid'}">${formatPrice(customer.remaining)}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderCustomerFinanceDetail(customerId) {
+    let customer;
+    let customerName;
+
+    console.log('renderCustomerFinanceDetail called with customerId:', customerId);
+
+    // Helper function to normalize names for comparison
+    const normalizeName = (name) => {
+        return name.trim().replace(/\s+/g, ' ');
+    };
+
+    // Check if this is an unregistered customer
+    if (customerId.startsWith('unregistered-')) {
+        customerName = customerId.replace('unregistered-', '');
+        customer = {
+            id: customerId,
+            name: customerName,
+            phone: 'در سیستم ثبت نشده',
+            isRegistered: false
+        };
+        console.log('Customer is unregistered:', customerName);
+    } else {
+        customer = customers.find(c => c.id === customerId);
+        console.log('Looking for customer with ID:', customerId, '- Found:', customer ? customer.name : 'NOT FOUND');
+        if (!customer) return;
+        customerName = customer.name;
+        // Add isRegistered flag
+        customer.isRegistered = true;
+    }
+
+    // Get all invoices for this customer name (flexible matching)
+    const customerInvoices = invoices.filter(inv => normalizeName(inv.customerName) === normalizeName(customerName));
+
+    // Get payments (only for registered customers)
+    const customerPayments = customer.isRegistered
+        ? payments.filter(pay => pay.customerId === customerId)
+        : [];
+
+    const totalDebt = customerInvoices.reduce((sum, inv) => sum + (inv.finalAmount || inv.totalAmount), 0);
+    const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
+    const remaining = totalDebt - totalPaid;
+
+    console.log('Customer:', customer.name, 'isRegistered:', customer.isRegistered, 'totalDebt:', totalDebt, 'totalPaid:', totalPaid);
+
+    // Update customer info
+    document.getElementById('customer-detail-name').textContent = customer.name;
+    document.getElementById('customer-detail-phone').textContent = customer.phone;
+    document.getElementById('customer-detail-total-debt').textContent = formatPrice(totalDebt);
+    document.getElementById('customer-detail-total-paid').textContent = formatPrice(totalPaid);
+    document.getElementById('customer-detail-remaining').textContent = formatPrice(remaining);
+
+    // Show/hide add payment button for unregistered customers
+    const addPaymentBtn = document.getElementById('add-payment-btn');
+    if (addPaymentBtn) {
+        addPaymentBtn.style.display = customer.isRegistered ? 'inline-block' : 'none';
+    }
+
+    // Render invoices
+    const customerInvoicesList = document.getElementById('customer-invoices-list');
+    if (customerInvoices.length === 0) {
+        customerInvoicesList.innerHTML = '<p class="empty-state-text">هیچ فاکتوری برای این مشتری وجود ندارد</p>';
+    } else {
+        customerInvoicesList.innerHTML = customerInvoices.map(invoice => `
+            <div class="customer-invoice-item">
+                <div class="invoice-item-header">
+                    <span class="invoice-item-number">#${invoice.id.slice(-6)}</span>
+                    <span class="invoice-item-date">${invoice.date} - ${invoice.time}</span>
+                </div>
+                <div class="invoice-item-details">
+                    <p>تعداد اقلام: ${invoice.items.length}</p>
+                    <p class="invoice-item-amount">مبلغ فاکتور: ${formatPrice(invoice.finalAmount || invoice.totalAmount)}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Render payments
+    const customerPaymentsList = document.getElementById('customer-payments-list');
+    if (customerPayments.length === 0) {
+        customerPaymentsList.innerHTML = customer.isRegistered
+            ? '<p class="empty-state-text">هنوز پرداختی ثبت نشده است</p>'
+            : '<p class="empty-state-text" style="color: #FFA500;">⚠ این مشتری در سیستم ثبت نشده است. برای ثبت پرداخت، ابتدا مشتری را در بخش مشتریان ثبت کنید.</p>';
+    } else {
+        customerPaymentsList.innerHTML = customerPayments.map(payment => `
+            <div class="customer-payment-item">
+                <div class="payment-item-header">
+                    <span class="payment-item-date">${payment.date}</span>
+                    <span class="payment-item-amount">${formatPrice(payment.amount)}</span>
+                </div>
+                ${payment.note ? `<p class="payment-item-note">${payment.note}</p>` : ''}
+                <button class="btn btn-danger btn-small" onclick="deletePayment('${payment.id}')">حذف</button>
+            </div>
+        `).join('');
+    }
+}
+
+function openPaymentModal() {
+    document.getElementById('payment-customer-id').value = currentFinanceCustomerId;
+    document.getElementById('payment-amount').value = '';
+    document.getElementById('payment-date').value = '';
+    document.getElementById('payment-note').value = '';
+
+    // Set current date in Persian
+    const now = new Date();
+    const persianDate = now.toLocaleDateString('fa-IR');
+    document.getElementById('payment-date').value = toPersianDigits(persianDate);
+
+    paymentModal.classList.add('active');
+}
+
+function closePaymentModal() {
+    paymentModal.classList.remove('active');
+}
+
+async function handlePaymentSubmit(e) {
+    e.preventDefault();
+
+    const customerId = document.getElementById('payment-customer-id').value;
+    const amount = parseFloat(document.getElementById('payment-amount').value);
+    const date = document.getElementById('payment-date').value;
+    const note = document.getElementById('payment-note').value;
+
+    if (!amount || amount <= 0) {
+        showToast('لطفاً مبلغ صحیح وارد کنید', 'error');
+        return;
+    }
+
+    if (!date) {
+        showToast('لطفاً تاریخ پرداخت را وارد کنید', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/payments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customerId, amount, date, note })
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            closePaymentModal();
+            renderCustomerFinanceDetail(customerId);
+            showToast('پرداخت با موفقیت ثبت شد', 'success');
+        } else {
+            showToast('خطا در ثبت پرداخت', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving payment:', error);
+        showToast('خطا در ثبت پرداخت', 'error');
+    }
+}
+
+async function deletePayment(paymentId) {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این پرداخت را حذف کنید؟')) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/payments/${paymentId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderCustomerFinanceDetail(currentFinanceCustomerId);
+            showToast('پرداخت با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف پرداخت', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting payment:', error);
+        showToast('خطا در حذف پرداخت', 'error');
+    }
+}
+
+// Close payment modal on outside click
+paymentModal.addEventListener('click', (e) => {
+    if (e.target === paymentModal) {
+        closePaymentModal();
     }
 });
 

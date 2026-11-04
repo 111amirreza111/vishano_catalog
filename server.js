@@ -92,6 +92,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(customersPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize payments.json if it doesn't exist
+        const paymentsPath = path.join(DATA_DIR, 'payments.json');
+        try {
+            await fs.access(paymentsPath);
+        } catch {
+            await fs.writeFile(paymentsPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -756,6 +764,90 @@ app.delete('/api/customers/:id', async (req, res) => {
     } catch (error) {
         console.error('Error deleting customer:', error);
         res.status(500).json({ error: 'Failed to delete customer' });
+    }
+});
+
+// Payment API Routes
+
+// Get all payments
+app.get('/api/payments', async (req, res) => {
+    try {
+        const paymentsPath = path.join(DATA_DIR, 'payments.json');
+        const data = await fs.readFile(paymentsPath, 'utf8');
+        const payments = JSON.parse(data);
+        res.json(payments);
+    } catch (error) {
+        console.error('Error reading payments:', error);
+        res.status(500).json({ error: 'Failed to read payments' });
+    }
+});
+
+// Get payments for a specific customer
+app.get('/api/payments/customer/:customerId', async (req, res) => {
+    try {
+        const paymentsPath = path.join(DATA_DIR, 'payments.json');
+        const data = await fs.readFile(paymentsPath, 'utf8');
+        const payments = JSON.parse(data);
+
+        const customerPayments = payments.filter(p => p.customerId === req.params.customerId);
+        res.json(customerPayments);
+    } catch (error) {
+        console.error('Error reading customer payments:', error);
+        res.status(500).json({ error: 'Failed to read customer payments' });
+    }
+});
+
+// Create payment
+app.post('/api/payments', async (req, res) => {
+    try {
+        const { customerId, amount, date, note } = req.body;
+
+        if (!customerId || !amount || !date) {
+            return res.status(400).json({ error: 'Customer ID, amount, and date are required' });
+        }
+
+        const paymentsPath = path.join(DATA_DIR, 'payments.json');
+        const data = await fs.readFile(paymentsPath, 'utf8');
+        const payments = JSON.parse(data);
+
+        const newPayment = {
+            id: Date.now().toString(),
+            customerId,
+            amount: parseFloat(amount),
+            date,
+            note: note || '',
+            createdAt: new Date().toISOString()
+        };
+
+        payments.push(newPayment);
+        await fs.writeFile(paymentsPath, JSON.stringify(payments, null, 2));
+
+        res.json(newPayment);
+    } catch (error) {
+        console.error('Error creating payment:', error);
+        res.status(500).json({ error: 'Failed to create payment' });
+    }
+});
+
+// Delete payment
+app.delete('/api/payments/:id', async (req, res) => {
+    try {
+        const paymentsPath = path.join(DATA_DIR, 'payments.json');
+        const data = await fs.readFile(paymentsPath, 'utf8');
+        const payments = JSON.parse(data);
+
+        const index = payments.findIndex(p => p.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Payment not found' });
+        }
+
+        payments.splice(index, 1);
+        await fs.writeFile(paymentsPath, JSON.stringify(payments, null, 2));
+
+        res.json({ message: 'Payment deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting payment:', error);
+        res.status(500).json({ error: 'Failed to delete payment' });
     }
 });
 

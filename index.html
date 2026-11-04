@@ -21,6 +21,7 @@
                 <button class="nav-tab active" data-page="products">محصولات</button>
                 <button class="nav-tab" data-page="invoices">صورتحساب</button>
                 <button class="nav-tab" data-page="customers">مشتریان</button>
+                <button class="nav-tab" data-page="finance">مالی</button>
                 <button class="nav-tab" data-page="production">مدیریت تولید</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
@@ -84,6 +85,97 @@
 
                 <div class="customers-grid" id="customers-grid">
                     <!-- Customers will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Finance Page -->
+            <section id="finance-page" class="page">
+                <div class="page-header">
+                    <h2>مدیریت مالی و بدهکاری‌ها</h2>
+                </div>
+
+                <div class="finance-container">
+                    <!-- Customer Debt List View -->
+                    <div id="finance-debt-list-view" class="finance-view active">
+                        <div class="finance-summary">
+                            <h3>خلاصه وضعیت مالی</h3>
+                            <div class="summary-stats">
+                                <div class="stat-card">
+                                    <div class="stat-label">کل بدهکاری مشتریان</div>
+                                    <div class="stat-value" id="total-debt">0 تومان</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">کل پرداختی‌ها</div>
+                                    <div class="stat-value" id="total-payments">0 تومان</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">باقی‌مانده کل</div>
+                                    <div class="stat-value" id="total-remaining">0 تومان</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>لیست مشتریان بدهکار</h3>
+                        <div class="finance-customers-list" id="finance-customers-list">
+                            <!-- Customers with debts will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Customer Detail View -->
+                    <div id="finance-customer-detail-view" class="finance-view">
+                        <div class="page-header">
+                            <button class="btn btn-secondary" id="back-to-finance-list-btn">
+                                <span class="icon">←</span>
+                                بازگشت به لیست
+                            </button>
+                        </div>
+
+                        <div class="customer-detail-container">
+                            <div class="customer-info-card">
+                                <h3 id="customer-detail-name">نام مشتری</h3>
+                                <div class="customer-detail-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">شماره تماس:</span>
+                                        <span class="stat-value" id="customer-detail-phone">-</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">کل بدهکاری:</span>
+                                        <span class="stat-value debt" id="customer-detail-total-debt">0 تومان</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">کل پرداختی:</span>
+                                        <span class="stat-value payment" id="customer-detail-total-paid">0 تومان</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">باقی‌مانده:</span>
+                                        <span class="stat-value" id="customer-detail-remaining">0 تومان</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="customer-detail-sections">
+                                <div class="detail-section">
+                                    <h4>فاکتورهای مشتری</h4>
+                                    <div class="customer-invoices-list" id="customer-invoices-list">
+                                        <!-- Customer invoices will be rendered here -->
+                                    </div>
+                                </div>
+
+                                <div class="detail-section">
+                                    <div class="section-header">
+                                        <h4>تاریخچه پرداخت‌ها</h4>
+                                        <button class="btn btn-primary" id="add-payment-btn">
+                                            <span class="icon">+</span>
+                                            ثبت پرداخت جدید
+                                        </button>
+                                    </div>
+                                    <div class="customer-payments-list" id="customer-payments-list">
+                                        <!-- Customer payments will be rendered here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -403,6 +495,43 @@
                         ذخیره مشتری
                     </button>
                     <button type="button" class="btn btn-secondary" id="cancel-customer-btn">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ثبت پرداخت جدید</h3>
+                <button class="modal-close" id="payment-modal-close-btn">&times;</button>
+            </div>
+
+            <form id="payment-form" class="payment-form">
+                <input type="hidden" id="payment-customer-id">
+
+                <div class="form-group">
+                    <label for="payment-amount">مبلغ پرداختی (تومان)</label>
+                    <input type="number" id="payment-amount" class="form-input" placeholder="مثال: 500000" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-date">تاریخ پرداخت</label>
+                    <input type="text" id="payment-date" class="form-input persian-number" placeholder="مثال: ۱۴۰۳/۰۷/۱۰" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-note">توضیحات (اختیاری)</label>
+                    <textarea id="payment-note" class="form-input" placeholder="توضیحات پرداخت" rows="2"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">💾</span>
+                        ثبت پرداخت
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-payment-btn">انصراف</button>
                 </div>
             </form>
         </div>
