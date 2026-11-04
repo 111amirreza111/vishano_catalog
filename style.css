@@ -932,6 +932,59 @@ body {
     justify-content: center;
 }
 
+/* Customer Styles */
+.customers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.customer-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.customer-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.customer-card-header {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.customer-card-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+.customer-card-details {
+    margin-bottom: 1rem;
+}
+
+.customer-card-details p {
+    margin-bottom: 0.5rem;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+.customer-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.customer-card-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
+
 /* Invoice Creator */
 .invoice-creator-container {
     display: grid;

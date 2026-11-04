@@ -20,6 +20,7 @@
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="products">محصولات</button>
                 <button class="nav-tab" data-page="invoices">صورتحساب</button>
+                <button class="nav-tab" data-page="customers">مشتریان</button>
                 <button class="nav-tab" data-page="production">مدیریت تولید</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
@@ -68,6 +69,21 @@
 
                 <div class="invoices-grid" id="invoices-grid">
                     <!-- Invoices will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Customers Page -->
+            <section id="customers-page" class="page">
+                <div class="page-header">
+                    <h2>مدیریت مشتریان</h2>
+                    <button class="btn btn-primary" id="add-customer-btn">
+                        <span class="icon">+</span>
+                        افزودن مشتری جدید
+                    </button>
+                </div>
+
+                <div class="customers-grid" id="customers-grid">
+                    <!-- Customers will be rendered here -->
                 </div>
             </section>
 
@@ -127,7 +143,9 @@
                     <div class="invoice-form-section">
                         <div class="form-group">
                             <label for="invoice-customer-name">نام مشتری</label>
-                            <input type="text" id="invoice-customer-name" class="form-input" placeholder="نام مشتری را وارد کنید">
+                            <select id="invoice-customer-name" class="form-input">
+                                <option value="">انتخاب مشتری...</option>
+                            </select>
                         </div>
                         
                         <div class="form-row three-columns">
@@ -350,6 +368,43 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div class="modal" id="customer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="customer-modal-title">افزودن مشتری جدید</h3>
+                <button class="modal-close" id="customer-modal-close-btn">&times;</button>
+            </div>
+
+            <form id="customer-form" class="customer-form">
+                <input type="hidden" id="customer-id">
+
+                <div class="form-group">
+                    <label for="customer-name">نام مشتری</label>
+                    <input type="text" id="customer-name" class="form-input" placeholder="نام مشتری را وارد کنید" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-phone">شماره تماس</label>
+                    <input type="text" id="customer-phone" class="form-input" placeholder="شماره تماس مشتری">
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-address">آدرس</label>
+                    <textarea id="customer-address" class="form-input" placeholder="آدرس مشتری" rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">💾</span>
+                        ذخیره مشتری
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-customer-btn">انصراف</button>
+                </div>
+            </form>
         </div>
     </div>
 

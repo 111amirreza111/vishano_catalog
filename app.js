@@ -2,6 +2,7 @@
 let products = [];
 let invoices = [];
 let categories = [];
+let customers = [];
 let settings = {
     cashPercentage: 30
 };
@@ -12,6 +13,7 @@ let currentInvoiceItems = [];
 let currentInvoiceId = null;
 let productionNeeds = [];
 let productionRecords = [];
+let editingCustomerId = null;
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -21,11 +23,14 @@ const pages = document.querySelectorAll('.page');
 const productsGrid = document.getElementById('products-grid');
 const liveCatalogGrid = document.getElementById('live-catalog-grid');
 const invoicesGrid = document.getElementById('invoices-grid');
+const customersGrid = document.getElementById('customers-grid');
 const productModal = document.getElementById('product-modal');
 const confirmModal = document.getElementById('confirm-modal');
 const categoryModal = document.getElementById('category-modal');
+const customerModal = document.getElementById('customer-modal');
 const productForm = document.getElementById('product-form');
 const categoryForm = document.getElementById('category-form');
+const customerForm = document.getElementById('customer-form');
 const descriptionsContainer = document.getElementById('descriptions-container');
 const imagePreview = document.getElementById('image-preview');
 const toast = document.getElementById('toast');
@@ -36,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeNavigation();
     initializeProductForm();
     initializeCategoryForm();
+    initializeCustomerForm();
     initializeSettings();
     initializeInvoiceCreator();
     initializeProductionPage();
@@ -80,6 +86,26 @@ async function switchPage(pageName) {
         renderProducts();
     } else if (pageName === 'invoices') {
         renderInvoices();
+    } else if (pageName === 'customers') {
+        renderCustomers();
+    } else if (pageName === 'invoice-creator') {
+        populateCustomerDropdown();
+
+        // If editing an invoice, select the customer
+        if (window.editingInvoiceCustomer) {
+            const { customerId, customerName } = window.editingInvoiceCustomer;
+            if (customerId) {
+                document.getElementById('invoice-customer-name').value = customerId;
+            } else {
+                // For old invoices without customerId, try to match by name
+                const customer = customers.find(c => c.name === customerName);
+                if (customer) {
+                    document.getElementById('invoice-customer-name').value = customer.id;
+                }
+            }
+            renderInvoicePreview();
+            window.editingInvoiceCustomer = null;
+        }
     } else if (pageName === 'production') {
         renderProductionList();
     }
@@ -89,12 +115,13 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
             fetch(`${API_BASE}/invoices`),
             fetch(`${API_BASE}/categories`),
-            fetch(`${API_BASE}/production`)
+            fetch(`${API_BASE}/production`),
+            fetch(`${API_BASE}/customers`)
         ]);
 
         if (!productsRes.ok || !settingsRes.ok) {
@@ -112,7 +139,10 @@ async function loadFromAPI() {
         if (productionRes.ok) {
             productionRecords = await productionRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length });
+        if (customersRes.ok) {
+            customers = await customersRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
@@ -121,6 +151,7 @@ async function loadFromAPI() {
         invoices = [];
         categories = [];
         productionRecords = [];
+        customers = [];
         settings = {
             cashPercentage: 30
         };
@@ -924,15 +955,20 @@ function initializeInvoiceCreator() {
     const saveInvoiceBtn = document.getElementById('save-invoice-btn');
     const downloadInvoiceImageBtn = document.getElementById('download-invoice-image-btn');
     const downloadInvoicePdfBtn = document.getElementById('download-invoice-pdf-btn');
+    const customerSelect = document.getElementById('invoice-customer-name');
 
     // Initialize Persian number inputs
     initializePersianNumberInputs();
+
+    // Populate customer dropdown
+    populateCustomerDropdown();
 
     createInvoiceBtn.addEventListener('click', () => {
         currentInvoiceItems = [];
         currentInvoiceId = null;
         document.getElementById('invoice-customer-name').value = '';
-        
+        window.editingInvoiceCustomer = null;
+
         // Set current date in Persian
         const now = new Date();
         const persianDate = now.toLocaleDateString('fa-IR');
@@ -940,13 +976,13 @@ function initializeInvoiceCreator() {
         document.getElementById('invoice-year').value = toPersianDigits(dateParts[0]);
         document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
         document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
-        
+
         // Set current time in Persian
         const persianTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
         const timeParts = persianTime.split(':');
         document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
         document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
-        
+
         renderInvoiceItems();
         renderInvoicePreview();
         switchPage('invoice-creator');
@@ -981,6 +1017,20 @@ function initializeInvoiceCreator() {
     saveInvoiceBtn.addEventListener('click', saveInvoice);
     downloadInvoiceImageBtn.addEventListener('click', downloadInvoiceImage);
     downloadInvoicePdfBtn.addEventListener('click', downloadInvoicePDF);
+
+    // Update preview when customer is selected
+    customerSelect.addEventListener('change', renderInvoicePreview);
+}
+
+function populateCustomerDropdown() {
+    const customerSelect = document.getElementById('invoice-customer-name');
+    customerSelect.innerHTML = '<option value="">انتخاب مشتری...</option>';
+    customers.forEach(customer => {
+        const option = document.createElement('option');
+        option.value = customer.id;
+        option.textContent = customer.name;
+        customerSelect.appendChild(option);
+    });
 }
 
 function initializePersianNumberInputs() {
@@ -1226,16 +1276,21 @@ function removeInvoiceItem(index) {
 }
 
 function renderInvoicePreview() {
-    const customerName = document.getElementById('invoice-customer-name').value || 'نام مشتری';
+    const customerId = document.getElementById('invoice-customer-name').value;
+    const customer = customers.find(c => c.id === customerId);
+    const customerName = customer ? customer.name : 'نام مشتری';
+    const customerPhone = customer ? customer.phone : '';
+    const customerAddress = customer ? customer.address : '';
+
     const year = document.getElementById('invoice-year').value || '۱۴۰۳';
     const month = document.getElementById('invoice-month').value || '۰۷';
     const day = document.getElementById('invoice-day').value || '۱۰';
     const hour = document.getElementById('invoice-hour').value || '۱۴';
     const minute = document.getElementById('invoice-minute').value || '۳۰';
-    
+
     const date = `${year}/${month}/${day}`;
     const time = `${hour}:${minute}`;
-    
+
     const totalQuantity = currentInvoiceItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = currentInvoiceItems.reduce((sum, item) => sum + item.total, 0);
     const totalDiscount = currentInvoiceItems.reduce((sum, item) => sum + (item.discountAmount || 0), 0);
@@ -1244,7 +1299,7 @@ function renderInvoicePreview() {
     const hasAnyDiscount = currentInvoiceItems.some(item => item.hasDiscount);
 
     const invoicePreview = document.getElementById('invoice-preview');
-    
+
     invoicePreview.innerHTML = `
         <div class="invoice-header">
             <div class="invoice-meta">
@@ -1256,10 +1311,12 @@ function renderInvoicePreview() {
                 <h1 class="invoice-title">صورتحساب فروش</h1>
             </div>
         </div>
-        
+
         <div class="invoice-company-info">
             <div class="invoice-customer">
                 <p>صورتحساب آقای/خانم: ${customerName}</p>
+                ${customerPhone ? `<p>شماره تماس: ${customerPhone}</p>` : ''}
+                ${customerAddress ? `<p>آدرس: ${customerAddress}</p>` : ''}
                 <p>مهلت تسویه: نقدی</p>
             </div>
             <div class="invoice-company">
@@ -1352,14 +1409,19 @@ function numberToPersianWords(num) {
 }
 
 async function saveInvoice() {
-    const customerName = document.getElementById('invoice-customer-name').value;
+    const customerId = document.getElementById('invoice-customer-name').value;
+    const customer = customers.find(c => c.id === customerId);
+    const customerName = customer ? customer.name : '';
+    const customerPhone = customer ? customer.phone : '';
+    const customerAddress = customer ? customer.address : '';
+
     const year = document.getElementById('invoice-year').value;
     const month = document.getElementById('invoice-month').value;
     const day = document.getElementById('invoice-day').value;
     const hour = document.getElementById('invoice-hour').value;
     const minute = document.getElementById('invoice-minute').value;
 
-    if (!customerName || !year || !month || !day || !hour || !minute) {
+    if (!customerId || !year || !month || !day || !hour || !minute) {
         showToast('لطفاً تمام فیلدها را پر کنید', 'error');
         return;
     }
@@ -1384,7 +1446,10 @@ async function saveInvoice() {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    customerId,
                     customerName,
+                    customerPhone,
+                    customerAddress,
                     date,
                     time,
                     items: currentInvoiceItems,
@@ -1400,7 +1465,10 @@ async function saveInvoice() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    customerId,
                     customerName,
+                    customerPhone,
+                    customerAddress,
                     date,
                     time,
                     items: currentInvoiceItems,
@@ -1509,9 +1577,7 @@ function editInvoice(invoiceId) {
         discountAmount: item.discountAmount || 0,
         finalTotal: item.finalTotal || item.total
     }));
-    
-    document.getElementById('invoice-customer-name').value = invoice.customerName;
-    
+
     // Parse date
     const dateParts = invoice.date.split('/');
     if (dateParts.length === 3) {
@@ -1519,23 +1585,30 @@ function editInvoice(invoiceId) {
         document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
         document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
     }
-    
+
     // Parse time
     const timeParts = invoice.time.split(':');
     if (timeParts.length === 2) {
         document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
         document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
     }
-    
+
     // Recalculate discounts for items that have discount enabled
     currentInvoiceItems.forEach(item => {
         if (item.hasDiscount && item.discountPercentage > 0) {
             recalculateItemDiscount(item);
         }
     });
-    
+
     renderInvoiceItems();
     renderInvoicePreview();
+
+    // Store the invoice customer info to select after page switch
+    window.editingInvoiceCustomer = {
+        customerId: invoice.customerId,
+        customerName: invoice.customerName
+    };
+
     switchPage('invoice-creator');
 }
 
@@ -1563,6 +1636,172 @@ async function deleteInvoice(invoiceId) {
         showToast('خطا در حذف صورتحساب', 'error');
     }
 }
+
+// Customer Management
+
+function renderCustomers() {
+    if (!customers || customers.length === 0) {
+        customersGrid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">👥</div>
+                <p class="empty-state-text">هنوز مشتری‌ای اضافه نشده است</p>
+            </div>
+        `;
+        return;
+    }
+
+    customersGrid.innerHTML = customers.map(customer => `
+        <div class="customer-card">
+            <div class="customer-card-header">
+                <h3 class="customer-card-name">${customer.name}</h3>
+            </div>
+            <div class="customer-card-details">
+                <p>شماره تماس: ${customer.phone || '-'}</p>
+                <p>آدرس: ${customer.address || '-'}</p>
+            </div>
+            <div class="customer-card-actions">
+                <button class="btn btn-secondary" onclick="editCustomer('${customer.id}')">
+                    ویرایش
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteCustomer('${customer.id}')">
+                    حذف
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function initializeCustomerForm() {
+    const addCustomerBtn = document.getElementById('add-customer-btn');
+    const customerModalCloseBtn = document.getElementById('customer-modal-close-btn');
+    const cancelCustomerBtn = document.getElementById('cancel-customer-btn');
+
+    addCustomerBtn.addEventListener('click', () => {
+        openCustomerModal();
+    });
+
+    customerModalCloseBtn.addEventListener('click', () => {
+        closeCustomerModal();
+    });
+
+    cancelCustomerBtn.addEventListener('click', () => {
+        closeCustomerModal();
+    });
+
+    customerForm.addEventListener('submit', handleCustomerSubmit);
+}
+
+function openCustomerModal(customer = null) {
+    editingCustomerId = customer ? customer.id : null;
+    document.getElementById('customer-modal-title').textContent = customer ? 'ویرایش مشتری' : 'افزودن مشتری جدید';
+
+    if (customer) {
+        document.getElementById('customer-id').value = customer.id;
+        document.getElementById('customer-name').value = customer.name;
+        document.getElementById('customer-phone').value = customer.phone || '';
+        document.getElementById('customer-address').value = customer.address || '';
+    } else {
+        customerForm.reset();
+        document.getElementById('customer-id').value = '';
+    }
+
+    customerModal.classList.add('active');
+}
+
+function closeCustomerModal() {
+    customerModal.classList.remove('active');
+    editingCustomerId = null;
+}
+
+async function handleCustomerSubmit(e) {
+    e.preventDefault();
+
+    const customerId = document.getElementById('customer-id').value;
+    const customerName = document.getElementById('customer-name').value;
+    const customerPhone = document.getElementById('customer-phone').value;
+    const customerAddress = document.getElementById('customer-address').value;
+
+    if (!customerName) {
+        showToast('لطفاً نام مشتری را وارد کنید', 'error');
+        return;
+    }
+
+    try {
+        let res;
+        if (editingCustomerId) {
+            res = await fetch(`${API_BASE}/customers/${editingCustomerId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: customerName,
+                    phone: customerPhone,
+                    address: customerAddress
+                })
+            });
+        } else {
+            res = await fetch(`${API_BASE}/customers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: customerName,
+                    phone: customerPhone,
+                    address: customerAddress
+                })
+            });
+        }
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderCustomers();
+            closeCustomerModal();
+            showToast(editingCustomerId ? 'مشتری با موفقیت ویرایش شد' : 'مشتری با موفقیت اضافه شد', 'success');
+        } else {
+            showToast('خطا در ذخیره مشتری', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving customer:', error);
+        showToast('خطا در ذخیره مشتری', 'error');
+    }
+}
+
+function editCustomer(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (customer) {
+        openCustomerModal(customer);
+    }
+}
+
+function confirmDeleteCustomer(customerId) {
+    if (confirm('آیا مطمئن هستید که می‌خواهید این مشتری را حذف کنید؟')) {
+        deleteCustomer(customerId);
+    }
+}
+
+async function deleteCustomer(customerId) {
+    try {
+        const res = await fetch(`${API_BASE}/customers/${customerId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderCustomers();
+            showToast('مشتری با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف مشتری', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting customer:', error);
+        showToast('خطا در حذف مشتری', 'error');
+    }
+}
+
+// Close customer modal on outside click
+customerModal.addEventListener('click', (e) => {
+    if (e.target === customerModal) {
+        closeCustomerModal();
+    }
+});
 
 // Production Management
 

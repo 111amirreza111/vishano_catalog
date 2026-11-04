@@ -84,6 +84,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(productionPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize customers.json if it doesn't exist
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        try {
+            await fs.access(customersPath);
+        } catch {
+            await fs.writeFile(customersPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -366,19 +374,22 @@ app.get('/api/invoices/:id', async (req, res) => {
 // Create invoice
 app.post('/api/invoices', async (req, res) => {
     try {
-        const { customerName, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
-        
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
+
         const invoicesPath = path.join(DATA_DIR, 'invoices.json');
         const data = await fs.readFile(invoicesPath, 'utf8');
         const invoices = JSON.parse(data);
-        
+
         const newInvoice = {
             id: Date.now().toString(),
+            customerId: customerId || null,
             customerName,
+            customerPhone: customerPhone || '',
+            customerAddress: customerAddress || '',
             date,
             time,
             items,
@@ -388,10 +399,10 @@ app.post('/api/invoices', async (req, res) => {
             totalQuantity,
             createdAt: new Date().toISOString()
         };
-        
+
         invoices.push(newInvoice);
         await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
-        
+
         res.json(newInvoice);
     } catch (error) {
         console.error('Error creating invoice:', error);
@@ -424,7 +435,7 @@ app.delete('/api/invoices/:id', async (req, res) => {
 // Update invoice
 app.put('/api/invoices/:id', async (req, res) => {
     try {
-        const { customerName, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
 
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -441,7 +452,10 @@ app.put('/api/invoices/:id', async (req, res) => {
 
         invoices[index] = {
             ...invoices[index],
+            customerId: customerId !== undefined ? customerId : invoices[index].customerId,
             customerName,
+            customerPhone: customerPhone !== undefined ? customerPhone : invoices[index].customerPhone,
+            customerAddress: customerAddress !== undefined ? customerAddress : invoices[index].customerAddress,
             date,
             time,
             items,
@@ -590,22 +604,141 @@ app.put('/api/production/:productId', async (req, res) => {
             production.push({
                 productId: req.params.productId,
                 totalDelivered: totalDelivered || 0,
-                updatedAt: new Date().toISOString()
+                createdAt: new Date().toISOString()
             });
         } else {
-            production[index] = {
-                ...production[index],
-                totalDelivered: totalDelivered !== undefined ? totalDelivered : production[index].totalDelivered,
-                updatedAt: new Date().toISOString()
-            };
+            production[index].totalDelivered = totalDelivered || 0;
+            production[index].updatedAt = new Date().toISOString();
         }
 
         await fs.writeFile(productionPath, JSON.stringify(production, null, 2));
 
-        res.json(production.find(p => p.productId === req.params.productId));
+        res.json(production[index] || production[production.length - 1]);
     } catch (error) {
         console.error('Error updating production:', error);
         res.status(500).json({ error: 'Failed to update production' });
+    }
+});
+
+// Customer API Routes
+
+// Get all customers
+app.get('/api/customers', async (req, res) => {
+    try {
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        const data = await fs.readFile(customersPath, 'utf8');
+        const customers = JSON.parse(data);
+        res.json(customers);
+    } catch (error) {
+        console.error('Error reading customers:', error);
+        res.status(500).json({ error: 'Failed to read customers' });
+    }
+});
+
+// Get single customer
+app.get('/api/customers/:id', async (req, res) => {
+    try {
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        const data = await fs.readFile(customersPath, 'utf8');
+        const customers = JSON.parse(data);
+        const customer = customers.find(c => c.id === req.params.id);
+
+        if (!customer) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+
+        res.json(customer);
+    } catch (error) {
+        console.error('Error reading customer:', error);
+        res.status(500).json({ error: 'Failed to read customer' });
+    }
+});
+
+// Create customer
+app.post('/api/customers', async (req, res) => {
+    try {
+        const { name, phone, address } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
+
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        const data = await fs.readFile(customersPath, 'utf8');
+        const customers = JSON.parse(data);
+
+        const newCustomer = {
+            id: Date.now().toString(),
+            name,
+            phone: phone || '',
+            address: address || '',
+            createdAt: new Date().toISOString()
+        };
+
+        customers.push(newCustomer);
+        await fs.writeFile(customersPath, JSON.stringify(customers, null, 2));
+
+        res.json(newCustomer);
+    } catch (error) {
+        console.error('Error creating customer:', error);
+        res.status(500).json({ error: 'Failed to create customer' });
+    }
+});
+
+// Update customer
+app.put('/api/customers/:id', async (req, res) => {
+    try {
+        const { name, phone, address } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ error: 'Name is required' });
+        }
+
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        const data = await fs.readFile(customersPath, 'utf8');
+        const customers = JSON.parse(data);
+
+        const index = customers.findIndex(c => c.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+
+        customers[index] = {
+            ...customers[index],
+            name,
+            phone: phone !== undefined ? phone : customers[index].phone,
+            address: address !== undefined ? address : customers[index].address,
+            updatedAt: new Date().toISOString()
+        };
+
+        await fs.writeFile(customersPath, JSON.stringify(customers, null, 2));
+
+        res.json(customers[index]);
+    } catch (error) {
+        console.error('Error updating customer:', error);
+        res.status(500).json({ error: 'Failed to update customer' });
+    }
+});
+
+// Delete customer
+app.delete('/api/customers/:id', async (req, res) => {
+    try {
+        const customersPath = path.join(DATA_DIR, 'customers.json');
+        const data = await fs.readFile(customersPath, 'utf8');
+        const customers = JSON.parse(data);
+
+        const index = customers.findIndex(c => c.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+
+        customers.splice(index, 1);
+        await fs.writeFile(customersPath, JSON.stringify(customers, null, 2));
+
+        res.json({ message: 'Customer deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting customer:', error);
+        res.status(500).json({ error: 'Failed to delete customer' });
     }
 });
 
