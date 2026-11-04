@@ -4,6 +4,7 @@ let invoices = [];
 let categories = [];
 let customers = [];
 let payments = [];
+let inventory = [];
 let settings = {
     cashPercentage: 30
 };
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeCustomerForm();
     initializeSettings();
     initializeInvoiceCreator();
-    initializeProductionPage();
+    initializeInventoryPage();
     initializeFinancePage();
     renderProducts();
     updateCurrentSettingsDisplay();
@@ -113,8 +114,8 @@ async function switchPage(pageName) {
             renderInvoicePreview();
             window.editingInvoiceCustomer = null;
         }
-    } else if (pageName === 'production') {
-        renderProductionList();
+    } else if (pageName === 'inventory') {
+        renderInventoryList();
     }
 }
 
@@ -122,14 +123,15 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes, paymentsRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes, paymentsRes, inventoryRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
             fetch(`${API_BASE}/invoices`),
             fetch(`${API_BASE}/categories`),
             fetch(`${API_BASE}/production`),
             fetch(`${API_BASE}/customers`),
-            fetch(`${API_BASE}/payments`)
+            fetch(`${API_BASE}/payments`),
+            fetch(`${API_BASE}/inventory`)
         ]);
 
         if (!productsRes.ok || !settingsRes.ok) {
@@ -153,7 +155,10 @@ async function loadFromAPI() {
         if (paymentsRes.ok) {
             payments = await paymentsRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length, paymentsCount: payments.length });
+        if (inventoryRes.ok) {
+            inventory = await inventoryRes.json();
+        }
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length, paymentsCount: payments.length, inventoryCount: inventory.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
@@ -164,6 +169,7 @@ async function loadFromAPI() {
         productionRecords = [];
         customers = [];
         payments = [];
+        inventory = [];
         settings = {
             cashPercentage: 30
         };
@@ -1016,13 +1022,20 @@ function initializeInvoiceCreator() {
             p.name.toLowerCase().includes(searchTerm)
         );
 
-        document.getElementById('product-search-results').innerHTML = filteredProducts.map(product => `
-            <div class="search-result-item" onclick="addProductToInvoice('${product.id}')">
-                <span class="search-result-name">${product.name}</span>
-                <span class="search-result-price">${formatPrice(product.cashPrice)}</span>
-            </div>
-        `).join('');
-        
+        document.getElementById('product-search-results').innerHTML = filteredProducts.map(product => {
+            const inventoryItem = inventory.find(i => i.productId === product.id);
+            const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+            const isOutOfStock = availableQuantity <= 0;
+
+            return `
+                <div class="search-result-item ${isOutOfStock ? 'out-of-stock' : ''}" ${isOutOfStock ? '' : `onclick="addProductToInvoice('${product.id}')"`}>
+                    <span class="search-result-name">${product.name}</span>
+                    <span class="search-result-price">${formatPrice(product.cashPrice)}</span>
+                    ${isOutOfStock ? '<span class="out-of-stock-label">نا موجود</span>' : ''}
+                </div>
+            `;
+        }).join('');
+
         document.getElementById('product-search-results').classList.add('show');
     });
 
@@ -1096,7 +1109,24 @@ function addProductToInvoice(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
+    // Check if product is in stock
+    const inventoryItem = inventory.find(i => i.productId === productId);
+    const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+
+    if (availableQuantity <= 0) {
+        showToast('این محصول در انبار موجود نیست', 'error');
+        return;
+    }
+
+    // Check if adding this product would exceed available stock
     const existingItem = currentInvoiceItems.find(item => item.productId === productId);
+    const currentQuantity = existingItem ? existingItem.quantity : 0;
+
+    if (currentQuantity + 1 > availableQuantity) {
+        showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+        return;
+    }
+
     if (existingItem) {
         existingItem.quantity += 1;
         existingItem.total = existingItem.quantity * existingItem.unitPrice;
@@ -1180,13 +1210,25 @@ function renderInvoiceItems() {
 
 function updateInvoiceItemQuantity(index, change) {
     const item = currentInvoiceItems[index];
+
+    // Check inventory when increasing quantity
+    if (change > 0) {
+        const inventoryItem = inventory.find(i => i.productId === item.productId);
+        const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+
+        if (item.quantity + change > availableQuantity) {
+            showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+            return;
+        }
+    }
+
     item.quantity += change;
-    
+
     if (item.quantity <= 0) {
         removeInvoiceItem(index);
         return;
     }
-    
+
     item.total = item.quantity * item.unitPrice;
     if (item.hasDiscount) {
         recalculateItemDiscount(item);
@@ -1198,12 +1240,22 @@ function updateInvoiceItemQuantity(index, change) {
 function updateInvoiceItemQuantityDirect(index, value) {
     const item = currentInvoiceItems[index];
     const quantity = parseInt(persianToEnglishDigits(value)) || 0;
-    
+
     if (quantity <= 0) {
         removeInvoiceItem(index);
         return;
     }
-    
+
+    // Check inventory
+    const inventoryItem = inventory.find(i => i.productId === item.productId);
+    const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+
+    if (quantity > availableQuantity) {
+        showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+        renderInvoiceItems();
+        return;
+    }
+
     item.quantity = quantity;
     item.total = item.quantity * item.unitPrice;
     if (item.hasDiscount) {
@@ -2193,224 +2245,221 @@ paymentModal.addEventListener('click', (e) => {
     }
 });
 
-// Production Management
+// Inventory Management
 
-function initializeProductionPage() {
-    const refreshBtn = document.getElementById('refresh-production-btn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', async () => {
-            await loadFromAPI();
-            renderProductionList();
-            showToast('لیست بروزرسانی شد', 'success');
+function initializeInventoryPage() {
+    const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
+    const inventoryModalCloseBtn = document.getElementById('inventory-modal-close-btn');
+    const cancelInventoryBtn = document.getElementById('cancel-inventory-btn');
+
+    if (addToInventoryBtn) {
+        addToInventoryBtn.addEventListener('click', () => {
+            openInventoryModal();
         });
     }
 
-    const copyBtn = document.getElementById('copy-production-needs-btn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', copyProductionNeeds);
-    }
-}
-
-function copyProductionNeeds() {
-    const needs = calculateProductionNeeds();
-
-    if (needs.length === 0) {
-        showToast('هیچ نیازی برای کپی وجود ندارد', 'error');
-        return;
-    }
-
-    let text = 'لیست نیازهای تولید:\n';
-    text += '==================\n\n';
-
-    needs.forEach(need => {
-        const remaining = need.totalNeeded - need.totalDelivered;
-        if (remaining > 0) {
-            text += `${need.productName}: ${remaining} عدد\n`;
-        }
-    });
-
-    text += '\n------------------\n';
-    text += `تعداد کل اقلام مورد نیاز: ${needs.reduce((sum, need) => sum + (need.totalNeeded - need.totalDelivered), 0)} عدد`;
-
-    // Copy to clipboard
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('لیست نیازها کپی شد', 'success');
-    }).catch(err => {
-        console.error('Error copying text:', err);
-        showToast('خطا در کپی کردن لیست', 'error');
-    });
-}
-
-function calculateProductionNeeds() {
-    // Calculate total quantity needed for each product from all invoices
-    const needs = {};
-
-    invoices.forEach(invoice => {
-        invoice.items.forEach(item => {
-            if (!needs[item.productId]) {
-                needs[item.productId] = {
-                    productId: item.productId,
-                    productName: item.name,
-                    totalNeeded: 0,
-                    totalDelivered: 0,
-                    invoices: []
-                };
-            }
-
-            needs[item.productId].totalNeeded += item.quantity;
-            needs[item.productId].invoices.push({
-                invoiceId: invoice.id,
-                customerName: invoice.customerName,
-                date: invoice.date,
-                quantity: item.quantity
-            });
+    if (inventoryModalCloseBtn) {
+        inventoryModalCloseBtn.addEventListener('click', () => {
+            closeInventoryModal();
         });
-    });
-
-    // Load delivered quantities from production records
-    productionRecords.forEach(record => {
-        if (needs[record.productId]) {
-            needs[record.productId].totalDelivered = record.totalDelivered || 0;
-        }
-    });
-
-    // Convert to array
-    productionNeeds = Object.values(needs);
-    return productionNeeds;
-}
-
-function renderProductionList() {
-    const productionList = document.getElementById('production-list');
-    const needs = calculateProductionNeeds();
-
-    if (needs.length === 0) {
-        productionList.innerHTML = `
-            <div class="empty-state" style="grid-column: 1 / -1;">
-                <div class="empty-state-icon">📋</div>
-                <p class="empty-state-text">هیچ صورتحسابی برای محاسبه نیاز تولید وجود ندارد</p>
-            </div>
-        `;
-        updateProductionSummary([]);
-        return;
     }
 
-    productionList.innerHTML = needs.map(need => {
-        const remaining = need.totalNeeded - need.totalDelivered;
-        const percentage = need.totalNeeded > 0 ? Math.round((need.totalDelivered / need.totalNeeded) * 100) : 0;
+    if (cancelInventoryBtn) {
+        cancelInventoryBtn.addEventListener('click', () => {
+            closeInventoryModal();
+        });
+    }
 
-        return `
-            <div class="production-item">
-                <div class="production-item-header">
-                    <h3 class="production-item-name">${need.productName}</h3>
-                    <div class="production-item-quantities">
-                        <span class="quantity-label">مجموع لازم:</span>
-                        <span class="quantity-value">${need.totalNeeded}</span>
-                        <span class="quantity-label">تحویل گرفته شده:</span>
-                        <span class="quantity-value delivered">${need.totalDelivered}</span>
-                        <span class="quantity-label">باقی‌مانده:</span>
-                        <span class="quantity-value remaining">${remaining}</span>
-                    </div>
-                </div>
-
-                <div class="production-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${percentage}%"></div>
-                    </div>
-                    <span class="progress-text">${percentage}%</span>
-                </div>
-
-                <div class="production-invoices-list">
-                    <h4>جزئیات بر اساس فاکتور:</h4>
-                    ${need.invoices.map(inv => `
-                        <div class="production-invoice-item">
-                            <span class="invoice-customer">${inv.customerName}</span>
-                            <span class="invoice-date">${inv.date}</span>
-                            <span class="invoice-quantity">${inv.quantity} عدد</span>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div class="production-actions">
-                    <div class="delivery-input-group">
-                        <label>ثبت تحویل از تولیدکننده:</label>
-                        <input type="number"
-                               class="form-input delivery-input"
-                               min="1"
-                               max="${remaining}"
-                               placeholder="تعداد"
-                               id="delivery-input-${need.productId}">
-                        <button class="btn btn-primary" onclick="recordDelivery('${need.productId}')">
-                            ثبت
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    updateProductionSummary(needs);
+    const inventoryForm = document.getElementById('inventory-form');
+    if (inventoryForm) {
+        inventoryForm.addEventListener('submit', handleInventorySubmit);
+    }
 }
 
-function updateProductionSummary(needs) {
-    const totalNeeded = needs.reduce((sum, need) => sum + need.totalNeeded, 0);
-    const totalDelivered = needs.reduce((sum, need) => sum + need.totalDelivered, 0);
-    const totalRemaining = totalNeeded - totalDelivered;
+function openInventoryModal() {
+    const productSelect = document.getElementById('inventory-product-select');
+    productSelect.innerHTML = '<option value="">انتخاب محصول...</option>';
 
-    document.getElementById('total-needed').textContent = totalNeeded.toLocaleString('fa-IR');
-    document.getElementById('total-delivered').textContent = totalDelivered.toLocaleString('fa-IR');
-    document.getElementById('total-remaining').textContent = totalRemaining.toLocaleString('fa-IR');
+    products.forEach(product => {
+        const option = document.createElement('option');
+        option.value = product.id;
+        option.textContent = product.name;
+        productSelect.appendChild(option);
+    });
+
+    document.getElementById('inventory-quantity').value = '';
+    document.getElementById('inventory-modal').classList.add('active');
 }
 
-async function recordDelivery(productId) {
-    const input = document.getElementById(`delivery-input-${productId}`);
-    const quantity = parseInt(input.value);
+function closeInventoryModal() {
+    document.getElementById('inventory-modal').classList.remove('active');
+}
+
+async function handleInventorySubmit(e) {
+    e.preventDefault();
+
+    const productId = document.getElementById('inventory-product-select').value;
+    const quantity = parseInt(document.getElementById('inventory-quantity').value);
+
+    if (!productId) {
+        showToast('لطفاً محصول را انتخاب کنید', 'error');
+        return;
+    }
 
     if (!quantity || quantity <= 0) {
         showToast('لطفاً تعداد معتبر وارد کنید', 'error');
         return;
     }
 
-    const need = productionNeeds.find(n => n.productId === productId);
-    if (!need) {
-        showToast('خطا در یافتن محصول', 'error');
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+        showToast('محصول یافت نشد', 'error');
         return;
     }
 
-    const remaining = need.totalNeeded - need.totalDelivered;
-    if (quantity > remaining) {
-        showToast(`تعداد وارد شده بیشتر از باقی‌مانده (${remaining}) است`, 'error');
-        return;
-    }
-
-    // Save to server
     try {
-        const newTotalDelivered = need.totalDelivered + quantity;
-        const res = await fetch(`${API_BASE}/production/${productId}`, {
-            method: 'PUT',
+        const res = await fetch(`${API_BASE}/inventory`, {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                totalDelivered: newTotalDelivered
+                productId,
+                productName: product.name,
+                quantity
             })
         });
 
         if (res.ok) {
-            // Reload production records from server
-            const productionRes = await fetch(`${API_BASE}/production`);
-            if (productionRes.ok) {
-                productionRecords = await productionRes.json();
-            }
-
-            // Clear input and re-render
-            input.value = '';
-            renderProductionList();
-            showToast(`${quantity} عدد با موفقیت ثبت شد`, 'success');
+            await loadFromAPI();
+            closeInventoryModal();
+            renderInventoryList();
+            showToast('محصول با موفقیت به انبار اضافه شد', 'success');
         } else {
-            showToast('خطا در ثبت تحویل', 'error');
+            showToast('خطا در افزودن به انبار', 'error');
         }
     } catch (error) {
-        console.error('Error recording delivery:', error);
-        showToast('خطا در ثبت تحویل', 'error');
+        console.error('Error adding to inventory:', error);
+        showToast('خطا در افزودن به انبار', 'error');
     }
+}
+
+function renderInventoryList() {
+    const inventoryList = document.getElementById('inventory-list');
+
+    if (!inventory || inventory.length === 0) {
+        inventoryList.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">📦</div>
+                <p class="empty-state-text">هنوز محصولی در انبار وجود ندارد</p>
+            </div>
+        `;
+
+        document.getElementById('total-inventory-products').textContent = '0';
+        document.getElementById('total-inventory-quantity').textContent = '0';
+        return;
+    }
+
+    inventoryList.innerHTML = inventory.map(item => {
+        const product = products.find(p => p.id === item.productId);
+        const productName = product ? product.name : item.productName;
+        const productImage = product ? product.image : '';
+
+        return `
+            <div class="inventory-item">
+                <div class="inventory-item-info">
+                    ${productImage ? `<img src="${productImage}" alt="${productName}" class="inventory-item-image">` : ''}
+                    <div class="inventory-item-details">
+                        <h3 class="inventory-item-name">${productName}</h3>
+                        <p class="inventory-item-id">شناسه: ${item.productId.slice(-6)}</p>
+                    </div>
+                </div>
+                <div class="inventory-item-quantity">
+                    <span class="quantity-label">موجودی:</span>
+                    <span class="quantity-value">${item.quantity.toLocaleString('fa-IR')} عدد</span>
+                </div>
+                <div class="inventory-item-actions">
+                    <button class="btn btn-secondary btn-small" onclick="editInventoryQuantity('${item.productId}')">
+                        ویرایش تعداد
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="deleteFromInventory('${item.productId}')">
+                        حذف از انبار
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Update summary
+    const totalProducts = inventory.length;
+    const totalQuantity = inventory.reduce((sum, item) => sum + item.quantity, 0);
+
+    document.getElementById('total-inventory-products').textContent = totalProducts.toLocaleString('fa-IR');
+    document.getElementById('total-inventory-quantity').textContent = totalQuantity.toLocaleString('fa-IR');
+}
+
+async function editInventoryQuantity(productId) {
+    const item = inventory.find(i => i.productId === productId);
+    if (!item) return;
+
+    const newQuantity = prompt('تعداد جدید را وارد کنید:', item.quantity);
+    if (newQuantity === null) return;
+
+    const quantity = parseInt(newQuantity);
+    if (isNaN(quantity) || quantity < 0) {
+        showToast('تعداد نامعتبر است', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/inventory/${productId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity })
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderInventoryList();
+            showToast('تعداد با موفقیت ویرایش شد', 'success');
+        } else {
+            showToast('خطا در ویرایش تعداد', 'error');
+        }
+    } catch (error) {
+        console.error('Error updating inventory:', error);
+        showToast('خطا در ویرایش تعداد', 'error');
+    }
+}
+
+async function deleteFromInventory(productId) {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این محصول را از انبار حذف کنید؟')) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/inventory/${productId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderInventoryList();
+            showToast('محصول با موفقیت از انبار حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف از انبار', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting from inventory:', error);
+        showToast('خطا در حذف از انبار', 'error');
+    }
+}
+
+// Close inventory modal on outside click
+const inventoryModal = document.getElementById('inventory-modal');
+if (inventoryModal) {
+    inventoryModal.addEventListener('click', (e) => {
+        if (e.target === inventoryModal) {
+            closeInventoryModal();
+        }
+    });
 }
 
 

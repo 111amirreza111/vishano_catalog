@@ -100,6 +100,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(paymentsPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize inventory.json if it doesn't exist
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        try {
+            await fs.access(inventoryPath);
+        } catch {
+            await fs.writeFile(inventoryPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -579,6 +587,107 @@ app.put('/api/categories/:id', async (req, res) => {
     } catch (error) {
         console.error('Error updating category:', error);
         res.status(500).json({ error: 'Failed to update category' });
+    }
+});
+
+// Inventory API Routes
+
+// Get all inventory records
+app.get('/api/inventory', async (req, res) => {
+    try {
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        const data = await fs.readFile(inventoryPath, 'utf8');
+        const inventory = JSON.parse(data);
+        res.json(inventory);
+    } catch (error) {
+        console.error('Error reading inventory:', error);
+        res.status(500).json({ error: 'Failed to read inventory' });
+    }
+});
+
+// Add product to inventory
+app.post('/api/inventory', async (req, res) => {
+    try {
+        const { productId, productName, quantity } = req.body;
+
+        if (!productId || !productName || !quantity) {
+            return res.status(400).json({ error: 'ProductId, productName, and quantity are required' });
+        }
+
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        const data = await fs.readFile(inventoryPath, 'utf8');
+        const inventory = JSON.parse(data);
+
+        // Check if product already exists in inventory
+        const existingIndex = inventory.findIndex(item => item.productId === productId);
+        if (existingIndex !== -1) {
+            // Update existing quantity
+            inventory[existingIndex].quantity += parseInt(quantity);
+            inventory[existingIndex].updatedAt = new Date().toISOString();
+        } else {
+            // Add new inventory item
+            inventory.push({
+                productId,
+                productName,
+                quantity: parseInt(quantity),
+                createdAt: new Date().toISOString()
+            });
+        }
+
+        await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+
+        res.json(existingIndex !== -1 ? inventory[existingIndex] : inventory[inventory.length - 1]);
+    } catch (error) {
+        console.error('Error adding to inventory:', error);
+        res.status(500).json({ error: 'Failed to add to inventory' });
+    }
+});
+
+// Update inventory quantity
+app.put('/api/inventory/:productId', async (req, res) => {
+    try {
+        const { quantity } = req.body;
+
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        const data = await fs.readFile(inventoryPath, 'utf8');
+        const inventory = JSON.parse(data);
+
+        const index = inventory.findIndex(item => item.productId === req.params.productId);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Inventory item not found' });
+        }
+
+        inventory[index].quantity = parseInt(quantity);
+        inventory[index].updatedAt = new Date().toISOString();
+
+        await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+
+        res.json(inventory[index]);
+    } catch (error) {
+        console.error('Error updating inventory:', error);
+        res.status(500).json({ error: 'Failed to update inventory' });
+    }
+});
+
+// Delete product from inventory
+app.delete('/api/inventory/:productId', async (req, res) => {
+    try {
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        const data = await fs.readFile(inventoryPath, 'utf8');
+        const inventory = JSON.parse(data);
+
+        const index = inventory.findIndex(item => item.productId === req.params.productId);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Inventory item not found' });
+        }
+
+        inventory.splice(index, 1);
+        await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+
+        res.json({ message: 'Inventory item deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting from inventory:', error);
+        res.status(500).json({ error: 'Failed to delete from inventory' });
     }
 });
 

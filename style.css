@@ -1057,6 +1057,33 @@ body {
     font-weight: 600;
 }
 
+.search-result-item.out-of-stock {
+    background-color: var(--gray-200);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.search-result-item.out-of-stock:hover {
+    background-color: var(--gray-200);
+}
+
+.search-result-item.out-of-stock .search-result-name {
+    color: var(--gray-600);
+}
+
+.search-result-item.out-of-stock .search-result-price {
+    color: var(--gray-500);
+}
+
+.out-of-stock-label {
+    background-color: var(--gray-700);
+    color: var(--white);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
 .invoice-items-section {
     margin-top: 1.5rem;
 }
@@ -1162,26 +1189,106 @@ body {
     cursor: pointer;
 }
 
-/* Production Management Styles */
-.production-container {
+/* Inventory Management Styles */
+.inventory-container {
     background-color: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     padding: 2rem;
 }
 
-.production-summary {
+.inventory-summary {
     background-color: var(--light-green);
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
 }
 
-.production-summary h3 {
+.inventory-summary h3 {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--primary-green);
     margin-bottom: 1rem;
+}
+
+.inventory-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.inventory-item {
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.inventory-item:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-green);
+}
+
+.inventory-item-info {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.inventory-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background-color: var(--white);
+}
+
+.inventory-item-details {
+    flex: 1;
+}
+
+.inventory-item-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.25rem;
+}
+
+.inventory-item-id {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.inventory-item-quantity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--white);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+}
+
+.inventory-item-quantity .quantity-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.inventory-item-quantity .quantity-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.inventory-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.inventory-item-actions .btn {
+    flex: 1;
+    justify-content: center;
 }
 
 .summary-stats {
@@ -1209,184 +1316,13 @@ body {
     color: var(--primary-green);
 }
 
-.production-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.production-item {
-    background-color: var(--gray-100);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    transition: var(--transition);
-}
-
-.production-item:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-green);
-}
-
-.production-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.production-item-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--gray-800);
-}
-
-.production-item-quantities {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.quantity-label {
-    font-size: 0.9rem;
-    color: var(--gray-600);
-}
-
-.quantity-value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--gray-800);
-}
-
-.quantity-value.delivered {
-    color: var(--primary-green);
-}
-
-.quantity-value.remaining {
-    color: #DC3545;
-}
-
-.production-progress {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.progress-bar {
-    flex: 1;
-    height: 12px;
-    background-color: var(--gray-300);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background-color: var(--primary-green);
-    transition: width 0.3s ease;
-}
-
-.progress-text {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary-green);
-    min-width: 40px;
-    text-align: left;
-}
-
-.production-invoices-list {
-    background-color: var(--white);
-    padding: 1rem;
-    border-radius: var(--radius);
-    margin-bottom: 1rem;
-}
-
-.production-invoices-list h4 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    margin-bottom: 0.75rem;
-}
-
-.production-invoice-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0.75rem;
-    background-color: var(--gray-100);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-}
-
-.production-invoice-item:last-child {
-    margin-bottom: 0;
-}
-
-.invoice-customer {
-    font-weight: 500;
-    color: var(--gray-800);
-}
-
-.invoice-date {
-    font-size: 0.85rem;
-    color: var(--gray-600);
-}
-
-.invoice-quantity {
-    font-weight: 600;
-    color: var(--primary-green);
-}
-
-.production-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.delivery-input-group {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.delivery-input-group label {
-    font-size: 0.9rem;
-    color: var(--gray-700);
-    font-weight: 500;
-}
-
-.delivery-input {
-    width: 100px;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-}
-
 @media (max-width: 768px) {
     .summary-stats {
         grid-template-columns: 1fr;
     }
 
-    .production-item-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .production-item-quantities {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .delivery-input-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .delivery-input {
-        width: 100%;
+    .inventory-list {
+        grid-template-columns: 1fr;
     }
 }
 

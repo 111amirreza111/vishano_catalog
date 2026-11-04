@@ -22,7 +22,7 @@
                 <button class="nav-tab" data-page="invoices">صورتحساب</button>
                 <button class="nav-tab" data-page="customers">مشتریان</button>
                 <button class="nav-tab" data-page="finance">مالی</button>
-                <button class="nav-tab" data-page="production">مدیریت تولید</button>
+                <button class="nav-tab" data-page="inventory">مدیریت انبار</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
             </nav>
@@ -179,43 +179,33 @@
                 </div>
             </section>
 
-            <!-- Production Management Page -->
-            <section id="production-page" class="page">
+            <!-- Inventory Management Page -->
+            <section id="inventory-page" class="page">
                 <div class="page-header">
-                    <h2>مدیریت تولید</h2>
-                    <div class="page-header-buttons">
-                        <button class="btn btn-secondary" id="refresh-production-btn">
-                            <span class="icon">🔄</span>
-                            بروزرسانی
-                        </button>
-                        <button class="btn btn-primary" id="copy-production-needs-btn">
-                            <span class="icon">📋</span>
-                            کپی لیست نیازها
-                        </button>
-                    </div>
+                    <h2>مدیریت انبار</h2>
+                    <button class="btn btn-primary" id="add-to-inventory-btn">
+                        <span class="icon">+</span>
+                        افزودن محصول به انبار
+                    </button>
                 </div>
 
-                <div class="production-container">
-                    <div class="production-summary">
-                        <h3>خلاصه وضعیت تولید</h3>
+                <div class="inventory-container">
+                    <div class="inventory-summary">
+                        <h3>خلاصه وضعیت انبار</h3>
                         <div class="summary-stats">
                             <div class="stat-card">
-                                <div class="stat-label">کل محصولات لازم</div>
-                                <div class="stat-value" id="total-needed">0</div>
+                                <div class="stat-label">کل محصولات در انبار</div>
+                                <div class="stat-value" id="total-inventory-products">0</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">تحویل گرفته شده</div>
-                                <div class="stat-value" id="total-delivered">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">باقی‌مانده</div>
-                                <div class="stat-value" id="total-remaining">0</div>
+                                <div class="stat-label">مجموع تعداد اقلام</div>
+                                <div class="stat-value" id="total-inventory-quantity">0</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="production-list" id="production-list">
-                        <!-- Production items will be rendered here -->
+                    <div class="inventory-list" id="inventory-list">
+                        <!-- Inventory items will be rendered here -->
                     </div>
                 </div>
             </section>
@@ -532,6 +522,38 @@
                         ثبت پرداخت
                     </button>
                     <button type="button" class="btn btn-secondary" id="cancel-payment-btn">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal" id="inventory-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>افزودن محصول به انبار</h3>
+                <button class="modal-close" id="inventory-modal-close-btn">&times;</button>
+            </div>
+
+            <form id="inventory-form" class="inventory-form">
+                <div class="form-group">
+                    <label for="inventory-product-select">انتخاب محصول</label>
+                    <select id="inventory-product-select" class="form-input" required>
+                        <option value="">انتخاب محصول...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inventory-quantity">تعداد</label>
+                    <input type="number" id="inventory-quantity" class="form-input" placeholder="مثال: 10" min="1" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">💾</span>
+                        افزودن به انبار
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-inventory-btn">انصراف</button>
                 </div>
             </form>
         </div>
