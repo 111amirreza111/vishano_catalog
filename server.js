@@ -1003,7 +1003,16 @@ app.post('/api/git-commit', async (req, res) => {
             return res.status(500).json({ error: 'Failed to commit changes' });
         }
 
-        res.json({ message: 'تغییرات با موفقیت در گیت ذخیره شد', commitMessage });
+        // Push to remote repository
+        try {
+            await execPromise('git push', { cwd: __dirname });
+            console.log('Git push successful');
+        } catch (error) {
+            console.error('Git push error:', error);
+            return res.status(500).json({ error: 'Failed to push changes to remote repository' });
+        }
+
+        res.json({ message: 'تغییرات با موفقیت در گیت ذخیره و همگام‌سازی شد', commitMessage });
     } catch (error) {
         console.error('Error in git commit:', error);
         res.status(500).json({ error: 'Failed to execute git commit' });
