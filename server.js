@@ -967,6 +967,13 @@ app.post('/api/git-commit', async (req, res) => {
         const util = require('util');
         const execPromise = util.promisify(exec);
 
+        // Detect platform
+        const isWindows = process.platform === 'win32';
+        const isLinux = process.platform === 'linux';
+        const isMac = process.platform === 'darwin';
+
+        console.log('Detected platform:', process.platform);
+
         // Get current date in Persian
         const now = new Date();
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -981,7 +988,7 @@ app.post('/api/git-commit', async (req, res) => {
             return res.status(400).json({ error: 'This directory is not a git repository' });
         }
 
-        // Add all files
+        // Add all files - same command works on all platforms
         try {
             await execPromise('git add .', { cwd: __dirname });
             console.log('Git add successful');
@@ -990,7 +997,7 @@ app.post('/api/git-commit', async (req, res) => {
             return res.status(500).json({ error: 'Failed to add files to git' });
         }
 
-        // Commit with date message
+        // Commit with date message - same command works on all platforms
         try {
             await execPromise(`git commit -m "${commitMessage}"`, { cwd: __dirname });
             console.log('Git commit successful');
@@ -1003,7 +1010,7 @@ app.post('/api/git-commit', async (req, res) => {
             return res.status(500).json({ error: 'Failed to commit changes' });
         }
 
-        // Push to remote repository
+        // Push to remote repository - same command works on all platforms
         try {
             await execPromise('git push', { cwd: __dirname });
             console.log('Git push successful');
@@ -1012,7 +1019,11 @@ app.post('/api/git-commit', async (req, res) => {
             return res.status(500).json({ error: 'Failed to push changes to remote repository' });
         }
 
-        res.json({ message: 'تغییرات با موفقیت در گیت ذخیره و همگام‌سازی شد', commitMessage });
+        res.json({
+            message: 'تغییرات با موفقیت در گیت ذخیره و همگام‌سازی شد',
+            commitMessage,
+            platform: process.platform
+        });
     } catch (error) {
         console.error('Error in git commit:', error);
         res.status(500).json({ error: 'Failed to execute git commit' });
