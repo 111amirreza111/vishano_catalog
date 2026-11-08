@@ -25,6 +25,7 @@
                 <button class="nav-tab" data-page="inventory">مدیریت انبار</button>
                 <button class="nav-tab" data-page="settings">تنظیمات</button>
                 <button class="nav-tab" data-page="live-catalog">مشاهده لایو کاتالوگ</button>
+                <button class="nav-tab" data-page="git-save">ذخیره در گیت</button>
             </nav>
         </header>
 
@@ -331,9 +332,32 @@
                         دانلود تمام تصاویر به صورت PDF
                     </button>
                 </div>
-                
+
                 <div class="live-catalog-grid" id="live-catalog-grid">
                     <!-- Live catalog cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Git Save Page -->
+            <section id="git-save-page" class="page">
+                <div class="page-header">
+                    <h2>ذخیره در گیت</h2>
+                </div>
+
+                <div class="git-save-container">
+                    <div class="git-save-info">
+                        <p>با زدن دکمه زیر، آخرین تغییرات پروژه در گیت ذخیره می‌شود.</p>
+                        <p>پیام کامیت به صورت خودکار با تاریخ جاری پر می‌شود.</p>
+                    </div>
+
+                    <button class="btn btn-primary btn-large" id="git-commit-btn">
+                        <span class="icon">💾</span>
+                        ذخیره تغییرات در گیت
+                    </button>
+
+                    <div class="git-commit-status" id="git-commit-status">
+                        <!-- Status messages will appear here -->
+                    </div>
                 </div>
             </section>
         </main>

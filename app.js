@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeInvoiceCreator();
     initializeInventoryPage();
     initializeFinancePage();
+    initializeGitSavePage();
     renderProducts();
     updateCurrentSettingsDisplay();
 });
@@ -2458,6 +2459,62 @@ if (inventoryModal) {
     inventoryModal.addEventListener('click', (e) => {
         if (e.target === inventoryModal) {
             closeInventoryModal();
+        }
+    });
+}
+
+// Git Save Page
+function initializeGitSavePage() {
+    const gitCommitBtn = document.getElementById('git-commit-btn');
+    const gitCommitStatus = document.getElementById('git-commit-status');
+
+    if (!gitCommitBtn) return;
+
+    gitCommitBtn.addEventListener('click', async () => {
+        // Show loading state
+        gitCommitBtn.disabled = true;
+        gitCommitBtn.innerHTML = '<span class="icon">⏳</span> در حال ذخیره...';
+
+        // Show status message
+        if (gitCommitStatus) {
+            gitCommitStatus.className = 'git-commit-status show info';
+            gitCommitStatus.textContent = 'در حال ذخیره تغییرات در گیت...';
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/git-commit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // Show success message
+                if (gitCommitStatus) {
+                    gitCommitStatus.className = 'git-commit-status show success';
+                    gitCommitStatus.textContent = data.message || 'تغییرات با موفقیت ذخیره شد';
+                }
+                showToast(data.message || 'تغییرات با موفقیت در گیت ذخیره شد', 'success');
+            } else {
+                // Show error message
+                if (gitCommitStatus) {
+                    gitCommitStatus.className = 'git-commit-status show error';
+                    gitCommitStatus.textContent = data.error || 'خطا در ذخیره تغییرات';
+                }
+                showToast(data.error || 'خطا در ذخیره تغییرات', 'error');
+            }
+        } catch (error) {
+            console.error('Error in git commit:', error);
+            if (gitCommitStatus) {
+                gitCommitStatus.className = 'git-commit-status show error';
+                gitCommitStatus.textContent = 'خطا در ارتباط با سرور';
+            }
+            showToast('خطا در ارتباط با سرور', 'error');
+        } finally {
+            // Reset button state
+            gitCommitBtn.disabled = false;
+            gitCommitBtn.innerHTML = '<span class="icon">💾</span> ذخیره تغییرات در گیت';
         }
     });
 }

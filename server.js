@@ -960,6 +960,56 @@ app.delete('/api/payments/:id', async (req, res) => {
     }
 });
 
+// Git Commit API Route
+app.post('/api/git-commit', async (req, res) => {
+    try {
+        const { exec } = require('child_process');
+        const util = require('util');
+        const execPromise = util.promisify(exec);
+
+        // Get current date in Persian
+        const now = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
+        const commitMessage = `ذخیره تغییرات - ${now.toLocaleDateString('fa-IR', options)}`;
+
+        console.log('Attempting git commit with message:', commitMessage);
+
+        // Check if .git directory exists
+        try {
+            await fs.access(path.join(__dirname, '.git'));
+        } catch {
+            return res.status(400).json({ error: 'This directory is not a git repository' });
+        }
+
+        // Add all files
+        try {
+            await execPromise('git add .', { cwd: __dirname });
+            console.log('Git add successful');
+        } catch (error) {
+            console.error('Git add error:', error);
+            return res.status(500).json({ error: 'Failed to add files to git' });
+        }
+
+        // Commit with date message
+        try {
+            await execPromise(`git commit -m "${commitMessage}"`, { cwd: __dirname });
+            console.log('Git commit successful');
+        } catch (error) {
+            console.error('Git commit error:', error);
+            // Check if there's nothing to commit
+            if (error.stdout && error.stdout.includes('nothing to commit')) {
+                return res.status(200).json({ message: 'هیچ تغییری برای ذخیره وجود ندارد', commitMessage });
+            }
+            return res.status(500).json({ error: 'Failed to commit changes' });
+        }
+
+        res.json({ message: 'تغییرات با موفقیت در گیت ذخیره شد', commitMessage });
+    } catch (error) {
+        console.error('Error in git commit:', error);
+        res.status(500).json({ error: 'Failed to execute git commit' });
+    }
+});
+
 // Start server
 ensureDirectories().then(() => {
     app.listen(PORT, () => {
