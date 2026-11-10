@@ -203,7 +203,8 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
         const settings = JSON.parse(settingsData);
 
         const baseCostNum = parseFloat(baseCost);
-        const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
+        // Use cashPrice from request if provided, otherwise calculate from settings
+        const cashPrice = req.body.cashPrice ? parseFloat(req.body.cashPrice) : Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
 
         const newProduct = {
             id: Date.now().toString(),
@@ -231,7 +232,7 @@ app.post('/api/products', upload.single('image'), async (req, res) => {
 // Update product
 app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     try {
-        const { name, baseCost, descriptions, category } = req.body;
+        const { name, baseCost, descriptions, category, cashPrice } = req.body;
 
         const productsPath = path.join(DATA_DIR, 'products.json');
         const data = await fs.readFile(productsPath, 'utf8');
@@ -242,12 +243,9 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        const settingsPath = path.join(DATA_DIR, 'settings.json');
-        const settingsData = await fs.readFile(settingsPath, 'utf8');
-        const settings = JSON.parse(settingsData);
-
         const baseCostNum = parseFloat(baseCost);
-        const cashPrice = Math.round(baseCostNum * (1 + settings.cashPercentage / 100));
+        // Use cashPrice from request if provided, otherwise keep existing
+        const finalCashPrice = cashPrice ? parseFloat(cashPrice) : products[index].cashPrice;
 
         // Delete old image if new one is uploaded
         if (req.file && products[index].image) {
@@ -265,7 +263,7 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             image: req.file ? `/uploads/${req.file.filename}` : products[index].image,
             descriptions: descriptions ? JSON.parse(descriptions) : products[index].descriptions,
             baseCost: baseCostNum,
-            cashPrice,
+            cashPrice: finalCashPrice,
             category: category !== undefined ? category : products[index].category
         };
 

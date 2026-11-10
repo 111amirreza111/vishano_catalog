@@ -416,6 +416,22 @@
                 <div class="form-group">
                     <label for="base-cost">قیمت تمام شده برای شرکت (تومان)</label>
                     <input type="number" id="base-cost" class="form-input" placeholder="مثال: 200000" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="auto-calculate-profit" checked>
+                        <span>محاسبه خودکار قیمت نهایی بر اساس تنظیمات</span>
+                    </label>
+                </div>
+
+                <div class="form-group" id="manual-profit-group" style="display: none;">
+                    <label for="manual-profit-percentage">درصد سود دستی (٪)</label>
+                    <input type="number" id="manual-profit-percentage" class="form-input" placeholder="مثال: 30" min="0" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label>قیمت نهایی</label>
                     <div class="calculated-prices">
                         <div class="price-display">
                             <span class="price-label">قیمت:</span>

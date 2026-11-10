@@ -255,8 +255,9 @@ function renderProducts() {
     }).join('');
 }
 
-function calculatePrices(baseCost) {
-    const cashPrice = baseCost * (1 + settings.cashPercentage / 100);
+function calculatePrices(baseCost, customProfitPercentage = null) {
+    const profitPercentage = customProfitPercentage !== null ? customProfitPercentage : settings.cashPercentage;
+    const cashPrice = baseCost * (1 + profitPercentage / 100);
     return {
         cashPrice: Math.round(cashPrice)
     };
@@ -273,6 +274,8 @@ function initializeProductForm() {
     const cancelBtn = document.getElementById('cancel-btn');
     const productImageInput = document.getElementById('product-image');
     const baseCostInput = document.getElementById('base-cost');
+    const autoCalculateProfitCheckbox = document.getElementById('auto-calculate-profit');
+    const manualProfitPercentageInput = document.getElementById('manual-profit-percentage');
     const addDescriptionBtn = document.getElementById('add-description-btn');
 
     addProductBtn.addEventListener('click', () => {
@@ -289,10 +292,12 @@ function initializeProductForm() {
 
     productImageInput.addEventListener('change', handleImageUpload);
 
-    baseCostInput.addEventListener('input', (e) => {
-        const baseCost = parseFloat(e.target.value) || 0;
-        const prices = calculatePrices(baseCost);
-        document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
+    baseCostInput.addEventListener('input', updatePriceDisplay);
+    manualProfitPercentageInput.addEventListener('input', updatePriceDisplay);
+    autoCalculateProfitCheckbox.addEventListener('change', (e) => {
+        const manualProfitGroup = document.getElementById('manual-profit-group');
+        manualProfitGroup.style.display = e.target.checked ? 'none' : 'block';
+        updatePriceDisplay();
     });
 
     addDescriptionBtn.addEventListener('click', addDescriptionField);
@@ -301,6 +306,14 @@ function initializeProductForm() {
 
     // Add initial description field
     addDescriptionField();
+}
+
+function updatePriceDisplay() {
+    const baseCost = parseFloat(document.getElementById('base-cost').value) || 0;
+    const autoCalculate = document.getElementById('auto-calculate-profit').checked;
+    const manualProfitPercentage = autoCalculate ? null : (parseFloat(document.getElementById('manual-profit-percentage').value) || 0);
+    const prices = calculatePrices(baseCost, manualProfitPercentage);
+    document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
 }
 
 function openProductModal(product = null) {
@@ -316,6 +329,12 @@ function openProductModal(product = null) {
         document.getElementById('product-name').value = product.name;
         document.getElementById('base-cost').value = product.baseCost;
         document.getElementById('product-category').value = product.category || '';
+
+        // Set auto calculate checkbox (default to checked for new products)
+        const autoCalculateProfitCheckbox = document.getElementById('auto-calculate-profit');
+        autoCalculateProfitCheckbox.checked = true;
+        document.getElementById('manual-profit-group').style.display = 'none';
+        document.getElementById('manual-profit-percentage').value = '';
 
         // Update price displays
         const prices = calculatePrices(product.baseCost);
@@ -339,6 +358,11 @@ function openProductModal(product = null) {
         addDescriptionField();
         document.getElementById('cash-price-display').textContent = '0 تومان';
         document.getElementById('product-category').value = '';
+
+        // Reset profit calculation settings
+        document.getElementById('auto-calculate-profit').checked = true;
+        document.getElementById('manual-profit-group').style.display = 'none';
+        document.getElementById('manual-profit-percentage').value = '';
     }
 
     productModal.classList.add('active');
@@ -582,6 +606,11 @@ async function handleProductSubmit(e) {
         .map(input => input.value.trim())
         .filter(value => value !== '');
 
+    // Calculate final price based on auto/manual selection
+    const autoCalculate = document.getElementById('auto-calculate-profit').checked;
+    const manualProfitPercentage = autoCalculate ? null : (parseFloat(document.getElementById('manual-profit-percentage').value) || 0);
+    const prices = calculatePrices(baseCost, manualProfitPercentage);
+
     if (!productName) {
         showToast('لطفاً نام محصول را وارد کنید', 'error');
         return;
@@ -600,6 +629,7 @@ async function handleProductSubmit(e) {
     const formData = new FormData();
     formData.append('name', productName);
     formData.append('baseCost', baseCost);
+    formData.append('cashPrice', prices.cashPrice);
     formData.append('descriptions', JSON.stringify(descriptions));
     formData.append('category', productCategory);
 
