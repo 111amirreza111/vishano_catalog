@@ -107,8 +107,8 @@
         "discountPercentage": 8,
         "discountAmount": 594000,
         "finalTotal": 6831000,
-        "baseCost": 55000,
-        "profit": 1331000
+        "baseCost": 46000,
+        "profit": 2231000
       },
       {
         "productId": "1788427924372",
@@ -278,8 +278,8 @@
         "discountPercentage": 0,
         "discountAmount": 0,
         "finalTotal": 7425000,
-        "baseCost": 55000,
-        "profit": 1925000
+        "baseCost": 46000,
+        "profit": 2825000
       },
       {
         "productId": "1788426653776",
@@ -448,8 +448,8 @@
         "discountPercentage": 2,
         "discountAmount": 700000,
         "finalTotal": 34300000,
-        "baseCost": 55000,
-        "profit": 6800000
+        "baseCost": 46000,
+        "profit": 11300000
       },
       {
         "productId": "1792915515001",
