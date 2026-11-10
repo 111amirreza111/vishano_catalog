@@ -820,6 +820,10 @@ body {
     background-color: #DC3545;
 }
 
+.toast.warning {
+    background-color: #FFA500;
+}
+
 /* Empty State */
 .empty-state {
     text-align: center;
@@ -1860,6 +1864,73 @@ body {
 .payment-item-amount {
     font-weight: 600;
     color: var(--primary-green);
+}
+
+.invoice-item-profit {
+    font-weight: 600;
+    color: var(--dark-green);
+}
+
+.invoice-item-profit-warning {
+    font-weight: 600;
+    color: #FFA500;
+    font-size: 0.85rem;
+}
+
+/* Invoice Profit Details Table */
+.invoice-profit-details {
+    margin-top: 1rem;
+    overflow-x: auto;
+}
+
+.profit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background-color: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.profit-table thead {
+    background-color: var(--light-green);
+}
+
+.profit-table th {
+    padding: 0.75rem;
+    text-align: right;
+    font-weight: 600;
+    color: var(--gray-700);
+    border-bottom: 2px solid var(--primary-green);
+}
+
+.profit-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.profit-table tbody tr:hover {
+    background-color: var(--gray-100);
+}
+
+.profit-table tfoot {
+    background-color: var(--light-green);
+    border-top: 2px solid var(--primary-green);
+}
+
+.profit-total-row td {
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+}
+
+.profit-positive {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+.profit-negative {
+    color: #DC3545;
+    font-weight: 600;
 }
 
 .payment-item-note {

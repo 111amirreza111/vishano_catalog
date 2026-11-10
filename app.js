@@ -1133,6 +1133,9 @@ function addProductToInvoice(productId) {
         existingItem.total = existingItem.quantity * existingItem.unitPrice;
         if (existingItem.hasDiscount) {
             recalculateItemDiscount(existingItem);
+        } else {
+            // Recalculate profit without discount
+            existingItem.profit = existingItem.total - (existingItem.baseCost * existingItem.quantity);
         }
     } else {
         currentInvoiceItems.push({
@@ -1140,11 +1143,13 @@ function addProductToInvoice(productId) {
             name: product.name,
             quantity: 1,
             unitPrice: product.cashPrice,
+            baseCost: product.baseCost,
             total: product.cashPrice,
             hasDiscount: false,
             discountPercentage: 0,
             discountAmount: 0,
-            finalTotal: product.cashPrice
+            finalTotal: product.cashPrice, // Important: should equal total when no discount
+            profit: product.cashPrice - product.baseCost
         });
     }
 
@@ -1233,6 +1238,9 @@ function updateInvoiceItemQuantity(index, change) {
     item.total = item.quantity * item.unitPrice;
     if (item.hasDiscount) {
         recalculateItemDiscount(item);
+    } else {
+        // Recalculate profit without discount
+        item.profit = item.total - (item.baseCost * item.quantity);
     }
     renderInvoiceItems();
     renderInvoicePreview();
@@ -1261,6 +1269,9 @@ function updateInvoiceItemQuantityDirect(index, value) {
     item.total = item.quantity * item.unitPrice;
     if (item.hasDiscount) {
         recalculateItemDiscount(item);
+    } else {
+        // Recalculate profit without discount
+        item.profit = item.total - (item.baseCost * item.quantity);
     }
     renderInvoiceItems();
     renderInvoicePreview();
@@ -1276,11 +1287,13 @@ function handleQuantityInputKeydown(event, index, input) {
 function toggleItemDiscount(index, hasDiscount) {
     const item = currentInvoiceItems[index];
     item.hasDiscount = hasDiscount;
-    
+
     if (!hasDiscount) {
         item.discountPercentage = 0;
         item.discountAmount = 0;
-        item.finalTotal = item.total;
+        item.finalTotal = item.total; // Important: finalTotal should equal total when no discount
+        // Recalculate profit without discount
+        item.profit = item.total - (item.baseCost * item.quantity);
     } else {
         // Keep existing discount percentage if it exists, otherwise set to 0
         if (!item.discountPercentage) {
@@ -1327,6 +1340,8 @@ function updateItemDiscountPercentage(index, value) {
 function recalculateItemDiscount(item) {
     item.discountAmount = Math.round(item.total * (item.discountPercentage / 100));
     item.finalTotal = item.total - item.discountAmount;
+    // Calculate profit based on final price after discount
+    item.profit = item.finalTotal - (item.baseCost * item.quantity);
 }
 
 function persianToEnglishDigits(str) {
@@ -1635,13 +1650,27 @@ function editInvoice(invoiceId) {
     if (!invoice) return;
 
     currentInvoiceId = invoice.id;
-    currentInvoiceItems = invoice.items.map(item => ({
-        ...item,
-        hasDiscount: item.hasDiscount || false,
-        discountPercentage: item.discountPercentage || 0,
-        discountAmount: item.discountAmount || 0,
-        finalTotal: item.finalTotal || item.total
-    }));
+    currentInvoiceItems = invoice.items.map(item => {
+        // Ensure baseCost is set (for old invoices)
+        const baseCost = item.baseCost || 0;
+
+        // Fix finalTotal for items without discount (should equal total)
+        const finalTotal = (!item.hasDiscount || item.discountPercentage === 0) ? item.total : (item.finalTotal || item.total);
+
+        // Calculate profit if not already calculated
+        const quantity = item.quantity || 1;
+        const profit = item.profit !== undefined ? item.profit : (finalTotal - (baseCost * quantity));
+
+        return {
+            ...item,
+            baseCost,
+            profit,
+            hasDiscount: item.hasDiscount || false,
+            discountPercentage: item.discountPercentage || 0,
+            discountAmount: item.discountAmount || 0,
+            finalTotal
+        };
+    });
 
     // Parse date
     const dateParts = invoice.date.split('/');
@@ -1658,10 +1687,13 @@ function editInvoice(invoiceId) {
         document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
     }
 
-    // Recalculate discounts for items that have discount enabled
+    // Recalculate discounts and profits for items
     currentInvoiceItems.forEach(item => {
         if (item.hasDiscount && item.discountPercentage > 0) {
             recalculateItemDiscount(item);
+        } else {
+            // Recalculate profit without discount
+            item.profit = item.total - (item.baseCost * item.quantity);
         }
     });
 
@@ -2125,18 +2157,79 @@ function renderCustomerFinanceDetail(customerId) {
     if (customerInvoices.length === 0) {
         customerInvoicesList.innerHTML = '<p class="empty-state-text">هیچ فاکتوری برای این مشتری وجود ندارد</p>';
     } else {
-        customerInvoicesList.innerHTML = customerInvoices.map(invoice => `
+        customerInvoicesList.innerHTML = customerInvoices.map(invoice => {
+            // Calculate totals
+            const totalBaseCost = invoice.items.reduce((sum, item) => {
+                return sum + (item.baseCost * item.quantity);
+            }, 0);
+
+            const totalFinalAmount = invoice.finalAmount || invoice.totalAmount;
+
+            const totalProfit = invoice.items.reduce((sum, item) => {
+                if (item.profit !== undefined) {
+                    return sum + item.profit;
+                }
+                const finalPrice = item.finalTotal || item.total;
+                const baseCost = item.baseCost || 0;
+                const quantity = item.quantity || 1;
+                return sum + (finalPrice - (baseCost * quantity));
+            }, 0);
+
+            // Generate details table
+            const itemsTable = invoice.items.map(item => {
+                const itemBaseCost = item.baseCost * item.quantity;
+                const itemFinalPrice = item.finalTotal || item.total;
+                const itemProfit = itemFinalPrice - itemBaseCost;
+                const discountPercent = item.hasDiscount ? item.discountPercentage : 0;
+
+                return `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>${formatPrice(itemBaseCost)}</td>
+                        <td>${discountPercent > 0 ? discountPercent + '%' : '-'}</td>
+                        <td>${formatPrice(itemFinalPrice)}</td>
+                        <td class="${itemProfit >= 0 ? 'profit-positive' : 'profit-negative'}">${formatPrice(itemProfit)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
             <div class="customer-invoice-item">
                 <div class="invoice-item-header">
                     <span class="invoice-item-number">#${invoice.id.slice(-6)}</span>
                     <span class="invoice-item-date">${invoice.date} - ${invoice.time}</span>
                 </div>
-                <div class="invoice-item-details">
-                    <p>تعداد اقلام: ${invoice.items.length}</p>
-                    <p class="invoice-item-amount">مبلغ فاکتور: ${formatPrice(invoice.finalAmount || invoice.totalAmount)}</p>
+
+                <div class="invoice-profit-details">
+                    <table class="profit-table">
+                        <thead>
+                            <tr>
+                                <th>محصول</th>
+                                <th>تعداد</th>
+                                <th>قیمت تمام شده</th>
+                                <th>تخفیف</th>
+                                <th>قیمت فاکتور</th>
+                                <th>سود</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsTable}
+                        </tbody>
+                        <tfoot>
+                            <tr class="profit-total-row">
+                                <td colspan="2"><strong>جمع کل:</strong></td>
+                                <td><strong>${formatPrice(totalBaseCost)}</strong></td>
+                                <td>-</td>
+                                <td><strong>${formatPrice(totalFinalAmount)}</strong></td>
+                                <td class="${totalProfit >= 0 ? 'profit-positive' : 'profit-negative'}"><strong>${formatPrice(totalProfit)}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     // Render payments

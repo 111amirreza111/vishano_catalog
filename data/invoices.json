@@ -14,7 +14,9 @@
         "hasDiscount": true,
         "discountPercentage": 5,
         "discountAmount": 1282500,
-        "finalTotal": 24367500
+        "finalTotal": 24367500,
+        "baseCost": 95000,
+        "profit": 5367500
       },
       {
         "productId": "1788428262784",
@@ -25,7 +27,9 @@
         "hasDiscount": true,
         "discountPercentage": 5,
         "discountAmount": 1282500,
-        "finalTotal": 24367500
+        "finalTotal": 24367500,
+        "baseCost": 95000,
+        "profit": 5367500
       },
       {
         "productId": "1789367360771",
@@ -36,7 +40,9 @@
         "hasDiscount": true,
         "discountPercentage": 5,
         "discountAmount": 648000,
-        "finalTotal": 12312000
+        "finalTotal": 12312000,
+        "baseCost": 48000,
+        "profit": 2712000
       },
       {
         "productId": "1791006509105",
@@ -47,7 +53,9 @@
         "hasDiscount": true,
         "discountPercentage": 5,
         "discountAmount": 661500,
-        "finalTotal": 12568500
+        "finalTotal": 12568500,
+        "baseCost": 95000,
+        "profit": 3068500
       }
     ],
     "totalAmount": 77490000,
@@ -72,7 +80,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 62100
+        "finalTotal": 6210000,
+        "baseCost": 46000,
+        "profit": 1610000
       },
       {
         "productId": "1788426996153",
@@ -83,7 +93,9 @@
         "hasDiscount": true,
         "discountPercentage": 10,
         "discountAmount": 1282500,
-        "finalTotal": 11542500
+        "finalTotal": 11542500,
+        "baseCost": 95000,
+        "profit": 2042500
       },
       {
         "productId": "1790666946305",
@@ -94,7 +106,9 @@
         "hasDiscount": true,
         "discountPercentage": 8,
         "discountAmount": 594000,
-        "finalTotal": 6831000
+        "finalTotal": 6831000,
+        "baseCost": 55000,
+        "profit": 1331000
       },
       {
         "productId": "1788427924372",
@@ -105,7 +119,9 @@
         "hasDiscount": true,
         "discountPercentage": 10,
         "discountAmount": 2565000,
-        "finalTotal": 23085000
+        "finalTotal": 23085000,
+        "baseCost": 95000,
+        "profit": 4085000
       }
     ],
     "totalAmount": 52110000,
@@ -130,7 +146,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 62100
+        "finalTotal": 6210000,
+        "baseCost": 46000,
+        "profit": 1610000
       },
       {
         "productId": "1788427406657",
@@ -141,7 +159,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 60750
+        "finalTotal": 6075000,
+        "baseCost": 45000,
+        "profit": 1575000
       },
       {
         "productId": "1788443562621",
@@ -152,7 +172,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 27000
+        "finalTotal": 5400000,
+        "baseCost": 20000,
+        "profit": 1400000
       },
       {
         "productId": "1788428025752",
@@ -163,7 +185,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950
+        "finalTotal": 2295000,
+        "baseCost": 17000,
+        "profit": 595000
       },
       {
         "productId": "1788426653776",
@@ -174,7 +198,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22680
+        "finalTotal": 2268000,
+        "baseCost": 16800,
+        "profit": 588000
       }
     ],
     "totalAmount": 22248000,
@@ -199,7 +225,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 60750
+        "finalTotal": 6075000,
+        "baseCost": 45000,
+        "profit": 1575000
       },
       {
         "productId": "1788427596450",
@@ -210,7 +238,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 39150
+        "finalTotal": 3915000,
+        "baseCost": 29000,
+        "profit": 1015000
       },
       {
         "productId": "1790134297126",
@@ -221,7 +251,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 39150
+        "finalTotal": 3915000,
+        "baseCost": 29000,
+        "profit": 1015000
       },
       {
         "productId": "1789367655315",
@@ -232,7 +264,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 94500
+        "finalTotal": 9450000,
+        "baseCost": 55000,
+        "profit": 3950000
       },
       {
         "productId": "1790666946305",
@@ -243,7 +277,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 74250
+        "finalTotal": 7425000,
+        "baseCost": 55000,
+        "profit": 1925000
       },
       {
         "productId": "1788426653776",
@@ -254,7 +290,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22680
+        "finalTotal": 2268000,
+        "baseCost": 16800,
+        "profit": 588000
       },
       {
         "productId": "1788426851563",
@@ -265,7 +303,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 12825000,
+        "baseCost": 95000,
+        "profit": 3325000
       },
       {
         "productId": "1788426996153",
@@ -276,7 +316,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 12825000,
+        "baseCost": 95000,
+        "profit": 3325000
       },
       {
         "productId": "1788427299742",
@@ -287,7 +329,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 12825000,
+        "baseCost": 95000,
+        "profit": 3325000
       },
       {
         "productId": "1788427165885",
@@ -298,7 +342,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 20250
+        "finalTotal": 4050000,
+        "baseCost": 15000,
+        "profit": 1050000
       },
       {
         "productId": "1788428025752",
@@ -309,7 +355,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950
+        "finalTotal": 2295000,
+        "baseCost": 17000,
+        "profit": 595000
       },
       {
         "productId": "1788428901523",
@@ -320,7 +368,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 155250
+        "finalTotal": 7762500,
+        "baseCost": 115000,
+        "profit": 2012500
       },
       {
         "productId": "1788428703676",
@@ -331,7 +381,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 446850
+        "finalTotal": 22342500,
+        "baseCost": 335000,
+        "profit": 5592500
       },
       {
         "productId": "1791006509105",
@@ -342,7 +394,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 148500
+        "finalTotal": 14850000,
+        "baseCost": 95000,
+        "profit": 5350000
       },
       {
         "productId": "1788428380016",
@@ -353,7 +407,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 402300
+        "finalTotal": 19712700,
+        "baseCost": 298000,
+        "profit": 5110700
       }
     ],
     "totalAmount": 142535700,
@@ -378,7 +434,9 @@
         "hasDiscount": true,
         "discountPercentage": 31,
         "discountAmount": 1519000,
-        "finalTotal": 3381000
+        "finalTotal": 3381000,
+        "baseCost": 55000,
+        "profit": 631000
       },
       {
         "productId": "1790666946305",
@@ -389,7 +447,9 @@
         "hasDiscount": true,
         "discountPercentage": 2,
         "discountAmount": 700000,
-        "finalTotal": 34300000
+        "finalTotal": 34300000,
+        "baseCost": 55000,
+        "profit": 6800000
       },
       {
         "productId": "1792915515001",
@@ -400,7 +460,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 154000
+        "finalTotal": 1540000,
+        "baseCost": 90000,
+        "profit": 640000
       }
     ],
     "totalAmount": 41440000,
@@ -425,7 +487,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 9618750,
+        "baseCost": 95000,
+        "profit": 2493750
       },
       {
         "productId": "1792915515001",
@@ -436,7 +500,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 148500
+        "finalTotal": 14850000,
+        "baseCost": 90000,
+        "profit": 5850000
       },
       {
         "productId": "1788443562621",
@@ -447,7 +513,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 27000
+        "finalTotal": 2700000,
+        "baseCost": 20000,
+        "profit": 700000
       }
     ],
     "totalAmount": 27168750,
@@ -471,7 +539,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 6412500,
+        "baseCost": 95000,
+        "profit": 1662500
       },
       {
         "productId": "1792915515001",
@@ -482,7 +552,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 148500
+        "finalTotal": 7425000,
+        "baseCost": 90000,
+        "profit": 2925000
       },
       {
         "productId": "1789367655315",
@@ -493,7 +565,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 94500
+        "finalTotal": 945000,
+        "baseCost": 55000,
+        "profit": 395000
       },
       {
         "productId": "1788429321645",
@@ -504,7 +578,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 205200
+        "finalTotal": 6156000,
+        "baseCost": 152000,
+        "profit": 1596000
       },
       {
         "productId": "1788429407062",
@@ -515,7 +591,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 194400
+        "finalTotal": 5832000,
+        "baseCost": 144000,
+        "profit": 1512000
       },
       {
         "productId": "1788428025752",
@@ -526,7 +604,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950
+        "finalTotal": 2295000,
+        "baseCost": 17000,
+        "profit": 595000
       },
       {
         "productId": "1788427165885",
@@ -537,7 +617,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 20250
+        "finalTotal": 2025000,
+        "baseCost": 15000,
+        "profit": 525000
       },
       {
         "productId": "1788426996153",
@@ -548,7 +630,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 6412500,
+        "baseCost": 95000,
+        "profit": 1662500
       },
       {
         "productId": "1788426851563",
@@ -559,7 +643,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 6412500,
+        "baseCost": 95000,
+        "profit": 1662500
       },
       {
         "productId": "1788427299742",
@@ -570,7 +656,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250
+        "finalTotal": 6412500,
+        "baseCost": 95000,
+        "profit": 1662500
       },
       {
         "productId": "1788427596450",
@@ -581,7 +669,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 39150
+        "finalTotal": 783000,
+        "baseCost": 29000,
+        "profit": 203000
       },
       {
         "productId": "1788427406657",
@@ -592,7 +682,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 60750
+        "finalTotal": 1215000,
+        "baseCost": 45000,
+        "profit": 315000
       },
       {
         "productId": "1790134297126",
@@ -603,7 +695,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 39150
+        "finalTotal": 783000,
+        "baseCost": 29000,
+        "profit": 203000
       },
       {
         "productId": "1788443562621",
@@ -614,7 +708,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 27000
+        "finalTotal": 2700000,
+        "baseCost": 20000,
+        "profit": 700000
       }
     ],
     "totalAmount": 55809000,
@@ -639,7 +735,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 20250
+        "finalTotal": 2025000,
+        "baseCost": 15000,
+        "profit": 525000
       },
       {
         "productId": "1788427406657",
@@ -650,7 +748,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 60750
+        "finalTotal": 6075000,
+        "baseCost": 45000,
+        "profit": 1575000
       },
       {
         "productId": "1788426653776",
@@ -661,7 +761,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22680
+        "finalTotal": 2268000,
+        "baseCost": 16800,
+        "profit": 588000
       },
       {
         "productId": "1788428025752",
@@ -672,7 +774,9 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950
+        "finalTotal": 2295000,
+        "baseCost": 17000,
+        "profit": 595000
       }
     ],
     "totalAmount": 12663000,
