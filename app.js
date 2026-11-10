@@ -2034,6 +2034,13 @@ function renderFinanceDebtList() {
         const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
         const remaining = totalDebt - totalPaid;
 
+        // Calculate total profit for this customer
+        const totalProfit = customerInvoices.reduce((sum, inv) => {
+            return sum + inv.items.reduce((itemSum, item) => {
+                return itemSum + (item.profit || 0);
+            }, 0);
+        }, 0);
+
         return {
             id: registeredCustomer ? registeredCustomer.id : 'unregistered-' + customerName,
             name: customerName,
@@ -2042,6 +2049,7 @@ function renderFinanceDebtList() {
             totalDebt,
             totalPaid,
             remaining,
+            totalProfit,
             invoices: customerInvoices,
             payments: customerPayments
         };
@@ -2058,6 +2066,7 @@ function renderFinanceDebtList() {
         document.getElementById('total-debt').textContent = '0 تومان';
         document.getElementById('total-payments').textContent = '0 تومان';
         document.getElementById('total-remaining').textContent = '0 تومان';
+        document.getElementById('total-profit').textContent = '0 تومان';
         return;
     }
 
@@ -2066,9 +2075,17 @@ function renderFinanceDebtList() {
     const totalPayments = allCustomersData.reduce((sum, c) => sum + c.totalPaid, 0);
     const totalRemaining = totalDebt - totalPayments;
 
+    // Calculate total profit from all invoices
+    const totalProfit = invoices.reduce((sum, invoice) => {
+        return sum + invoice.items.reduce((itemSum, item) => {
+            return itemSum + (item.profit || 0);
+        }, 0);
+    }, 0);
+
     document.getElementById('total-debt').textContent = formatPrice(totalDebt);
     document.getElementById('total-payments').textContent = formatPrice(totalPayments);
     document.getElementById('total-remaining').textContent = formatPrice(totalRemaining);
+    document.getElementById('total-profit').textContent = formatPrice(totalProfit);
 
     financeCustomersList.innerHTML = allCustomersData.map(customer => `
         <div class="finance-customer-card" onclick="showFinanceCustomerDetailView('${customer.id}')" ${!customer.isRegistered ? 'style="border-color: #FFA500;"' : ''}>
@@ -2089,6 +2106,10 @@ function renderFinanceDebtList() {
                 <div class="finance-stat">
                     <span class="finance-stat-label">باقی‌مانده:</span>
                     <span class="finance-stat-value ${customer.remaining > 0 ? 'remaining-debt' : 'paid'}">${formatPrice(customer.remaining)}</span>
+                </div>
+                <div class="finance-stat">
+                    <span class="finance-stat-label">سود کل:</span>
+                    <span class="finance-stat-value profit">${formatPrice(customer.totalProfit)}</span>
                 </div>
             </div>
         </div>
@@ -2137,7 +2158,14 @@ function renderCustomerFinanceDetail(customerId) {
     const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
     const remaining = totalDebt - totalPaid;
 
-    console.log('Customer:', customer.name, 'isRegistered:', customer.isRegistered, 'totalDebt:', totalDebt, 'totalPaid:', totalPaid);
+    // Calculate total profit for this customer
+    const totalProfit = customerInvoices.reduce((sum, inv) => {
+        return sum + inv.items.reduce((itemSum, item) => {
+            return itemSum + (item.profit || 0);
+        }, 0);
+    }, 0);
+
+    console.log('Customer:', customer.name, 'isRegistered:', customer.isRegistered, 'totalDebt:', totalDebt, 'totalPaid:', totalPaid, 'totalProfit:', totalProfit);
 
     // Update customer info
     document.getElementById('customer-detail-name').textContent = customer.name;
@@ -2145,6 +2173,7 @@ function renderCustomerFinanceDetail(customerId) {
     document.getElementById('customer-detail-total-debt').textContent = formatPrice(totalDebt);
     document.getElementById('customer-detail-total-paid').textContent = formatPrice(totalPaid);
     document.getElementById('customer-detail-remaining').textContent = formatPrice(remaining);
+    document.getElementById('customer-detail-total-profit').textContent = formatPrice(totalProfit);
 
     // Show/hide add payment button for unregistered customers
     const addPaymentBtn = document.getElementById('add-payment-btn');

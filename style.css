@@ -1346,7 +1346,7 @@ body {
 
 .summary-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
@@ -1366,12 +1366,12 @@ body {
 .stat-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-green);
+    color: var(--gray-800);
 }
 
 @media (max-width: 768px) {
     .summary-stats {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .inventory-list {
@@ -1648,6 +1648,10 @@ body {
     color: var(--gray-800);
 }
 
+.stat-value.profit {
+    color: var(--primary-green);
+}
+
 .finance-customers-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -1731,6 +1735,10 @@ body {
     color: var(--primary-green);
 }
 
+.finance-stat-value.profit {
+    color: var(--dark-green);
+}
+
 /* Customer Detail View */
 .customer-detail-container {
     display: flex;
@@ -1781,6 +1789,10 @@ body {
 
 .customer-detail-stats .stat-value.payment {
     color: var(--primary-green);
+}
+
+.customer-detail-stats .stat-value.profit {
+    color: var(--dark-green);
 }
 
 .customer-detail-sections {
