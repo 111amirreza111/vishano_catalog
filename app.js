@@ -986,6 +986,10 @@ function renderInvoices() {
                 <p class="invoice-total">مبلغ کل: ${formatPrice(invoice.totalAmount)}</p>
             </div>
             <div class="invoice-card-actions">
+                <label class="invoice-sent-checkbox">
+                    <input type="checkbox" ${invoice.isSent ? 'checked' : ''} onchange="toggleInvoiceSentStatus('${invoice.id}', this.checked)">
+                    <span>ارسال شده</span>
+                </label>
                 <button class="btn btn-secondary" onclick="editInvoice('${invoice.id}')">
                     ایجاد تغییرات
                 </button>
@@ -1551,6 +1555,10 @@ async function saveInvoice() {
     try {
         let res;
         if (currentInvoiceId) {
+            // Get the original invoice to preserve isSent status
+            const originalInvoice = invoices.find(i => i.id === currentInvoiceId);
+            const isSent = originalInvoice ? originalInvoice.isSent : false;
+
             // Update existing invoice
             res = await fetch(`${API_BASE}/invoices/${currentInvoiceId}`, {
                 method: 'PUT',
@@ -1566,7 +1574,8 @@ async function saveInvoice() {
                     totalAmount,
                     totalDiscount,
                     finalAmount,
-                    totalQuantity
+                    totalQuantity,
+                    isSent
                 })
             });
         } else {
@@ -1594,6 +1603,13 @@ async function saveInvoice() {
             const savedInvoice = await res.json();
             currentInvoiceId = savedInvoice.id;
             await loadFromAPI();
+
+            // Refresh finance page if it's currently active
+            const financePage = document.getElementById('finance-page');
+            if (financePage && financePage.classList.contains('active')) {
+                renderFinancePage();
+            }
+
             showToast(currentInvoiceId ? 'صورتحساب با موفقیت ویرایش شد' : 'صورتحساب با موفقیت ذخیره شد', 'success');
         } else {
             showToast('خطا در ذخیره صورتحساب', 'error');
@@ -1754,6 +1770,13 @@ async function deleteInvoice(invoiceId) {
         if (res.ok) {
             await loadFromAPI();
             renderInvoices();
+
+            // Refresh finance page if it's currently active
+            const financePage = document.getElementById('finance-page');
+            if (financePage && financePage.classList.contains('active')) {
+                renderFinancePage();
+            }
+
             showToast('صورتحساب با موفقیت حذف شد', 'success');
         } else {
             showToast('خطا در حذف صورتحساب', 'error');
@@ -1761,6 +1784,57 @@ async function deleteInvoice(invoiceId) {
     } catch (error) {
         console.error('Error deleting invoice:', error);
         showToast('خطا در حذف صورتحساب', 'error');
+    }
+}
+
+async function toggleInvoiceSentStatus(invoiceId, newStatus) {
+    const message = newStatus
+        ? 'آیا مطمئن هستید که می‌خواهید این فاکتور را به عنوان ارسال شده علامت‌گذاری کنید؟'
+        : 'آیا مطمئن هستید که می‌خواهید علامت ارسال شده را از این فاکتور بردارید؟';
+
+    if (!confirm(message)) {
+        // Revert checkbox
+        const checkbox = document.querySelector(`input[onchange="toggleInvoiceSentStatus('${invoiceId}', this.checked)"]`);
+        if (checkbox) {
+            checkbox.checked = !newStatus;
+        }
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/invoices/${invoiceId}/sent-status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isSent: newStatus })
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderInvoices();
+
+            // Refresh finance page if it's currently active
+            const financePage = document.getElementById('finance-page');
+            if (financePage && financePage.classList.contains('active')) {
+                renderFinancePage();
+            }
+
+            showToast(newStatus ? 'فاکتور به عنوان ارسال شده علامت‌گذاری شد' : 'علامت ارسال شده از فاکتور برداشته شد', 'success');
+        } else {
+            showToast('خطا در تغییر وضعیت ارسال', 'error');
+            // Revert checkbox on error
+            const checkbox = document.querySelector(`input[onchange="toggleInvoiceSentStatus('${invoiceId}', this.checked)"]`);
+            if (checkbox) {
+                checkbox.checked = !newStatus;
+            }
+        }
+    } catch (error) {
+        console.error('Error toggling invoice sent status:', error);
+        showToast('خطا در تغییر وضعیت ارسال', 'error');
+        // Revert checkbox on error
+        const checkbox = document.querySelector(`input[onchange="toggleInvoiceSentStatus('${invoiceId}', this.checked)"]`);
+        if (checkbox) {
+            checkbox.checked = !newStatus;
+        }
     }
 }
 

@@ -411,6 +411,7 @@ app.post('/api/invoices', async (req, res) => {
             totalDiscount: totalDiscount || 0,
             finalAmount: finalAmount || totalAmount,
             totalQuantity,
+            isSent: false,
             createdAt: new Date().toISOString()
         };
 
@@ -477,6 +478,7 @@ app.put('/api/invoices/:id', async (req, res) => {
             totalDiscount: totalDiscount || 0,
             finalAmount: finalAmount || totalAmount,
             totalQuantity,
+            isSent: req.body.isSent !== undefined ? req.body.isSent : invoices[index].isSent,
             updatedAt: new Date().toISOString()
         };
 
@@ -486,6 +488,36 @@ app.put('/api/invoices/:id', async (req, res) => {
     } catch (error) {
         console.error('Error updating invoice:', error);
         res.status(500).json({ error: 'Failed to update invoice' });
+    }
+});
+
+// Update invoice sent status (partial update)
+app.patch('/api/invoices/:id/sent-status', async (req, res) => {
+    try {
+        const { isSent } = req.body;
+
+        if (typeof isSent !== 'boolean') {
+            return res.status(400).json({ error: 'isSent must be a boolean' });
+        }
+
+        const invoicesPath = path.join(DATA_DIR, 'invoices.json');
+        const data = await fs.readFile(invoicesPath, 'utf8');
+        const invoices = JSON.parse(data);
+
+        const index = invoices.findIndex(i => i.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+
+        invoices[index].isSent = isSent;
+        invoices[index].updatedAt = new Date().toISOString();
+
+        await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
+
+        res.json(invoices[index]);
+    } catch (error) {
+        console.error('Error updating invoice sent status:', error);
+        res.status(500).json({ error: 'Failed to update invoice sent status' });
     }
 });
 
