@@ -13,6 +13,7 @@ let productToDelete = null;
 let uploadedImageFile = null;
 let currentInvoiceItems = [];
 let currentInvoiceId = null;
+let originalInvoiceItems = []; // Store original items when editing
 let productionNeeds = [];
 let productionRecords = [];
 let editingCustomerId = null;
@@ -1019,6 +1020,7 @@ function initializeInvoiceCreator() {
     createInvoiceBtn.addEventListener('click', () => {
         currentInvoiceItems = [];
         currentInvoiceId = null;
+        originalInvoiceItems = []; // Clear original items for new invoice
         document.getElementById('invoice-customer-name').value = '';
         window.editingInvoiceCustomer = null;
 
@@ -1256,9 +1258,29 @@ function updateInvoiceItemQuantity(index, change) {
         const inventoryItem = inventory.find(i => i.productId === item.productId);
         const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
 
-        if (item.quantity + change > availableQuantity) {
-            showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
-            return;
+        // If editing an existing invoice, check differently
+        if (originalInvoiceItems.length > 0) {
+            const originalItem = originalInvoiceItems.find(i => i.productId === item.productId);
+            const originalQuantity = originalItem ? originalItem.quantity : 0;
+
+            // Calculate total quantity that will be deducted from inventory
+            // Final quantity will be: item.quantity + change
+            // Original quantity that was already deducted: originalQuantity
+            // So we need to deduct: (item.quantity + change) - originalQuantity from inventory
+            const finalQuantity = item.quantity + change;
+            const quantityToDeduct = finalQuantity - originalQuantity;
+
+            // Only check if we're deducting (positive difference)
+            if (quantityToDeduct > 0 && quantityToDeduct > availableQuantity) {
+                showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+                return;
+            }
+        } else {
+            // New invoice - simple check
+            if (change > availableQuantity) {
+                showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+                return;
+            }
         }
     }
 
@@ -1289,14 +1311,34 @@ function updateInvoiceItemQuantityDirect(index, value) {
         return;
     }
 
-    // Check inventory
-    const inventoryItem = inventory.find(i => i.productId === item.productId);
-    const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+    // Check inventory only when increasing quantity
+    if (quantity > item.quantity) {
+        const inventoryItem = inventory.find(i => i.productId === item.productId);
+        const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
 
-    if (quantity > availableQuantity) {
-        showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
-        renderInvoiceItems();
-        return;
+        // If editing an existing invoice, check differently
+        if (originalInvoiceItems.length > 0) {
+            const originalItem = originalInvoiceItems.find(i => i.productId === item.productId);
+            const originalQuantity = originalItem ? originalItem.quantity : 0;
+
+            // Calculate total quantity that will be deducted from inventory
+            const quantityToDeduct = quantity - originalQuantity;
+
+            // Only check if we're deducting (positive difference)
+            if (quantityToDeduct > 0 && quantityToDeduct > availableQuantity) {
+                showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+                renderInvoiceItems();
+                return;
+            }
+        } else {
+            // New invoice - simple check
+            const amountToAdd = quantity - item.quantity;
+            if (amountToAdd > availableQuantity) {
+                showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+                renderInvoiceItems();
+                return;
+            }
+        }
     }
 
     item.quantity = quantity;
@@ -1602,6 +1644,21 @@ async function saveInvoice() {
         if (res.ok) {
             const savedInvoice = await res.json();
             currentInvoiceId = savedInvoice.id;
+
+            console.log('Saving invoice - currentInvoiceId:', currentInvoiceId);
+            console.log('originalInvoiceItems length:', originalInvoiceItems.length);
+
+            // Update inventory if editing an invoice
+            if (originalInvoiceItems.length > 0) {
+                console.log('Updating inventory from invoice edit...');
+                await updateInventoryFromInvoiceEdit(currentInvoiceItems, originalInvoiceItems);
+                originalInvoiceItems = []; // Clear original items
+            } else {
+                // For new invoices, deduct from inventory
+                console.log('Deducting inventory for new invoice...');
+                await deductInventoryForNewInvoice(currentInvoiceItems);
+            }
+
             await loadFromAPI();
 
             // Refresh finance page if it's currently active
@@ -1691,11 +1748,19 @@ async function downloadInvoicePDF() {
     }
 }
 
-function editInvoice(invoiceId) {
-    const invoice = invoices.find(i => i.id === invoiceId);
+async function editInvoice(invoiceId) {
+    // Fetch the actual invoice from server to get the latest data
+    const res = await fetch(`${API_BASE}/invoices/${invoiceId}`);
+    const invoice = await res.json();
+
     if (!invoice) return;
 
     currentInvoiceId = invoice.id;
+
+    // Store original items for inventory adjustment later (from server data)
+    originalInvoiceItems = JSON.parse(JSON.stringify(invoice.items));
+    console.log('Edit invoice - stored original items from server:', originalInvoiceItems);
+
     currentInvoiceItems = invoice.items.map(item => {
         // Ensure baseCost is set (for old invoices)
         const baseCost = item.baseCost || 0;
@@ -1755,6 +1820,185 @@ function editInvoice(invoiceId) {
     switchPage('invoice-creator');
 }
 
+// Function to update inventory based on invoice changes
+async function updateInventoryFromInvoiceEdit(newItems, oldItems) {
+    // Get current inventory from server
+    const inventoryRes = await fetch(`${API_BASE}/inventory`);
+    const currentInventory = await inventoryRes.json();
+
+    // Create a map of old items by productId
+    const oldItemsMap = new Map();
+    oldItems.forEach(item => {
+        oldItemsMap.set(item.productId, item.quantity);
+    });
+
+    // Create a map of new items by productId
+    const newItemsMap = new Map();
+    newItems.forEach(item => {
+        newItemsMap.set(item.productId, item.quantity);
+    });
+
+    // Get all unique product IDs
+    const allProductIds = new Set([...oldItemsMap.keys(), ...newItemsMap.keys()]);
+
+    for (const productId of allProductIds) {
+        const oldQuantity = oldItemsMap.get(productId) || 0;
+        const newQuantity = newItemsMap.get(productId) || 0;
+        const quantityDifference = oldQuantity - newQuantity;
+
+        if (quantityDifference !== 0) {
+            // Find inventory item from current server data
+            const inventoryItem = currentInventory.find(i => i.productId === productId);
+
+            if (inventoryItem) {
+                const newInventoryQuantity = inventoryItem.quantity + quantityDifference;
+
+                // Check if we have enough inventory when deducting (newInventoryQuantity < current)
+                if (newInventoryQuantity < 0) {
+                    const product = products.find(p => p.id === productId);
+                    const productName = product ? product.name : productId;
+                    showToast(`موجودی انبار برای "${productName}" کافی نیست. در انبار ${inventoryItem.quantity} عدد موجود است اما نیاز به ${Math.abs(newInventoryQuantity)} عدد بیشتر است.`, 'error');
+                    throw new Error(`Insufficient inventory for product ${productId}`);
+                }
+
+                // Update inventory via API (using productId as param)
+                try {
+                    await fetch(`${API_BASE}/inventory/${productId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            quantity: newInventoryQuantity
+                        })
+                    });
+                    console.log(`Updated inventory for product ${productId}: ${inventoryItem.quantity} -> ${newInventoryQuantity} (diff: ${quantityDifference})`);
+                } catch (error) {
+                    console.error('Error updating inventory:', error);
+                    throw error;
+                }
+            } else {
+                // Inventory item doesn't exist, create it
+                const product = products.find(p => p.id === productId);
+                const productName = product ? product.name : 'Unknown';
+
+                try {
+                    await fetch(`${API_BASE}/inventory`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            productId,
+                            productName,
+                            quantity: quantityDifference // Can be negative if we're reducing
+                        })
+                    });
+                    console.log(`Created inventory item for product ${productId} with quantity ${quantityDifference}`);
+                } catch (error) {
+                    console.error('Error creating inventory item:', error);
+                    throw error;
+                }
+            }
+        }
+    }
+
+    // Reload inventory data
+    await loadFromAPI();
+}
+
+// Function to deduct inventory for new invoices
+async function deductInventoryForNewInvoice(items) {
+    // Get current inventory from server
+    const inventoryRes = await fetch(`${API_BASE}/inventory`);
+    const currentInventory = await inventoryRes.json();
+
+    for (const item of items) {
+        const inventoryItem = currentInventory.find(i => i.productId === item.productId);
+
+        if (inventoryItem) {
+            const newInventoryQuantity = inventoryItem.quantity - item.quantity;
+
+            // Update inventory via API (using productId as param)
+            try {
+                await fetch(`${API_BASE}/inventory/${item.productId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        quantity: newInventoryQuantity
+                    })
+                });
+                console.log(`Deducted inventory for product ${item.productId}: ${inventoryItem.quantity} -> ${newInventoryQuantity}`);
+            } catch (error) {
+                console.error('Error updating inventory:', error);
+            }
+        } else {
+            // Inventory item doesn't exist, create it with negative quantity
+            const product = products.find(p => p.id === item.productId);
+            const productName = product ? product.name : 'Unknown';
+
+            try {
+                await fetch(`${API_BASE}/inventory`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        productId: item.productId,
+                        productName,
+                        quantity: -item.quantity
+                    })
+                });
+                console.log(`Created inventory item for product ${item.productId} with quantity -${item.quantity}`);
+            } catch (error) {
+                console.error('Error creating inventory item:', error);
+            }
+        }
+    }
+}
+
+// Function to restore inventory when invoice is deleted
+async function restoreInventoryFromDeletedInvoice(items) {
+    // Get current inventory from server
+    const inventoryRes = await fetch(`${API_BASE}/inventory`);
+    const currentInventory = await inventoryRes.json();
+
+    for (const item of items) {
+        const inventoryItem = currentInventory.find(i => i.productId === item.productId);
+
+        if (inventoryItem) {
+            const newInventoryQuantity = inventoryItem.quantity + item.quantity;
+
+            // Update inventory via API (using productId as param)
+            try {
+                await fetch(`${API_BASE}/inventory/${item.productId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        quantity: newInventoryQuantity
+                    })
+                });
+                console.log(`Restored inventory for product ${item.productId}: ${inventoryItem.quantity} -> ${newInventoryQuantity}`);
+            } catch (error) {
+                console.error('Error updating inventory:', error);
+            }
+        } else {
+            // Inventory item doesn't exist, create it
+            const product = products.find(p => p.id === item.productId);
+            const productName = product ? product.name : 'Unknown';
+
+            try {
+                await fetch(`${API_BASE}/inventory`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        productId: item.productId,
+                        productName,
+                        quantity: item.quantity
+                    })
+                });
+                console.log(`Created inventory item for product ${item.productId} with quantity ${item.quantity}`);
+            } catch (error) {
+                console.error('Error creating inventory item:', error);
+            }
+        }
+    }
+}
+
 function confirmDeleteInvoice(invoiceId) {
     if (confirm('آیا مطمئن هستید که می‌خواهید این صورتحساب را حذف کنید؟')) {
         deleteInvoice(invoiceId);
@@ -1763,11 +2007,19 @@ function confirmDeleteInvoice(invoiceId) {
 
 async function deleteInvoice(invoiceId) {
     try {
+        // Get the invoice before deleting to restore inventory
+        const invoiceToDelete = invoices.find(i => i.id === invoiceId);
+
         const res = await fetch(`${API_BASE}/invoices/${invoiceId}`, {
             method: 'DELETE'
         });
 
         if (res.ok) {
+            // Restore inventory from deleted invoice
+            if (invoiceToDelete && invoiceToDelete.items) {
+                await restoreInventoryFromDeletedInvoice(invoiceToDelete.items);
+            }
+
             await loadFromAPI();
             renderInvoices();
 
