@@ -7,8 +7,8 @@
       "چوب گردو",
       "ابعاد : 7 * 5"
     ],
-    "baseCost": 46000,
-    "cashPrice": 62100,
+    "baseCost": 57700,
+    "cashPrice": 77895,
     "createdAt": "2026-09-03T09:07:31.054Z",
     "installmentPrice": 46000,
     "category": "1791014817011"
@@ -36,8 +36,8 @@
       "مناسب آجیل",
       "ابعاد : 15 * 6"
     ],
-    "baseCost": 95000,
-    "cashPrice": 128250,
+    "baseCost": 101000,
+    "cashPrice": 136350,
     "createdAt": "2026-09-03T09:14:11.563Z",
     "installmentPrice": 80000,
     "category": "cat1"
@@ -51,8 +51,8 @@
       "مناسب آجیل",
       "ابعاد : 15 * 6"
     ],
-    "baseCost": 95000,
-    "cashPrice": 128250,
+    "baseCost": 101000,
+    "cashPrice": 136350,
     "createdAt": "2026-09-03T09:16:36.153Z",
     "installmentPrice": 76000,
     "category": "cat1"
@@ -80,8 +80,8 @@
       "مناسب آجیل",
       "ابعاد : 15 * 6"
     ],
-    "baseCost": 95000,
-    "cashPrice": 128250,
+    "baseCost": 101000,
+    "cashPrice": 136350,
     "createdAt": "2026-09-03T09:21:39.742Z",
     "installmentPrice": 77000,
     "category": "cat1"
@@ -94,8 +94,8 @@
       "چوب گردو",
       "ابعاد : 7 * 7"
     ],
-    "baseCost": 45000,
-    "cashPrice": 60750,
+    "baseCost": 57500,
+    "cashPrice": 77625,
     "createdAt": "2026-09-03T09:23:26.658Z",
     "installmentPrice": 45000,
     "category": "cat2"
@@ -108,8 +108,8 @@
       "چوب گردو",
       "ابعاد : 7 * 4"
     ],
-    "baseCost": 29000,
-    "cashPrice": 39150,
+    "baseCost": 32000,
+    "cashPrice": 43200,
     "createdAt": "2026-09-03T09:26:36.450Z",
     "installmentPrice": 27500,
     "category": "cat2"
@@ -122,8 +122,8 @@
       "چوب گردو",
       "ابعاد : 20 * 7"
     ],
-    "baseCost": 95000,
-    "cashPrice": 128250,
+    "baseCost": 115000,
+    "cashPrice": 155250,
     "createdAt": "2026-09-03T09:32:04.372Z",
     "installmentPrice": 84000,
     "category": "cat3"
@@ -171,53 +171,14 @@
     "category": "cat3"
   },
   {
-    "id": "1788428380016",
-    "name": "جا قاشقی 4 قسمتی ",
-    "image": "/uploads/1788428380007-273333877.jpg",
-    "descriptions": [
-      "ابعاد : 15 * 16"
-    ],
-    "baseCost": 298000,
-    "cashPrice": 402300,
-    "createdAt": "2026-09-03T09:39:40.016Z",
-    "installmentPrice": 30000,
-    "category": "cat6"
-  },
-  {
-    "id": "1788428703676",
-    "name": "جا قاشقی دو قلو ",
-    "image": "/uploads/1788428703667-761369335.jpg",
-    "descriptions": [
-      "ابعاد : 25 * 14"
-    ],
-    "baseCost": 335000,
-    "cashPrice": 452250,
-    "createdAt": "2026-09-03T09:45:03.676Z",
-    "installmentPrice": 331000,
-    "category": "cat6"
-  },
-  {
-    "id": "1788428901523",
-    "name": "سبد سبزی دایره ای ",
-    "image": "/uploads/1788428901517-931489505.jpg",
-    "descriptions": [
-      "ابعاد : 15 * 7"
-    ],
-    "baseCost": 115000,
-    "cashPrice": 155250,
-    "createdAt": "2026-09-03T09:48:21.523Z",
-    "installmentPrice": 115000,
-    "category": "cat5"
-  },
-  {
     "id": "1788429194931",
-    "name": "قاشق عسل کوچک سپیدار ",
+    "name": "قاشق عسل گردو",
     "image": "/uploads/1788429194925-34473768.jpg",
     "descriptions": [
-      "ابعاد : 9 * 2"
+      "ابعاد : 15 * 2"
     ],
-    "baseCost": 12000,
-    "cashPrice": 16200,
+    "baseCost": 20000,
+    "cashPrice": 27000,
     "createdAt": "2026-09-03T09:53:14.931Z",
     "installmentPrice": 12000,
     "category": "cat4"
@@ -229,8 +190,8 @@
     "descriptions": [
       "ابعاد : 6 * 6"
     ],
-    "baseCost": 152000,
-    "cashPrice": 205200,
+    "baseCost": 178000,
+    "cashPrice": 240300,
     "createdAt": "2026-09-03T09:55:21.645Z",
     "installmentPrice": 152000,
     "category": "cat7"
@@ -242,25 +203,11 @@
     "descriptions": [
       "ابعاد : 6 * 6"
     ],
-    "baseCost": 144000,
-    "cashPrice": 194400,
+    "baseCost": 178000,
+    "cashPrice": 240300,
     "createdAt": "2026-09-03T09:56:47.062Z",
     "installmentPrice": 144000,
     "category": "cat7"
-  },
-  {
-    "id": "1788429526123",
-    "name": "قاشق عسل ",
-    "image": "/uploads/1788429526119-836459294.jpg",
-    "descriptions": [
-      "چوب سپیدار",
-      "ابعاد : 16 * 2"
-    ],
-    "baseCost": 15000,
-    "cashPrice": 20250,
-    "createdAt": "2026-09-03T09:58:46.123Z",
-    "installmentPrice": 15000,
-    "category": "cat4"
   },
   {
     "id": "1788429889733",
@@ -270,8 +217,8 @@
       "چوب راش",
       "ابعاد : 30"
     ],
-    "baseCost": 82000,
-    "cashPrice": 110700,
+    "baseCost": 100000,
+    "cashPrice": 135000,
     "createdAt": "2026-09-03T10:04:49.733Z",
     "installmentPrice": 82000,
     "category": "cat3"
@@ -284,8 +231,8 @@
       "ابعاد : 25",
       "جنس: راش"
     ],
-    "baseCost": 92000,
-    "cashPrice": 124200,
+    "baseCost": 102000,
+    "cashPrice": 137700,
     "createdAt": "2026-09-03T10:07:27.645Z",
     "installmentPrice": 92000,
     "category": "cat4"
@@ -298,8 +245,8 @@
       "ابعاد : 30",
       "جنس: راش"
     ],
-    "baseCost": 115000,
-    "cashPrice": 155250,
+    "baseCost": 132000,
+    "cashPrice": 178200,
     "createdAt": "2026-09-03T13:47:10.560Z",
     "installmentPrice": 115000,
     "category": "cat4"
@@ -312,8 +259,8 @@
       "ابعاد : 30",
       "جنس: راش"
     ],
-    "baseCost": 115000,
-    "cashPrice": 155250,
+    "baseCost": 132000,
+    "cashPrice": 178200,
     "createdAt": "2026-09-03T13:48:23.976Z",
     "installmentPrice": 115000,
     "category": "cat3"
@@ -326,8 +273,8 @@
       "ابعاد : 20",
       "جنس: راش"
     ],
-    "baseCost": 115000,
-    "cashPrice": 155250,
+    "baseCost": 132000,
+    "cashPrice": 178200,
     "createdAt": "2026-09-03T13:49:32.236Z",
     "installmentPrice": 115000,
     "category": "cat3"
@@ -355,8 +302,8 @@
       "ابعاد : 40 * 4",
       "جنس گردو"
     ],
-    "baseCost": 90000,
-    "cashPrice": 121500,
+    "baseCost": 95000,
+    "cashPrice": 128250,
     "createdAt": "2026-09-13T06:38:44.430Z",
     "installmentPrice": 82000,
     "category": "cat8"
@@ -369,24 +316,10 @@
       "ابعاد : 30 * 4",
       "جنس گردو"
     ],
-    "baseCost": 70000,
-    "cashPrice": 94500,
+    "baseCost": 85000,
+    "cashPrice": 114750,
     "createdAt": "2026-09-13T06:39:37.234Z",
     "installmentPrice": 65000,
-    "category": "cat8"
-  },
-  {
-    "id": "1789281799566",
-    "name": "وردنه شیار دار 40 سانتی گردو",
-    "image": "/uploads/1789281799555-33859645.png",
-    "descriptions": [
-      "ابعاد : 40 * 4",
-      "جنس گردو"
-    ],
-    "baseCost": 100000,
-    "cashPrice": 135000,
-    "createdAt": "2026-09-13T06:43:19.566Z",
-    "installmentPrice": 110000,
     "category": "cat8"
   },
   {
@@ -397,8 +330,8 @@
       "جنس: سپیدار",
       "ابعاد: 40 * 4"
     ],
-    "baseCost": 48000,
-    "cashPrice": 64800,
+    "baseCost": 50000,
+    "cashPrice": 67500,
     "installmentPrice": 48000,
     "createdAt": "2026-09-14T06:29:20.771Z",
     "category": "cat8"
@@ -410,8 +343,8 @@
     "descriptions": [
       "جنس: گردو"
     ],
-    "baseCost": 55000,
-    "cashPrice": 74250,
+    "baseCost": 62000,
+    "cashPrice": 83700,
     "installmentPrice": 70000,
     "createdAt": "2026-09-14T06:34:15.316Z",
     "category": "cat9"
@@ -422,10 +355,10 @@
     "image": "/uploads/1790134297117-253615305.png",
     "descriptions": [
       "جنس : گردو",
-      "ابعاد: 6.5 * 7"
+      "ابعاد: 6.5 * 4.5"
     ],
-    "baseCost": 29000,
-    "cashPrice": 39150,
+    "baseCost": 38600,
+    "cashPrice": 52110,
     "installmentPrice": 28000,
     "createdAt": "2026-09-23T03:31:37.126Z",
     "category": "cat2"
@@ -451,8 +384,8 @@
       "ابعاد : 7.5 * 6",
       "جنس گردو"
     ],
-    "baseCost": 95000,
-    "cashPrice": 128250,
+    "baseCost": 150000,
+    "cashPrice": 202500,
     "createdAt": "2026-10-03T05:48:29.105Z",
     "category": "cat7"
   },
@@ -464,8 +397,8 @@
       "جنس گردو",
       "ابعاد: 6.5 * 7"
     ],
-    "baseCost": 35000,
-    "cashPrice": 47250,
+    "baseCost": 38600,
+    "cashPrice": 52110,
     "createdAt": "2026-10-03T06:06:24.682Z",
     "category": "cat2"
   },
@@ -476,8 +409,8 @@
     "descriptions": [
       "ابعاد 7 در 22"
     ],
-    "baseCost": 90000,
-    "cashPrice": 121500,
+    "baseCost": 114000,
+    "cashPrice": 153900,
     "category": "cat3",
     "createdAt": "2026-10-25T08:05:15.001Z"
   },
@@ -488,8 +421,8 @@
     "descriptions": [
       "جنس گردو"
     ],
-    "baseCost": 70000,
-    "cashPrice": 94500,
+    "baseCost": 75000,
+    "cashPrice": 101250,
     "category": "cat8",
     "createdAt": "2026-10-25T08:30:56.153Z"
   },
@@ -500,8 +433,8 @@
     "descriptions": [
       "جنس گردو"
     ],
-    "baseCost": 49000,
-    "cashPrice": 66150,
+    "baseCost": 38600,
+    "cashPrice": 52110,
     "category": "cat2",
     "createdAt": "2026-10-27T08:04:34.952Z"
   }
