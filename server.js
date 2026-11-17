@@ -1060,6 +1060,43 @@ app.post('/api/git-commit', async (req, res) => {
     }
 });
 
+// Git Pull API Route
+app.post('/api/git-pull', async (req, res) => {
+    try {
+        const { exec } = require('child_process');
+        const util = require('util');
+        const execPromise = util.promisify(exec);
+
+        console.log('Attempting git pull...');
+
+        // Check if .git directory exists
+        try {
+            await fs.access(path.join(__dirname, '.git'));
+        } catch {
+            return res.status(400).json({ error: 'This directory is not a git repository' });
+        }
+
+        // Pull from remote repository
+        try {
+            const { stdout, stderr } = await execPromise('git pull', { cwd: __dirname });
+            console.log('Git pull successful');
+            console.log('stdout:', stdout);
+            if (stderr) console.log('stderr:', stderr);
+        } catch (error) {
+            console.error('Git pull error:', error);
+            return res.status(500).json({ error: 'Failed to pull changes from remote repository' });
+        }
+
+        res.json({
+            message: 'به‌روزرسانی با موفقیت انجام شد',
+            platform: process.platform
+        });
+    } catch (error) {
+        console.error('Error in git pull:', error);
+        res.status(500).json({ error: 'Failed to execute git pull' });
+    }
+});
+
 // Start server
 ensureDirectories().then(() => {
     app.listen(PORT, () => {

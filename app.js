@@ -2990,6 +2990,7 @@ if (inventoryModal) {
 // Git Save Page
 function initializeGitSavePage() {
     const gitCommitBtn = document.getElementById('git-commit-btn');
+    const gitPullBtn = document.getElementById('git-pull-btn');
     const gitCommitStatus = document.getElementById('git-commit-status');
 
     if (!gitCommitBtn) return;
@@ -3041,6 +3042,56 @@ function initializeGitSavePage() {
             gitCommitBtn.innerHTML = '<span class="icon">💾</span> ذخیره تغییرات در گیت';
         }
     });
+
+    if (gitPullBtn) {
+        gitPullBtn.addEventListener('click', async () => {
+            // Show loading state
+            gitPullBtn.disabled = true;
+            gitPullBtn.innerHTML = '<span class="icon">⏳</span> در حال به‌روزرسانی...';
+
+            // Show status message
+            if (gitCommitStatus) {
+                gitCommitStatus.className = 'git-commit-status show info';
+                gitCommitStatus.textContent = 'در حال به‌روزرسانی از گیت...';
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/git-pull`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Show success message
+                    if (gitCommitStatus) {
+                        gitCommitStatus.className = 'git-commit-status show success';
+                        gitCommitStatus.textContent = data.message || 'به‌روزرسانی با موفقیت انجام شد';
+                    }
+                    showToast(data.message || 'به‌روزرسانی با موفقیت انجام شد', 'success');
+                } else {
+                    // Show error message
+                    if (gitCommitStatus) {
+                        gitCommitStatus.className = 'git-commit-status show error';
+                        gitCommitStatus.textContent = data.error || 'خطا در به‌روزرسانی';
+                    }
+                    showToast(data.error || 'خطا در به‌روزرسانی', 'error');
+                }
+            } catch (error) {
+                console.error('Error in git pull:', error);
+                if (gitCommitStatus) {
+                    gitCommitStatus.className = 'git-commit-status show error';
+                    gitCommitStatus.textContent = 'خطا در ارتباط با سرور';
+                }
+                showToast('خطا در ارتباط با سرور', 'error');
+            } finally {
+                // Reset button state
+                gitPullBtn.disabled = false;
+                gitPullBtn.innerHTML = '<span class="icon">🔄</span> به‌روزرسانی از گیت';
+            }
+        });
+    }
 }
 
 

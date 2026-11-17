@@ -404,6 +404,16 @@ body {
     font-size: 1rem;
 }
 
+.git-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.git-actions .btn {
+    flex: 1;
+}
+
 .git-commit-status {
     margin-top: 2rem;
     padding: 1rem;
