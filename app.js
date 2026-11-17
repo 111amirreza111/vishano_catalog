@@ -21,6 +21,10 @@ let currentFinanceCustomerId = null;
 
 const API_BASE = 'http://localhost:3000/api';
 
+// Password for finance page
+const FINANCE_PASSWORD = '00991155';
+let pendingPageSwitch = null;
+
 // DOM Elements
 const navTabs = document.querySelectorAll('.nav-tab');
 const pages = document.querySelectorAll('.page');
@@ -33,6 +37,7 @@ const confirmModal = document.getElementById('confirm-modal');
 const categoryModal = document.getElementById('category-modal');
 const customerModal = document.getElementById('customer-modal');
 const paymentModal = document.getElementById('payment-modal');
+const passwordModal = document.getElementById('password-modal');
 const productForm = document.getElementById('product-form');
 const categoryForm = document.getElementById('category-form');
 const customerForm = document.getElementById('customer-form');
@@ -62,8 +67,49 @@ function initializeNavigation() {
     navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const pageName = tab.dataset.page;
-            switchPage(pageName);
+            if (pageName === 'finance') {
+                // Show password modal for finance page
+                pendingPageSwitch = pageName;
+                passwordModal.classList.add('active');
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-input').focus();
+            } else {
+                switchPage(pageName);
+            }
         });
+    });
+
+    // Password modal handlers
+    document.getElementById('password-modal-close-btn').addEventListener('click', () => {
+        passwordModal.classList.remove('active');
+        pendingPageSwitch = null;
+    });
+
+    document.getElementById('cancel-password-btn').addEventListener('click', () => {
+        passwordModal.classList.remove('active');
+        pendingPageSwitch = null;
+    });
+
+    document.getElementById('confirm-password-btn').addEventListener('click', () => {
+        const enteredPassword = document.getElementById('password-input').value;
+        if (enteredPassword === FINANCE_PASSWORD) {
+            passwordModal.classList.remove('active');
+            if (pendingPageSwitch) {
+                switchPage(pendingPageSwitch);
+                pendingPageSwitch = null;
+            }
+        } else {
+            showToast('رمز عبور اشتباه است', 'error');
+            document.getElementById('password-input').value = '';
+            document.getElementById('password-input').focus();
+        }
+    });
+
+    // Allow Enter key to submit password
+    document.getElementById('password-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('confirm-password-btn').click();
+        }
     });
 }
 
