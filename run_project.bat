@@ -21,16 +21,6 @@ if %errorlevel% == 0 (
     echo Starting server...
     echo.
 
-    :: Check if Node.js is installed
-    where node >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo [ERROR] Node.js is not installed!
-        echo Please install Node.js first.
-        echo.
-        pause
-        exit /b 1
-    )
-
     :: Start server in new window
     start "Vishano Server" cmd /k "node server.js"
 
