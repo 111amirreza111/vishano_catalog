@@ -63,14 +63,27 @@
             <section id="invoices-page" class="page">
                 <div class="page-header">
                     <h2>مدیریت صورتحساب</h2>
-                    <button class="btn btn-primary" id="create-invoice-btn">
-                        <span class="icon">+</span>
-                        ایجاد صورتحساب جدید
-                    </button>
+                    <div class="invoice-tabs">
+                        <button class="invoice-tab active" data-tab="invoices">فاکتورها</button>
+                        <button class="invoice-tab" data-tab="proformas">پیش فاکتورها</button>
+                    </div>
+                    <div class="page-header-buttons">
+                        <button class="btn btn-primary" id="create-invoice-btn">
+                            <span class="icon">+</span>
+                            ایجاد فاکتور جدید
+                        </button>
+                        <button class="btn btn-secondary" id="create-proforma-btn">
+                            <span class="icon">+</span>
+                            ایجاد پیش فاکتور جدید
+                        </button>
+                    </div>
                 </div>
 
                 <div class="invoices-grid" id="invoices-grid">
                     <!-- Invoices will be rendered here -->
+                </div>
+                <div class="invoices-grid" id="proformas-grid" style="display: none;">
+                    <!-- Proformas will be rendered here -->
                 </div>
             </section>
 
@@ -222,7 +235,7 @@
             <!-- Invoice Creator Page -->
             <section id="invoice-creator-page" class="page">
                 <div class="page-header">
-                    <h2>ایجاد صورتحساب</h2>
+                    <h2 id="invoice-creator-title">ایجاد صورتحساب</h2>
                     <button class="btn btn-secondary" id="back-to-invoices-btn">
                         <span class="icon">←</span>
                         بازگشت به لیست

@@ -925,6 +925,36 @@ body {
 }
 
 /* Invoice Styles */
+.invoice-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.invoice-tab {
+    padding: 0.5rem 1rem;
+    background-color: var(--gray-100);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.invoice-tab:hover {
+    background-color: var(--light-green);
+    color: var(--primary-green);
+}
+
+.invoice-tab.active {
+    background-color: var(--primary-green);
+    color: var(--white);
+    border-color: var(--primary-green);
+}
+
 .invoices-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

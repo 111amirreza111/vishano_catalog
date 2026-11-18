@@ -108,6 +108,14 @@ async function ensureDirectories() {
         } catch {
             await fs.writeFile(inventoryPath, JSON.stringify([], null, 2));
         }
+
+        // Initialize proformas.json if it doesn't exist
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        try {
+            await fs.access(proformasPath);
+        } catch {
+            await fs.writeFile(proformasPath, JSON.stringify([], null, 2));
+        }
     } catch (error) {
         console.error('Error creating directories:', error);
     }
@@ -518,6 +526,146 @@ app.patch('/api/invoices/:id/sent-status', async (req, res) => {
     } catch (error) {
         console.error('Error updating invoice sent status:', error);
         res.status(500).json({ error: 'Failed to update invoice sent status' });
+    }
+});
+
+// Proforma API Routes
+
+// Get all proformas
+app.get('/api/proformas', async (req, res) => {
+    try {
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        const data = await fs.readFile(proformasPath, 'utf8');
+        const proformas = JSON.parse(data);
+        res.json(proformas);
+    } catch (error) {
+        console.error('Error reading proformas:', error);
+        res.status(500).json({ error: 'Failed to read proformas' });
+    }
+});
+
+// Get single proforma
+app.get('/api/proformas/:id', async (req, res) => {
+    try {
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        const data = await fs.readFile(proformasPath, 'utf8');
+        const proformas = JSON.parse(data);
+        const proforma = proformas.find(p => p.id === req.params.id);
+
+        if (!proforma) {
+            return res.status(404).json({ error: 'Proforma not found' });
+        }
+
+        res.json(proforma);
+    } catch (error) {
+        console.error('Error reading proforma:', error);
+        res.status(500).json({ error: 'Failed to read proforma' });
+    }
+});
+
+// Create proforma
+app.post('/api/proformas', async (req, res) => {
+    try {
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+
+        if (!customerName || !date || !time || !items || items.length === 0) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        const data = await fs.readFile(proformasPath, 'utf8');
+        const proformas = JSON.parse(data);
+
+        const newProforma = {
+            id: Date.now().toString(),
+            customerId: customerId || null,
+            customerName,
+            customerPhone: customerPhone || '',
+            customerAddress: customerAddress || '',
+            date,
+            time,
+            items,
+            totalAmount,
+            totalDiscount: totalDiscount || 0,
+            finalAmount: finalAmount || totalAmount,
+            totalQuantity,
+            isSent: false,
+            createdAt: new Date().toISOString()
+        };
+
+        proformas.push(newProforma);
+        await fs.writeFile(proformasPath, JSON.stringify(proformas, null, 2));
+
+        res.json(newProforma);
+    } catch (error) {
+        console.error('Error creating proforma:', error);
+        res.status(500).json({ error: 'Failed to create proforma' });
+    }
+});
+
+// Delete proforma
+app.delete('/api/proformas/:id', async (req, res) => {
+    try {
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        const data = await fs.readFile(proformasPath, 'utf8');
+        const proformas = JSON.parse(data);
+
+        const index = proformas.findIndex(p => p.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Proforma not found' });
+        }
+
+        proformas.splice(index, 1);
+        await fs.writeFile(proformasPath, JSON.stringify(proformas, null, 2));
+
+        res.json({ message: 'Proforma deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting proforma:', error);
+        res.status(500).json({ error: 'Failed to delete proforma' });
+    }
+});
+
+// Update proforma
+app.put('/api/proformas/:id', async (req, res) => {
+    try {
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+
+        if (!customerName || !date || !time || !items || items.length === 0) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const proformasPath = path.join(DATA_DIR, 'proformas.json');
+        const data = await fs.readFile(proformasPath, 'utf8');
+        const proformas = JSON.parse(data);
+
+        const index = proformas.findIndex(p => p.id === req.params.id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Proforma not found' });
+        }
+
+        proformas[index] = {
+            ...proformas[index],
+            customerId: customerId !== undefined ? customerId : proformas[index].customerId,
+            customerName,
+            customerPhone: customerPhone !== undefined ? customerPhone : proformas[index].customerPhone,
+            customerAddress: customerAddress !== undefined ? customerAddress : proformas[index].customerAddress,
+            date,
+            time,
+            items,
+            totalAmount,
+            totalDiscount: totalDiscount || 0,
+            finalAmount: finalAmount || totalAmount,
+            totalQuantity,
+            isSent: req.body.isSent !== undefined ? req.body.isSent : proformas[index].isSent,
+            updatedAt: new Date().toISOString()
+        };
+
+        await fs.writeFile(proformasPath, JSON.stringify(proformas, null, 2));
+
+        res.json(proformas[index]);
+    } catch (error) {
+        console.error('Error updating proforma:', error);
+        res.status(500).json({ error: 'Failed to update proforma' });
     }
 });
 

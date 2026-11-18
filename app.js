@@ -1,6 +1,7 @@
 // App State
 let products = [];
 let invoices = [];
+let proformas = [];
 let categories = [];
 let customers = [];
 let payments = [];
@@ -18,6 +19,7 @@ let productionNeeds = [];
 let productionRecords = [];
 let editingCustomerId = null;
 let currentFinanceCustomerId = null;
+let isProformaMode = false; // Track if we're creating a proforma
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -140,6 +142,8 @@ async function switchPage(pageName) {
         renderProducts();
     } else if (pageName === 'invoices') {
         renderInvoices();
+        renderProformas();
+        initializeInvoiceTabs();
     } else if (pageName === 'customers') {
         renderCustomers();
     } else if (pageName === 'finance') {
@@ -171,10 +175,11 @@ async function switchPage(pageName) {
 async function loadFromAPI() {
     try {
         console.log('Loading data from API...');
-        const [productsRes, settingsRes, invoicesRes, categoriesRes, productionRes, customersRes, paymentsRes, inventoryRes] = await Promise.all([
+        const [productsRes, settingsRes, invoicesRes, proformasRes, categoriesRes, productionRes, customersRes, paymentsRes, inventoryRes] = await Promise.all([
             fetch(`${API_BASE}/products`),
             fetch(`${API_BASE}/settings`),
             fetch(`${API_BASE}/invoices`),
+            fetch(`${API_BASE}/proformas`),
             fetch(`${API_BASE}/categories`),
             fetch(`${API_BASE}/production`),
             fetch(`${API_BASE}/customers`),
@@ -191,6 +196,9 @@ async function loadFromAPI() {
         if (invoicesRes.ok) {
             invoices = await invoicesRes.json();
         }
+        if (proformasRes.ok) {
+            proformas = await proformasRes.json();
+        }
         if (categoriesRes.ok) {
             categories = await categoriesRes.json();
         }
@@ -206,13 +214,14 @@ async function loadFromAPI() {
         if (inventoryRes.ok) {
             inventory = await inventoryRes.json();
         }
-        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length, paymentsCount: payments.length, inventoryCount: inventory.length });
+        console.log('Data loaded successfully:', { productsCount: products.length, settings, invoicesCount: invoices.length, proformasCount: proformas.length, categoriesCount: categories.length, productionCount: productionRecords.length, customersCount: customers.length, paymentsCount: payments.length, inventoryCount: inventory.length });
     } catch (error) {
         console.error('Error loading data:', error);
         showToast('خطا در بارگذاری داده‌ها', 'error');
         // Set default values if loading fails
         products = [];
         invoices = [];
+        proformas = [];
         categories = [];
         productionRecords = [];
         customers = [];
@@ -1009,12 +1018,34 @@ confirmModal.addEventListener('click', (e) => {
 
 // Invoice Management
 
+function initializeInvoiceTabs() {
+    const invoiceTabs = document.querySelectorAll('.invoice-tab');
+    const invoicesGrid = document.getElementById('invoices-grid');
+    const proformasGrid = document.getElementById('proformas-grid');
+
+    invoiceTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            invoiceTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const tabName = tab.dataset.tab;
+            if (tabName === 'invoices') {
+                invoicesGrid.style.display = 'grid';
+                proformasGrid.style.display = 'none';
+            } else {
+                invoicesGrid.style.display = 'none';
+                proformasGrid.style.display = 'grid';
+            }
+        });
+    });
+}
+
 function renderInvoices() {
     if (!invoices || invoices.length === 0) {
         invoicesGrid.innerHTML = `
             <div class="empty-state" style="grid-column: 1 / -1;">
                 <div class="empty-state-icon">📄</div>
-                <p class="empty-state-text">هنوز صورتحسابی ایجاد نشده است</p>
+                <p class="empty-state-text">هنوز فاکتوری ایجاد نشده است</p>
             </div>
         `;
         return;
@@ -1048,8 +1079,45 @@ function renderInvoices() {
     `).join('');
 }
 
+function renderProformas() {
+    const proformasGrid = document.getElementById('proformas-grid');
+    if (!proformas || proformas.length === 0) {
+        proformasGrid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">📄</div>
+                <p class="empty-state-text">هنوز پیش فاکتوری ایجاد نشده است</p>
+            </div>
+        `;
+        return;
+    }
+
+    proformasGrid.innerHTML = proformas.map(proforma => `
+        <div class="invoice-card">
+            <div class="invoice-card-header">
+                <h3 class="invoice-card-customer">${proforma.customerName}</h3>
+                <span class="invoice-card-number">#${proforma.id.slice(-6)}</span>
+            </div>
+            <div class="invoice-card-details">
+                <p>تاریخ: ${proforma.date}</p>
+                <p>ساعت: ${proforma.time}</p>
+                <p>تعداد اقلام: ${proforma.items.length}</p>
+                <p class="invoice-total">مبلغ کل: ${formatPrice(proforma.totalAmount)}</p>
+            </div>
+            <div class="invoice-card-actions">
+                <button class="btn btn-secondary" onclick="editProforma('${proforma.id}')">
+                    ایجاد تغییرات
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteProforma('${proforma.id}')">
+                    حذف
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
 function initializeInvoiceCreator() {
     const createInvoiceBtn = document.getElementById('create-invoice-btn');
+    const createProformaBtn = document.getElementById('create-proforma-btn');
     const backToInvoicesBtn = document.getElementById('back-to-invoices-btn');
     const productSearch = document.getElementById('product-search');
     const saveInvoiceBtn = document.getElementById('save-invoice-btn');
@@ -1064,11 +1132,41 @@ function initializeInvoiceCreator() {
     populateCustomerDropdown();
 
     createInvoiceBtn.addEventListener('click', () => {
+        isProformaMode = false;
         currentInvoiceItems = [];
         currentInvoiceId = null;
         originalInvoiceItems = []; // Clear original items for new invoice
         document.getElementById('invoice-customer-name').value = '';
         window.editingInvoiceCustomer = null;
+        document.getElementById('invoice-creator-title').textContent = 'ایجاد صورتحساب';
+
+        // Set current date in Persian
+        const now = new Date();
+        const persianDate = now.toLocaleDateString('fa-IR');
+        const dateParts = persianDate.split('/');
+        document.getElementById('invoice-year').value = toPersianDigits(dateParts[0]);
+        document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
+        document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
+
+        // Set current time in Persian
+        const persianTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+        const timeParts = persianTime.split(':');
+        document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
+        document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
+
+        renderInvoiceItems();
+        renderInvoicePreview();
+        switchPage('invoice-creator');
+    });
+
+    createProformaBtn.addEventListener('click', () => {
+        isProformaMode = true;
+        currentInvoiceItems = [];
+        currentInvoiceId = null;
+        originalInvoiceItems = []; // Clear original items for new proforma
+        document.getElementById('invoice-customer-name').value = '';
+        window.editingInvoiceCustomer = null;
+        document.getElementById('invoice-creator-title').textContent = 'ایجاد پیش فاکتور';
 
         // Set current date in Persian
         const now = new Date();
@@ -1090,6 +1188,8 @@ function initializeInvoiceCreator() {
     });
 
     backToInvoicesBtn.addEventListener('click', () => {
+        isProformaMode = false; // Reset mode when going back
+        document.getElementById('invoice-creator-title').textContent = 'ایجاد صورتحساب';
         switchPage('invoices');
     });
 
@@ -1110,11 +1210,14 @@ function initializeInvoiceCreator() {
             const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
             const isOutOfStock = availableQuantity <= 0;
 
+            // In proforma mode, allow adding products even if out of stock
+            const isClickable = isProformaMode || !isOutOfStock;
+
             return `
-                <div class="search-result-item ${isOutOfStock ? 'out-of-stock' : ''}" ${isOutOfStock ? '' : `onclick="addProductToInvoice('${product.id}')"`}>
+                <div class="search-result-item ${isOutOfStock && !isProformaMode ? 'out-of-stock' : ''}" ${isClickable ? `onclick="addProductToInvoice('${product.id}')"` : ''}>
                     <span class="search-result-name">${product.name}</span>
                     <span class="search-result-price">${formatPrice(product.cashPrice)}</span>
-                    ${isOutOfStock ? '<span class="out-of-stock-label">نا موجود</span>' : ''}
+                    ${isOutOfStock && !isProformaMode ? '<span class="out-of-stock-label">نا موجود</span>' : ''}
                 </div>
             `;
         }).join('');
@@ -1192,23 +1295,28 @@ function addProductToInvoice(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-    // Check if product is in stock
-    const inventoryItem = inventory.find(i => i.productId === productId);
-    const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
+    // Skip inventory checks in proforma mode
+    if (!isProformaMode) {
+        // Check if product is in stock
+        const inventoryItem = inventory.find(i => i.productId === productId);
+        const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
 
-    if (availableQuantity <= 0) {
-        showToast('این محصول در انبار موجود نیست', 'error');
-        return;
+        if (availableQuantity <= 0) {
+            showToast('این محصول در انبار موجود نیست', 'error');
+            return;
+        }
+
+        // Check if adding this product would exceed available stock
+        const existingItem = currentInvoiceItems.find(item => item.productId === productId);
+        const currentQuantity = existingItem ? existingItem.quantity : 0;
+
+        if (currentQuantity + 1 > availableQuantity) {
+            showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
+            return;
+        }
     }
 
-    // Check if adding this product would exceed available stock
     const existingItem = currentInvoiceItems.find(item => item.productId === productId);
-    const currentQuantity = existingItem ? existingItem.quantity : 0;
-
-    if (currentQuantity + 1 > availableQuantity) {
-        showToast(`فقط ${availableQuantity} عدد از این محصول در انبار موجود است`, 'error');
-        return;
-    }
 
     if (existingItem) {
         existingItem.quantity += 1;
@@ -1299,8 +1407,8 @@ function renderInvoiceItems() {
 function updateInvoiceItemQuantity(index, change) {
     const item = currentInvoiceItems[index];
 
-    // Check inventory when increasing quantity
-    if (change > 0) {
+    // Check inventory when increasing quantity (skip in proforma mode)
+    if (change > 0 && !isProformaMode) {
         const inventoryItem = inventory.find(i => i.productId === item.productId);
         const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
 
@@ -1357,8 +1465,8 @@ function updateInvoiceItemQuantityDirect(index, value) {
         return;
     }
 
-    // Check inventory only when increasing quantity
-    if (quantity > item.quantity) {
+    // Check inventory only when increasing quantity (skip in proforma mode)
+    if (quantity > item.quantity && !isProformaMode) {
         const inventoryItem = inventory.find(i => i.productId === item.productId);
         const availableQuantity = inventoryItem ? inventoryItem.quantity : 0;
 
@@ -1502,6 +1610,8 @@ function renderInvoicePreview() {
 
     const invoicePreview = document.getElementById('invoice-preview');
 
+    const docTitle = isProformaMode ? 'پیش فاکتور فروش' : 'صورتحساب فروش';
+
     invoicePreview.innerHTML = `
         <div class="invoice-header">
             <div class="invoice-meta">
@@ -1510,7 +1620,7 @@ function renderInvoicePreview() {
             </div>
             <div class="invoice-title-section">
                 <p class="invoice-quote">راه در جهان یکیست و آن راه، راستی‌ست</p>
-                <h1 class="invoice-title">صورتحساب فروش</h1>
+                <h1 class="invoice-title">${docTitle}</h1>
             </div>
         </div>
 
@@ -1640,15 +1750,19 @@ async function saveInvoice() {
     const totalDiscount = currentInvoiceItems.reduce((sum, item) => sum + (item.discountAmount || 0), 0);
     const finalAmount = totalAmount - totalDiscount;
 
+    // Choose API endpoint based on mode
+    const apiEndpoint = isProformaMode ? `${API_BASE}/proformas` : `${API_BASE}/invoices`;
+    const collection = isProformaMode ? proformas : invoices;
+
     try {
         let res;
         if (currentInvoiceId) {
-            // Get the original invoice to preserve isSent status
+            // Get the original invoice/proforma to preserve isSent status (only for invoices)
             const originalInvoice = invoices.find(i => i.id === currentInvoiceId);
             const isSent = originalInvoice ? originalInvoice.isSent : false;
 
-            // Update existing invoice
-            res = await fetch(`${API_BASE}/invoices/${currentInvoiceId}`, {
+            // Update existing invoice/proforma
+            res = await fetch(`${apiEndpoint}/${currentInvoiceId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1663,12 +1777,12 @@ async function saveInvoice() {
                     totalDiscount,
                     finalAmount,
                     totalQuantity,
-                    isSent
+                    isSent: isProformaMode ? false : isSent
                 })
             });
         } else {
-            // Create new invoice
-            res = await fetch(`${API_BASE}/invoices`, {
+            // Create new invoice/proforma
+            res = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1691,18 +1805,22 @@ async function saveInvoice() {
             const savedInvoice = await res.json();
             currentInvoiceId = savedInvoice.id;
 
-            console.log('Saving invoice - currentInvoiceId:', currentInvoiceId);
+            console.log('Saving invoice/proforma - currentInvoiceId:', currentInvoiceId);
             console.log('originalInvoiceItems length:', originalInvoiceItems.length);
+            console.log('isProformaMode:', isProformaMode);
 
-            // Update inventory if editing an invoice
-            if (originalInvoiceItems.length > 0) {
-                console.log('Updating inventory from invoice edit...');
-                await updateInventoryFromInvoiceEdit(currentInvoiceItems, originalInvoiceItems);
-                originalInvoiceItems = []; // Clear original items
-            } else {
-                // For new invoices, deduct from inventory
-                console.log('Deducting inventory for new invoice...');
-                await deductInventoryForNewInvoice(currentInvoiceItems);
+            // Only update inventory for regular invoices, NOT for proformas
+            if (!isProformaMode) {
+                // Update inventory if editing an invoice
+                if (originalInvoiceItems.length > 0) {
+                    console.log('Updating inventory from invoice edit...');
+                    await updateInventoryFromInvoiceEdit(currentInvoiceItems, originalInvoiceItems);
+                    originalInvoiceItems = []; // Clear original items
+                } else {
+                    // For new invoices, deduct from inventory
+                    console.log('Deducting inventory for new invoice...');
+                    await deductInventoryForNewInvoice(currentInvoiceItems);
+                }
             }
 
             await loadFromAPI();
@@ -1713,13 +1831,16 @@ async function saveInvoice() {
                 renderFinancePage();
             }
 
-            showToast(currentInvoiceId ? 'صورتحساب با موفقیت ویرایش شد' : 'صورتحساب با موفقیت ذخیره شد', 'success');
+            const docType = isProformaMode ? 'پیش فاکتور' : 'صورتحساب';
+            showToast(currentInvoiceId ? `${docType} با موفقیت ویرایش شد` : `${docType} با موفقیت ذخیره شد`, 'success');
         } else {
-            showToast('خطا در ذخیره صورتحساب', 'error');
+            const docType = isProformaMode ? 'پیش فاکتور' : 'صورتحساب';
+            showToast(`خطا در ذخیره ${docType}`, 'error');
         }
     } catch (error) {
-        console.error('Error saving invoice:', error);
-        showToast('خطا در ذخیره صورتحساب', 'error');
+        console.error('Error saving invoice/proforma:', error);
+        const docType = isProformaMode ? 'پیش فاکتور' : 'صورتحساب';
+        showToast(`خطا در ذخیره ${docType}`, 'error');
     }
 }
 
@@ -1738,7 +1859,8 @@ async function downloadInvoiceImage() {
 
         const link = document.createElement('a');
         const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
-        link.download = `صورتحساب-${customerName}-${Date.now()}.png`;
+        const docType = isProformaMode ? 'پیش-فاکتور' : 'صورتحساب';
+        link.download = `${docType}-${customerName}-${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
 
@@ -1785,7 +1907,8 @@ async function downloadInvoicePDF() {
         pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
 
         const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
-        pdf.save(`صورتحساب-${customerName}-${Date.now()}.pdf`);
+        const docType = isProformaMode ? 'پیش-فاکتور' : 'صورتحساب';
+        pdf.save(`${docType}-${customerName}-${Date.now()}.pdf`);
 
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
@@ -1795,6 +1918,9 @@ async function downloadInvoicePDF() {
 }
 
 async function editInvoice(invoiceId) {
+    isProformaMode = false;
+    document.getElementById('invoice-creator-title').textContent = 'ویرایش صورتحساب';
+
     // Fetch the actual invoice from server to get the latest data
     const res = await fetch(`${API_BASE}/invoices/${invoiceId}`);
     const invoice = await res.json();
@@ -2065,6 +2191,118 @@ async function deleteInvoice(invoiceId) {
             if (invoiceToDelete && invoiceToDelete.items) {
                 await restoreInventoryFromDeletedInvoice(invoiceToDelete.items);
             }
+
+            await loadFromAPI();
+            renderInvoices();
+            showToast('صورتحساب با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف صورتحساب', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting invoice:', error);
+        showToast('خطا در حذف صورتحساب', 'error');
+    }
+}
+
+// Proforma Functions
+async function editProforma(proformaId) {
+    isProformaMode = true;
+    document.getElementById('invoice-creator-title').textContent = 'ویرایش پیش فاکتور';
+
+    // Fetch the actual proforma from server to get the latest data
+    const res = await fetch(`${API_BASE}/proformas/${proformaId}`);
+    const proforma = await res.json();
+
+    if (!proforma) return;
+
+    currentInvoiceId = proforma.id;
+
+    // No original items for proformas (no inventory tracking)
+    originalInvoiceItems = [];
+
+    currentInvoiceItems = proforma.items.map(item => {
+        // Ensure baseCost is set
+        const baseCost = item.baseCost || 0;
+
+        // Fix finalTotal for items without discount (should equal total)
+        const finalTotal = (!item.hasDiscount || item.discountPercentage === 0) ? item.total : (item.finalTotal || item.total);
+
+        // Calculate profit if not already calculated
+        const quantity = item.quantity || 1;
+        const profit = item.profit !== undefined ? item.profit : (finalTotal - (baseCost * quantity));
+
+        return {
+            ...item,
+            baseCost,
+            profit,
+            hasDiscount: item.hasDiscount || false,
+            discountPercentage: item.discountPercentage || 0,
+            discountAmount: item.discountAmount || 0,
+            finalTotal
+        };
+    });
+
+    // Parse date
+    const dateParts = proforma.date.split('/');
+    if (dateParts.length === 3) {
+        document.getElementById('invoice-year').value = toPersianDigits(dateParts[0]);
+        document.getElementById('invoice-month').value = toPersianDigits(dateParts[1]);
+        document.getElementById('invoice-day').value = toPersianDigits(dateParts[2]);
+    }
+
+    // Parse time
+    const timeParts = proforma.time.split(':');
+    if (timeParts.length === 2) {
+        document.getElementById('invoice-hour').value = toPersianDigits(timeParts[0]);
+        document.getElementById('invoice-minute').value = toPersianDigits(timeParts[1]);
+    }
+
+    // Recalculate discounts and profits for items
+    currentInvoiceItems.forEach(item => {
+        if (item.hasDiscount && item.discountPercentage > 0) {
+            recalculateItemDiscount(item);
+        } else {
+            // Recalculate profit without discount
+            item.profit = item.total - (item.baseCost * item.quantity);
+        }
+    });
+
+    renderInvoiceItems();
+    renderInvoicePreview();
+
+    // Store the proforma customer info to select after page switch
+    window.editingInvoiceCustomer = {
+        customerId: proforma.customerId,
+        customerName: proforma.customerName
+    };
+
+    switchPage('invoice-creator');
+}
+
+function confirmDeleteProforma(proformaId) {
+    if (confirm('آیا مطمئن هستید که می‌خواهید این پیش فاکتور را حذف کنید؟')) {
+        deleteProforma(proformaId);
+    }
+}
+
+async function deleteProforma(proformaId) {
+    try {
+        const res = await fetch(`${API_BASE}/proformas/${proformaId}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            await loadFromAPI();
+            renderProformas();
+            showToast('پیش فاکتور با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف پیش فاکتور', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting proforma:', error);
+        showToast('خطا در حذف پیش فاکتور', 'error');
+    }
+}
 
             await loadFromAPI();
             renderInvoices();
