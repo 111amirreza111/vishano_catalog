@@ -2304,25 +2304,6 @@ async function deleteProforma(proformaId) {
     }
 }
 
-            await loadFromAPI();
-            renderInvoices();
-
-            // Refresh finance page if it's currently active
-            const financePage = document.getElementById('finance-page');
-            if (financePage && financePage.classList.contains('active')) {
-                renderFinancePage();
-            }
-
-            showToast('صورتحساب با موفقیت حذف شد', 'success');
-        } else {
-            showToast('خطا در حذف صورتحساب', 'error');
-        }
-    } catch (error) {
-        console.error('Error deleting invoice:', error);
-        showToast('خطا در حذف صورتحساب', 'error');
-    }
-}
-
 async function toggleInvoiceSentStatus(invoiceId, newStatus) {
     const message = newStatus
         ? 'آیا مطمئن هستید که می‌خواهید این فاکتور را به عنوان ارسال شده علامت‌گذاری کنید؟'
