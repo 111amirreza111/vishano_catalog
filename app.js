@@ -67,8 +67,8 @@ function initializeNavigation() {
     navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const pageName = tab.dataset.page;
-            if (pageName === 'finance') {
-                // Show password modal for finance page
+            if (pageName === 'finance' || pageName === 'settings') {
+                // Show password modal for finance and settings pages
                 pendingPageSwitch = pageName;
                 passwordModal.classList.add('active');
                 document.getElementById('password-input').value = '';
