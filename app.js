@@ -1608,6 +1608,15 @@ function renderInvoicePreview() {
     const totalAmountInWords = numberToPersianWords(finalAmount);
     const hasAnyDiscount = currentInvoiceItems.some(item => item.hasDiscount);
 
+    // Calculate previous debt for this customer
+    let previousDebt = 0;
+    let totalDebt = finalAmount;
+    if (customer) {
+        const customerFinance = calculateCustomerFinance(customer.id);
+        previousDebt = customerFinance.remaining > 0 ? customerFinance.remaining : 0;
+        totalDebt = previousDebt + finalAmount;
+    }
+
     const invoicePreview = document.getElementById('invoice-preview');
 
     const docTitle = isProformaMode ? 'پیش فاکتور فروش' : 'صورتحساب فروش';
@@ -1683,6 +1692,12 @@ function renderInvoicePreview() {
             ${totalDiscount > 0 ? `
                 <p><strong>مجموع تخفیف: ${formatPrice(totalDiscount)} T</strong></p>
                 <p><strong>مبلغ نهایی قابل پرداخت: ${formatPrice(finalAmount)} T</strong></p>
+            ` : `
+                <p><strong>مبلغ نهایی قابل پرداخت: ${formatPrice(finalAmount)} T</strong></p>
+            `}
+            ${previousDebt > 0 ? `
+                <p style="color: #d32f2f;"><strong>مانده قبلی: ${formatPrice(previousDebt)} T</strong></p>
+                <p style="color: #d32f2f;"><strong>کل بدهی (${formatPrice(previousDebt)} + ${formatPrice(finalAmount)}): ${formatPrice(totalDebt)} T</strong></p>
             ` : ''}
         </div>
         
@@ -1703,7 +1718,8 @@ function renderInvoicePreview() {
         
         <div class="invoice-payment-method">
             <p>نحوه تسویه: نقدی</p>
-            <p>مانده فاکتور: 0 T</p>
+            <p>مانده فاکتور جاری: ${formatPrice(finalAmount)} T</p>
+            ${previousDebt > 0 ? `<p>کل بدهی با احتساب مانده قبلی: ${formatPrice(totalDebt)} T</p>` : ''}
         </div>
         
         <div class="invoice-footer">
