@@ -94,56 +94,64 @@
   {
     "productId": "1795067728610",
     "productName": "سبد خرید بزرگ",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:46:05.296Z"
+    "quantity": -160,
+    "createdAt": "2026-11-19T06:46:05.296Z",
+    "updatedAt": "2026-11-19T07:10:06.278Z"
   },
   {
     "productId": "1795067961517",
     "productName": "سبد رخت",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:46:23.182Z"
+    "quantity": -140,
+    "createdAt": "2026-11-19T06:46:23.182Z",
+    "updatedAt": "2026-11-19T07:10:06.284Z"
   },
   {
     "productId": "1795068078828",
     "productName": "جا قاشقی استوانه ای بزرگ",
-    "quantity": 60,
+    "quantity": -150,
     "createdAt": "2026-11-19T06:48:25.696Z",
-    "updatedAt": "2026-11-19T06:55:28.220Z"
+    "updatedAt": "2026-11-19T07:10:06.290Z"
   },
   {
     "productId": "1795068146467",
     "productName": "سبد نان بزرگ با دسته چوبی",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:48:50.512Z"
+    "quantity": -120,
+    "createdAt": "2026-11-19T06:48:50.512Z",
+    "updatedAt": "2026-11-19T07:10:06.292Z"
   },
   {
     "productId": "1795068304144",
     "productName": "سبد گرد میوه",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:49:12.366Z"
+    "quantity": -100,
+    "createdAt": "2026-11-19T06:49:12.366Z",
+    "updatedAt": "2026-11-19T07:10:06.292Z"
   },
   {
     "productId": "1795069013902",
     "productName": "سبد رخت کودک دسته چوبی",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:49:25.990Z"
+    "quantity": -40,
+    "createdAt": "2026-11-19T06:49:25.990Z",
+    "updatedAt": "2026-11-19T07:10:06.292Z"
   },
   {
     "productId": "1795070085443",
     "productName": "سطل زباله حصیری",
-    "quantity": 5,
-    "createdAt": "2026-11-19T06:49:51.749Z"
+    "quantity": -15,
+    "createdAt": "2026-11-19T06:49:51.749Z",
+    "updatedAt": "2026-11-19T07:10:06.308Z"
   },
   {
     "productId": "1795070279378",
     "productName": "سبد رخت بزرگ دسته چوبی",
-    "quantity": 20,
-    "createdAt": "2026-11-19T06:50:14.464Z"
+    "quantity": -60,
+    "createdAt": "2026-11-19T06:50:14.464Z",
+    "updatedAt": "2026-11-19T07:10:06.308Z"
   },
   {
     "productId": "1795070329676",
     "productName": "صندوقچه",
-    "quantity": 5,
-    "createdAt": "2026-11-19T06:50:26.113Z"
+    "quantity": -15,
+    "createdAt": "2026-11-19T06:50:26.113Z",
+    "updatedAt": "2026-11-19T07:10:06.323Z"
   }
 ]
