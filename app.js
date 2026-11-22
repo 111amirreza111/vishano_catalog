@@ -1874,9 +1874,14 @@ async function downloadInvoiceImage() {
         });
 
         const link = document.createElement('a');
-        const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
+        const customerId = document.getElementById('invoice-customer-name').value;
+        const customer = customers.find(c => c.id === customerId);
+        const customerName = customer ? customer.name : 'invoice';
         const docType = isProformaMode ? 'پیش-فاکتور' : 'صورتحساب';
-        link.download = `${docType}-${customerName}-${Date.now()}.png`;
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('fa-IR').replace(/\//g, '-');
+        const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }).replace(/:/g, '-');
+        link.download = `${docType}-${customerName} تاریخ ${dateStr} ساعت ${timeStr}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
 
@@ -1922,9 +1927,14 @@ async function downloadInvoicePDF() {
 
         pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
 
-        const customerName = document.getElementById('invoice-customer-name').value || 'invoice';
+        const customerId = document.getElementById('invoice-customer-name').value;
+        const customer = customers.find(c => c.id === customerId);
+        const customerName = customer ? customer.name : 'invoice';
         const docType = isProformaMode ? 'پیش-فاکتور' : 'صورتحساب';
-        pdf.save(`${docType}-${customerName}-${Date.now()}.pdf`);
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('fa-IR').replace(/\//g, '-');
+        const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }).replace(/:/g, '-');
+        pdf.save(`${docType}-${customerName} تاریخ ${dateStr} ساعت ${timeStr}.pdf`);
 
         showToast('PDF با موفقیت دانلود شد', 'success');
     } catch (error) {
