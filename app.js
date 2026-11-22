@@ -1622,7 +1622,15 @@ function renderInvoicePreview() {
     let totalDebt = finalAmount;
     if (customer) {
         const customerFinance = calculateCustomerFinance(customer.id);
-        previousDebt = customerFinance.remaining > 0 ? customerFinance.remaining : 0;
+        // For editing, exclude the current invoice from the debt calculation
+        if (currentInvoiceId) {
+            const currentInvoiceAmount = customerFinance.invoices.find(i => i.id === currentInvoiceId)?.finalAmount || 0;
+            previousDebt = (customerFinance.totalDebt - currentInvoiceAmount) - customerFinance.totalPaid;
+            if (previousDebt < 0) previousDebt = 0;
+        } else {
+            // For new invoices, include all previous debt
+            previousDebt = customerFinance.remaining > 0 ? customerFinance.remaining : 0;
+        }
         totalDebt = previousDebt + finalAmount;
     }
 
@@ -1749,6 +1757,8 @@ function numberToPersianWords(num) {
 let isSavingInvoice = false;
 
 async function saveInvoice() {
+    console.log('saveInvoice called - currentInvoiceId:', currentInvoiceId);
+
     // Prevent double submission
     if (isSavingInvoice) {
         console.log('Already saving invoice, ignoring duplicate request');
@@ -1796,6 +1806,8 @@ async function saveInvoice() {
     try {
         let res;
         if (currentInvoiceId) {
+            console.log('Updating existing invoice/proforma - ID:', currentInvoiceId);
+            console.log('PUT URL:', `${apiEndpoint}/${currentInvoiceId}`);
             // Get the original invoice/proforma to preserve isSent status (only for invoices)
             const originalInvoice = invoices.find(i => i.id === currentInvoiceId);
             const isSent = originalInvoice ? originalInvoice.isSent : false;
@@ -1820,7 +1832,9 @@ async function saveInvoice() {
                     skipInventoryCheck: apiEndpoint.includes('proformas')
                 })
             });
+            console.log('PUT response status:', res.status);
         } else {
+            console.log('Creating new invoice/proforma');
             // Create new invoice/proforma
             res = await fetch(apiEndpoint, {
                 method: 'POST',
@@ -1974,6 +1988,7 @@ async function downloadInvoicePDF() {
 }
 
 async function editInvoice(invoiceId) {
+    console.log('editInvoice called with invoiceId:', invoiceId);
     isProformaMode = false;
     document.getElementById('invoice-creator-title').textContent = 'ویرایش صورتحساب';
 
@@ -1984,6 +1999,7 @@ async function editInvoice(invoiceId) {
     if (!invoice) return;
 
     currentInvoiceId = invoice.id;
+    console.log('editInvoice - set currentInvoiceId to:', currentInvoiceId);
 
     // Store original items for inventory adjustment later (from server data)
     originalInvoiceItems = JSON.parse(JSON.stringify(invoice.items));
@@ -2647,15 +2663,33 @@ function calculateCustomerFinance(customerId) {
         };
     }
 
-    // Find invoices by customerId OR by customerName (for old invoices)
-    const customerInvoices = invoices.filter(inv =>
-        inv.customerId === customerId || inv.customerName === customer.name
-    );
+    console.log('calculateCustomerFinance - customerId:', customerId, 'customer.name:', customer.name);
+    console.log('calculateCustomerFinance - total invoices:', invoices.length);
+
+    // Find invoices by customerId (for old invoices without customerId, match by name)
+    const customerInvoices = invoices.filter(inv => {
+        if (inv.customerId === customerId) return true;
+        // For old invoices without customerId, match by exact name
+        if (!inv.customerId && inv.customerName === customer.name) return true;
+        return false;
+    });
+
+    console.log('calculateCustomerFinance - customerInvoices:', customerInvoices.map(i => ({id: i.id, finalAmount: i.finalAmount, totalAmount: i.totalAmount})));
+
     const customerPayments = payments.filter(pay => pay.customerId === customerId);
 
-    const totalDebt = customerInvoices.reduce((sum, inv) => sum + (inv.finalAmount || inv.totalAmount), 0);
+    let totalDebt = 0;
+    customerInvoices.forEach(inv => {
+        const amount = inv.finalAmount || inv.totalAmount;
+        console.log(`Invoice ${inv.id}: adding ${amount} to totalDebt`);
+        totalDebt += amount;
+    });
     const totalPaid = customerPayments.reduce((sum, pay) => sum + pay.amount, 0);
     const remaining = totalDebt - totalPaid;
+
+    console.log('calculateCustomerFinance - totalDebt:', totalDebt, 'totalPaid:', totalPaid, 'remaining:', remaining);
+
+    console.log('calculateCustomerFinance - totalDebt:', totalDebt, 'totalPaid:', totalPaid, 'remaining:', remaining);
 
     return {
         totalDebt,

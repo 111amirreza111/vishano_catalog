@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Log all requests
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
+    console.log(`${req.method} ${req.url} - Body:`, JSON.stringify(req.body));
     next();
 });
 
@@ -510,6 +510,9 @@ app.put('/api/invoices/:id', async (req, res) => {
     try {
         const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity, skipInventoryCheck } = req.body;
 
+        console.log('PUT /api/invoices/:id - ID:', req.params.id);
+        console.log('PUT /api/invoices/:id - totalAmount:', totalAmount, 'finalAmount:', finalAmount);
+
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
@@ -522,6 +525,8 @@ app.put('/api/invoices/:id', async (req, res) => {
         if (index === -1) {
             return res.status(404).json({ error: 'Invoice not found' });
         }
+
+        console.log('PUT /api/invoices/:id - old invoice finalAmount:', invoices[index].finalAmount);
 
         // Update inventory atomically (unless skipInventoryCheck is true for proformas)
         if (!skipInventoryCheck) {
