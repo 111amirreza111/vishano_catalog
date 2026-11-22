@@ -386,15 +386,24 @@ function openProductModal(product = null) {
         document.getElementById('base-cost').value = product.baseCost;
         document.getElementById('product-category').value = product.category || '';
 
-        // Set auto calculate checkbox (default to checked for new products)
+        // Set auto calculate checkbox based on whether price matches auto-calculated price
         const autoCalculateProfitCheckbox = document.getElementById('auto-calculate-profit');
-        autoCalculateProfitCheckbox.checked = true;
-        document.getElementById('manual-profit-group').style.display = 'none';
-        document.getElementById('manual-profit-percentage').value = '';
+        const expectedPrice = calculatePrices(product.baseCost).cashPrice;
+        const isAutoCalculated = product.cashPrice === expectedPrice;
 
-        // Update price displays
-        const prices = calculatePrices(product.baseCost);
-        document.getElementById('cash-price-display').textContent = formatPrice(prices.cashPrice);
+        autoCalculateProfitCheckbox.checked = isAutoCalculated;
+        document.getElementById('manual-profit-group').style.display = isAutoCalculated ? 'none' : 'block';
+
+        if (!isAutoCalculated) {
+            // Calculate the manual percentage that was used
+            const manualPercentage = ((product.cashPrice / product.baseCost) - 1) * 100;
+            document.getElementById('manual-profit-percentage').value = manualPercentage.toFixed(2);
+        } else {
+            document.getElementById('manual-profit-percentage').value = '';
+        }
+
+        // Update price displays with actual saved price
+        document.getElementById('cash-price-display').textContent = formatPrice(product.cashPrice);
 
         // Set image preview
         if (product.image) {

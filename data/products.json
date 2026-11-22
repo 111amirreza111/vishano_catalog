@@ -615,7 +615,7 @@
     ],
     "baseCost": 66000,
     "cashPrice": 112200,
-    "category": null,
+    "category": "",
     "createdAt": "2026-11-22T07:53:01.751Z"
   }
 ]
