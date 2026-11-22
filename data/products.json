@@ -617,5 +617,17 @@
     "cashPrice": 112200,
     "category": "",
     "createdAt": "2026-11-22T07:53:01.751Z"
+  },
+  {
+    "id": "1795338199296",
+    "name": "ملاقه چوبی",
+    "image": "/uploads/1795338199281-712677136.png",
+    "descriptions": [
+      "."
+    ],
+    "baseCost": 326,
+    "cashPrice": 375,
+    "category": null,
+    "createdAt": "2026-11-22T09:03:19.297Z"
   }
 ]
