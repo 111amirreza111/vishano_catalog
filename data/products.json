@@ -625,9 +625,9 @@
     "descriptions": [
       "."
     ],
-    "baseCost": 326,
-    "cashPrice": 375,
-    "category": null,
+    "baseCost": 326000,
+    "cashPrice": 374900,
+    "category": "",
     "createdAt": "2026-11-22T09:03:19.297Z"
   }
 ]
