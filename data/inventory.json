@@ -94,30 +94,30 @@
   {
     "productId": "1795067728610",
     "productName": "سبد خرید بزرگ",
-    "quantity": -160,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:46:05.296Z",
-    "updatedAt": "2026-11-19T07:10:06.278Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795067961517",
     "productName": "سبد رخت",
-    "quantity": -140,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:46:23.182Z",
-    "updatedAt": "2026-11-19T07:10:06.284Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795068078828",
     "productName": "جا قاشقی استوانه ای بزرگ",
-    "quantity": -150,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:48:25.696Z",
-    "updatedAt": "2026-11-19T07:10:06.290Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795068146467",
     "productName": "سبد نان بزرگ با دسته چوبی",
-    "quantity": -120,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:48:50.512Z",
-    "updatedAt": "2026-11-19T07:10:06.292Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795068304144",
@@ -136,22 +136,22 @@
   {
     "productId": "1795070085443",
     "productName": "سطل زباله حصیری",
-    "quantity": -15,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:49:51.749Z",
-    "updatedAt": "2026-11-19T07:10:06.308Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795070279378",
     "productName": "سبد رخت بزرگ دسته چوبی",
-    "quantity": -60,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:50:14.464Z",
-    "updatedAt": "2026-11-19T07:10:06.308Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   },
   {
     "productId": "1795070329676",
     "productName": "صندوقچه",
-    "quantity": -15,
+    "quantity": 0,
     "createdAt": "2026-11-19T06:50:26.113Z",
-    "updatedAt": "2026-11-19T07:10:06.323Z"
+    "updatedAt": "2026-11-22T10:00:00.000Z"
   }
 ]

@@ -2103,6 +2103,14 @@ async function deductInventoryForNewInvoice(items) {
         if (inventoryItem) {
             const newInventoryQuantity = inventoryItem.quantity - item.quantity;
 
+            // Check if we have enough inventory
+            if (newInventoryQuantity < 0) {
+                const product = products.find(p => p.id === item.productId);
+                const productName = product ? product.name : item.productId;
+                showToast(`موجودی انبار برای "${productName}" کافی نیست. در انبار ${inventoryItem.quantity} عدد موجود است اما نیاز به ${item.quantity} عدد است.`, 'error');
+                throw new Error(`Insufficient inventory for product ${item.productId}`);
+            }
+
             // Update inventory via API (using productId as param)
             try {
                 await fetch(`${API_BASE}/inventory/${item.productId}`, {
@@ -2115,26 +2123,14 @@ async function deductInventoryForNewInvoice(items) {
                 console.log(`Deducted inventory for product ${item.productId}: ${inventoryItem.quantity} -> ${newInventoryQuantity}`);
             } catch (error) {
                 console.error('Error updating inventory:', error);
+                throw error;
             }
         } else {
-            // Inventory item doesn't exist, create it with negative quantity
+            // Inventory item doesn't exist - this means there's no stock at all
             const product = products.find(p => p.id === item.productId);
-            const productName = product ? product.name : 'Unknown';
-
-            try {
-                await fetch(`${API_BASE}/inventory`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        productId: item.productId,
-                        productName,
-                        quantity: -item.quantity
-                    })
-                });
-                console.log(`Created inventory item for product ${item.productId} with quantity -${item.quantity}`);
-            } catch (error) {
-                console.error('Error creating inventory item:', error);
-            }
+            const productName = product ? product.name : item.productId;
+            showToast(`محصول "${productName}" در انبار موجود نیست. لطفاً ابتدا آن را به انبار اضافه کنید.`, 'error');
+            throw new Error(`Product ${item.productId} not in inventory`);
         }
     }
 }
@@ -3165,7 +3161,7 @@ async function editInventoryQuantity(productId) {
 
     const quantity = parseInt(newQuantity);
     if (isNaN(quantity) || quantity < 0) {
-        showToast('تعداد نامعتبر است', 'error');
+        showToast('تعداد نامعتبر است. تعداد نمی‌تواند منفی باشد.', 'error');
         return;
     }
 

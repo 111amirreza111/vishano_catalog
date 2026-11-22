@@ -792,6 +792,11 @@ app.post('/api/inventory', async (req, res) => {
             return res.status(400).json({ error: 'ProductId, productName, and quantity are required' });
         }
 
+        const quantityNum = parseInt(quantity);
+        if (quantityNum < 0) {
+            return res.status(400).json({ error: 'Quantity cannot be negative' });
+        }
+
         const inventoryPath = path.join(DATA_DIR, 'inventory.json');
         const data = await fs.readFile(inventoryPath, 'utf8');
         const inventory = JSON.parse(data);
@@ -800,14 +805,18 @@ app.post('/api/inventory', async (req, res) => {
         const existingIndex = inventory.findIndex(item => item.productId === productId);
         if (existingIndex !== -1) {
             // Update existing quantity
-            inventory[existingIndex].quantity += parseInt(quantity);
+            const newQuantity = inventory[existingIndex].quantity + quantityNum;
+            if (newQuantity < 0) {
+                return res.status(400).json({ error: 'Resulting quantity cannot be negative' });
+            }
+            inventory[existingIndex].quantity = newQuantity;
             inventory[existingIndex].updatedAt = new Date().toISOString();
         } else {
             // Add new inventory item
             inventory.push({
                 productId,
                 productName,
-                quantity: parseInt(quantity),
+                quantity: quantityNum,
                 createdAt: new Date().toISOString()
             });
         }
@@ -826,6 +835,11 @@ app.put('/api/inventory/:productId', async (req, res) => {
     try {
         const { quantity } = req.body;
 
+        const quantityNum = parseInt(quantity);
+        if (isNaN(quantityNum) || quantityNum < 0) {
+            return res.status(400).json({ error: 'Quantity must be a non-negative number' });
+        }
+
         const inventoryPath = path.join(DATA_DIR, 'inventory.json');
         const data = await fs.readFile(inventoryPath, 'utf8');
         const inventory = JSON.parse(data);
@@ -835,7 +849,7 @@ app.put('/api/inventory/:productId', async (req, res) => {
             return res.status(404).json({ error: 'Inventory item not found' });
         }
 
-        inventory[index].quantity = parseInt(quantity);
+        inventory[index].quantity = quantityNum;
         inventory[index].updatedAt = new Date().toISOString();
 
         await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
