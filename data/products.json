@@ -371,7 +371,7 @@
       "جنس : چنار-گردو"
     ],
     "baseCost": 46000,
-    "cashPrice": 69920,
+    "cashPrice": 78200,
     "installmentPrice": 50000,
     "createdAt": "2026-09-29T07:29:06.305Z",
     "category": "cat10"
@@ -605,5 +605,17 @@
     "cashPrice": 297000,
     "category": "cat5",
     "createdAt": "2026-11-19T07:01:13.124Z"
+  },
+  {
+    "id": "1795333981751",
+    "name": "گیره لباس 18 عددی",
+    "image": "/uploads/1795333981737-724664995.jpeg",
+    "descriptions": [
+      "."
+    ],
+    "baseCost": 66000,
+    "cashPrice": 112200,
+    "category": null,
+    "createdAt": "2026-11-22T07:53:01.751Z"
   }
 ]
