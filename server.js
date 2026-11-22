@@ -396,10 +396,44 @@ app.get('/api/invoices/:id', async (req, res) => {
 // Create invoice
 app.post('/api/invoices', async (req, res) => {
     try {
-        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity, skipInventoryCheck } = req.body;
 
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Deduct inventory atomically (unless skipInventoryCheck is true for proformas)
+        console.log('POST /api/invoices - skipInventoryCheck:', skipInventoryCheck);
+        if (!skipInventoryCheck) {
+            const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+            const inventoryData = await fs.readFile(inventoryPath, 'utf8');
+            const inventory = JSON.parse(inventoryData);
+
+            for (const item of items) {
+                console.log(`Checking inventory for product ${item.productId}, quantity: ${item.quantity}`);
+                const inventoryItem = inventory.find(i => i.productId === item.productId);
+                if (!inventoryItem) {
+                    console.log(`Product ${item.productId} not found in inventory`);
+                    return res.status(400).json({ error: `Product ${item.productId} not in inventory` });
+                }
+                // Also check if current quantity is already negative
+                if (inventoryItem.quantity < 0) {
+                    console.log(`Inventory for product ${item.productId} is already negative: ${inventoryItem.quantity}`);
+                    return res.status(400).json({ error: `Inventory for product ${item.productId} is currently negative (${inventoryItem.quantity}). Please correct it first.` });
+                }
+                const newQuantity = inventoryItem.quantity - item.quantity;
+                if (newQuantity < 0) {
+                    console.log(`Insufficient inventory for product ${item.productId}. Available: ${inventoryItem.quantity}, Required: ${item.quantity}`);
+                    return res.status(400).json({ error: `Insufficient inventory for product ${item.productId}. Available: ${inventoryItem.quantity}, Required: ${item.quantity}` });
+                }
+                inventoryItem.quantity = newQuantity;
+                inventoryItem.updatedAt = new Date().toISOString();
+                console.log(`Deducted inventory for product ${item.productId}: ${inventoryItem.quantity + item.quantity} -> ${newQuantity}`);
+            }
+
+            await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+        } else {
+            console.log('Skipping inventory check');
         }
 
         const invoicesPath = path.join(DATA_DIR, 'invoices.json');
@@ -439,15 +473,31 @@ app.delete('/api/invoices/:id', async (req, res) => {
         const invoicesPath = path.join(DATA_DIR, 'invoices.json');
         const data = await fs.readFile(invoicesPath, 'utf8');
         const invoices = JSON.parse(data);
-        
+
         const index = invoices.findIndex(i => i.id === req.params.id);
         if (index === -1) {
             return res.status(404).json({ error: 'Invoice not found' });
         }
-        
+
+        // Restore inventory atomically
+        const items = invoices[index].items || [];
+        const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+        const inventoryData = await fs.readFile(inventoryPath, 'utf8');
+        const inventory = JSON.parse(inventoryData);
+
+        for (const item of items) {
+            const inventoryItem = inventory.find(i => i.productId === item.productId);
+            if (inventoryItem) {
+                inventoryItem.quantity = inventoryItem.quantity + item.quantity;
+                inventoryItem.updatedAt = new Date().toISOString();
+            }
+        }
+
+        await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+
         invoices.splice(index, 1);
         await fs.writeFile(invoicesPath, JSON.stringify(invoices, null, 2));
-        
+
         res.json({ message: 'Invoice deleted successfully' });
     } catch (error) {
         console.error('Error deleting invoice:', error);
@@ -458,7 +508,7 @@ app.delete('/api/invoices/:id', async (req, res) => {
 // Update invoice
 app.put('/api/invoices/:id', async (req, res) => {
     try {
-        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity } = req.body;
+        const { customerId, customerName, customerPhone, customerAddress, date, time, items, totalAmount, totalDiscount, finalAmount, totalQuantity, skipInventoryCheck } = req.body;
 
         if (!customerName || !date || !time || !items || items.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -471,6 +521,49 @@ app.put('/api/invoices/:id', async (req, res) => {
         const index = invoices.findIndex(i => i.id === req.params.id);
         if (index === -1) {
             return res.status(404).json({ error: 'Invoice not found' });
+        }
+
+        // Update inventory atomically (unless skipInventoryCheck is true for proformas)
+        if (!skipInventoryCheck) {
+            const oldItems = invoices[index].items || [];
+            const inventoryPath = path.join(DATA_DIR, 'inventory.json');
+            const inventoryData = await fs.readFile(inventoryPath, 'utf8');
+            const inventory = JSON.parse(inventoryData);
+
+        // Create a map of old quantities
+        const oldQuantities = {};
+        for (const item of oldItems) {
+            oldQuantities[item.productId] = (oldQuantities[item.productId] || 0) + item.quantity;
+        }
+
+        // Create a map of new quantities
+        const newQuantities = {};
+        for (const item of items) {
+            newQuantities[item.productId] = (newQuantities[item.productId] || 0) + item.quantity;
+        }
+
+        // Calculate differences and update inventory
+        const allProductIds = new Set([...Object.keys(oldQuantities), ...Object.keys(newQuantities)]);
+        for (const productId of allProductIds) {
+            const oldQty = oldQuantities[productId] || 0;
+            const newQty = newQuantities[productId] || 0;
+            const diff = newQty - oldQty;
+
+            if (diff !== 0) {
+                const inventoryItem = inventory.find(i => i.productId === productId);
+                if (!inventoryItem) {
+                    return res.status(400).json({ error: `Product ${productId} not in inventory` });
+                }
+                const newQuantity = inventoryItem.quantity - diff;
+                if (newQuantity < 0) {
+                    return res.status(400).json({ error: `Insufficient inventory for product ${productId}. Available: ${inventoryItem.quantity}, Required: ${newQuantity}` });
+                }
+                inventoryItem.quantity = newQuantity;
+                inventoryItem.updatedAt = new Date().toISOString();
+            }
+        }
+
+        await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
         }
 
         invoices[index] = {

@@ -1745,7 +1745,17 @@ function numberToPersianWords(num) {
     return numStr.replace(/\d/g, d => persianDigits[d]);
 }
 
+// Flag to prevent double submission
+let isSavingInvoice = false;
+
 async function saveInvoice() {
+    // Prevent double submission
+    if (isSavingInvoice) {
+        console.log('Already saving invoice, ignoring duplicate request');
+        return;
+    }
+    isSavingInvoice = true;
+
     const customerId = document.getElementById('invoice-customer-name').value;
     const customer = customers.find(c => c.id === customerId);
     const customerName = customer ? customer.name : '';
@@ -1779,6 +1789,10 @@ async function saveInvoice() {
     const apiEndpoint = isProformaMode ? `${API_BASE}/proformas` : `${API_BASE}/invoices`;
     const collection = isProformaMode ? proformas : invoices;
 
+    console.log('saveInvoice - isProformaMode:', isProformaMode);
+    console.log('saveInvoice - apiEndpoint:', apiEndpoint);
+    console.log('saveInvoice - skipInventoryCheck:', apiEndpoint.includes('proformas'));
+
     try {
         let res;
         if (currentInvoiceId) {
@@ -1802,7 +1816,8 @@ async function saveInvoice() {
                     totalDiscount,
                     finalAmount,
                     totalQuantity,
-                    isSent: isProformaMode ? false : isSent
+                    isSent: isProformaMode ? false : isSent,
+                    skipInventoryCheck: apiEndpoint.includes('proformas')
                 })
             });
         } else {
@@ -1821,7 +1836,8 @@ async function saveInvoice() {
                     totalAmount,
                     totalDiscount,
                     finalAmount,
-                    totalQuantity
+                    totalQuantity,
+                    skipInventoryCheck: apiEndpoint.includes('proformas')
                 })
             });
         }
@@ -1834,19 +1850,8 @@ async function saveInvoice() {
             console.log('originalInvoiceItems length:', originalInvoiceItems.length);
             console.log('isProformaMode:', isProformaMode);
 
-            // Only update inventory for regular invoices, NOT for proformas
-            if (!isProformaMode) {
-                // Update inventory if editing an invoice
-                if (originalInvoiceItems.length > 0) {
-                    console.log('Updating inventory from invoice edit...');
-                    await updateInventoryFromInvoiceEdit(currentInvoiceItems, originalInvoiceItems);
-                    originalInvoiceItems = []; // Clear original items
-                } else {
-                    // For new invoices, deduct from inventory
-                    console.log('Deducting inventory for new invoice...');
-                    await deductInventoryForNewInvoice(currentInvoiceItems);
-                }
-            }
+            // Clear original items after successful save
+            originalInvoiceItems = [];
 
             await loadFromAPI();
 
@@ -1860,12 +1865,28 @@ async function saveInvoice() {
             showToast(currentInvoiceId ? `${docType} با موفقیت ویرایش شد` : `${docType} با موفقیت ذخیره شد`, 'success');
         } else {
             const docType = isProformaMode ? 'پیش فاکتور' : 'صورتحساب';
-            showToast(`خطا در ذخیره ${docType}`, 'error');
+            const errorData = await res.json();
+            if (errorData.error && errorData.error.includes('Insufficient inventory')) {
+                // Extract product ID and show localized message
+                const match = errorData.error.match(/product (\d+)/);
+                if (match) {
+                    const productId = match[1];
+                    const product = products.find(p => p.id === productId);
+                    const productName = product ? product.name : productId;
+                    showToast(`موجودی انبار برای "${productName}" کافی نیست.`, 'error');
+                } else {
+                    showToast(`موجودی انبار کافی نیست.`, 'error');
+                }
+            } else {
+                showToast(`خطا در ذخیره ${docType}`, 'error');
+            }
         }
     } catch (error) {
         console.error('Error saving invoice/proforma:', error);
         const docType = isProformaMode ? 'پیش فاکتور' : 'صورتحساب';
         showToast(`خطا در ذخیره ${docType}`, 'error');
+    } finally {
+        isSavingInvoice = false;
     }
 }
 
@@ -2210,19 +2231,11 @@ function confirmDeleteInvoice(invoiceId) {
 
 async function deleteInvoice(invoiceId) {
     try {
-        // Get the invoice before deleting to restore inventory
-        const invoiceToDelete = invoices.find(i => i.id === invoiceId);
-
         const res = await fetch(`${API_BASE}/invoices/${invoiceId}`, {
             method: 'DELETE'
         });
 
         if (res.ok) {
-            // Restore inventory from deleted invoice
-            if (invoiceToDelete && invoiceToDelete.items) {
-                await restoreInventoryFromDeletedInvoice(invoiceToDelete.items);
-            }
-
             await loadFromAPI();
             renderInvoices();
             showToast('صورتحساب با موفقیت حذف شد', 'success');
