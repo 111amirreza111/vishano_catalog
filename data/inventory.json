@@ -92,36 +92,36 @@
   {
     "productId": "1788429889733",
     "productName": "کفگیر چوبی دسته بلند راش",
-    "quantity": 300,
+    "quantity": 200,
     "createdAt": "2026-11-22T09:00:41.849Z",
-    "updatedAt": "2026-11-22T15:39:42.538Z"
+    "updatedAt": "2026-11-23T06:59:50.465Z"
   },
   {
     "productId": "1788430047644",
     "productName": "قاشق چوبی متوسط راش",
-    "quantity": 400,
+    "quantity": 200,
     "createdAt": "2026-11-22T09:00:58.797Z",
-    "updatedAt": "2026-11-22T09:21:49.675Z"
+    "updatedAt": "2026-11-23T06:59:43.984Z"
   },
   {
     "productId": "1788443230560",
     "productName": "قاشق چوبی بلند راش",
-    "quantity": 400,
+    "quantity": 200,
     "createdAt": "2026-11-22T09:01:09.145Z",
-    "updatedAt": "2026-11-22T09:21:49.681Z"
+    "updatedAt": "2026-11-23T06:59:47.258Z"
   },
   {
     "productId": "1788443303976",
     "productName": "کفگیر پلویی دسته بلند راش",
-    "quantity": 400,
+    "quantity": 300,
     "createdAt": "2026-11-22T09:01:23.275Z",
-    "updatedAt": "2026-11-22T09:21:49.669Z"
+    "updatedAt": "2026-11-23T06:59:26.157Z"
   },
   {
     "productId": "1795338199296",
     "productName": "ملاقه چوبی",
-    "quantity": 201,
+    "quantity": 200,
     "createdAt": "2026-11-22T09:03:36.879Z",
-    "updatedAt": "2026-11-22T16:53:09.006Z"
+    "updatedAt": "2026-11-23T06:59:57.420Z"
   }
 ]
