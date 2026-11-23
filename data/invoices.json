@@ -802,5 +802,35 @@
     "customerPhone": "09126663880",
     "customerAddress": "صالح آباد باربری کارون ",
     "isSent": false
+  },
+  {
+    "id": "1795417260126",
+    "customerId": "1795338618435",
+    "customerName": "فتحی",
+    "customerPhone": "09232632961",
+    "customerAddress": "صالح آباد باربری کارون",
+    "date": "۱۴۰۵/۹/۲",
+    "time": "۱۰:۳۰",
+    "items": [
+      {
+        "productId": "1795338199296",
+        "name": "ملاقه چوبی",
+        "quantity": 100,
+        "unitPrice": 374900,
+        "baseCost": 326000,
+        "total": 37490000,
+        "hasDiscount": true,
+        "discountPercentage": 34,
+        "discountAmount": 12746600,
+        "finalTotal": 24743400,
+        "profit": -7856600
+      }
+    ],
+    "totalAmount": 37490000,
+    "totalDiscount": 12746600,
+    "finalAmount": 24743400,
+    "totalQuantity": 100,
+    "isSent": false,
+    "createdAt": "2026-11-23T07:01:00.127Z"
   }
 ]
