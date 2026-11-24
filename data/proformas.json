@@ -127,7 +127,7 @@
         "hasDiscount": true,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 77625,
+        "finalTotal": 7762500,
         "profit": 2012500
       },
       {
@@ -153,7 +153,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 52110,
+        "finalTotal": 5211000,
         "profit": 1351000
       },
       {
@@ -166,7 +166,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 52110,
+        "finalTotal": 5211000,
         "profit": 1351000
       },
       {
@@ -179,7 +179,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 78200,
+        "finalTotal": 7820000,
         "profit": 3220000
       },
       {
@@ -192,7 +192,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 112200,
+        "finalTotal": 11220000,
         "profit": 4620000
       },
       {
@@ -205,7 +205,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22680,
+        "finalTotal": 4536000,
         "profit": 1176000
       },
       {
@@ -218,7 +218,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 136350,
+        "finalTotal": 13635000,
         "profit": 3535000
       },
       {
@@ -231,7 +231,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 136350,
+        "finalTotal": 13635000,
         "profit": 3535000
       },
       {
@@ -244,7 +244,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 20250,
+        "finalTotal": 4050000,
         "profit": 1050000
       },
       {
@@ -257,7 +257,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 136350,
+        "finalTotal": 13635000,
         "profit": 3535000
       },
       {
@@ -270,7 +270,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950,
+        "finalTotal": 4590000,
         "profit": 1190000
       },
       {
@@ -283,7 +283,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950,
+        "finalTotal": 4590000,
         "profit": 1190000
       },
       {
@@ -296,7 +296,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 27000,
+        "finalTotal": 5400000,
         "profit": 1400000
       },
       {
@@ -309,7 +309,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 27000,
+        "finalTotal": 5400000,
         "profit": 1400000
       },
       {
@@ -322,7 +322,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 135000,
+        "finalTotal": 13500000,
         "profit": 3500000
       },
       {
@@ -335,7 +335,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 178200,
+        "finalTotal": 26730000,
         "profit": 6930000
       },
       {
@@ -348,7 +348,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 137700,
+        "finalTotal": 13770000,
         "profit": 3570000
       },
       {
@@ -361,7 +361,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 178200,
+        "finalTotal": 17820000,
         "profit": 4620000
       },
       {
@@ -374,7 +374,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 12825000,
         "profit": 3325000
       },
       {
@@ -387,7 +387,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 114750,
+        "finalTotal": 11475000,
         "profit": 2975000
       },
       {
@@ -400,7 +400,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 101250,
+        "finalTotal": 10125000,
         "profit": 2625000
       },
       {
@@ -413,7 +413,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 155250,
+        "finalTotal": 15525000,
         "profit": 4025000
       },
       {
@@ -426,7 +426,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 153900,
+        "finalTotal": 15390000,
         "profit": 3990000
       },
       {
@@ -439,17 +439,30 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 12825000,
         "profit": 3325000
+      },
+      {
+        "productId": "1788426451054",
+        "name": "شات بشکه ای ",
+        "quantity": 100,
+        "unitPrice": 77895,
+        "baseCost": 57700,
+        "total": 7789500,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 77895,
+        "profit": 2019500
       }
     ],
-    "totalAmount": 261000500,
+    "totalAmount": 268790000,
     "totalDiscount": 0,
-    "finalAmount": 261000500,
-    "totalQuantity": 3150,
+    "finalAmount": 268790000,
+    "totalQuantity": 3250,
     "isSent": false,
     "createdAt": "2026-11-24T07:39:57.456Z",
-    "updatedAt": "2026-11-24T07:53:51.136Z"
+    "updatedAt": "2026-11-24T08:48:49.540Z"
   },
   {
     "id": "1795509503752",
