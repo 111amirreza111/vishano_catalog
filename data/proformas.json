@@ -483,7 +483,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 52110,
+        "finalTotal": 5211000,
         "profit": 1351000
       },
       {
@@ -496,7 +496,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 52110,
+        "finalTotal": 7295400,
         "profit": 1891400
       },
       {
@@ -509,7 +509,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22680,
+        "finalTotal": 22680000,
         "profit": 5880000
       },
       {
@@ -522,7 +522,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 22950,
+        "finalTotal": 22950000,
         "profit": 5950000
       },
       {
@@ -535,7 +535,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 114750,
+        "finalTotal": 11475000,
         "profit": 2975000
       },
       {
@@ -548,7 +548,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 25650000,
         "profit": 6650000
       },
       {
@@ -561,16 +561,42 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 25650000,
         "profit": 6650000
+      },
+      {
+        "productId": "1788426451054",
+        "name": "شات بشکه ای ",
+        "quantity": 100,
+        "unitPrice": 77895,
+        "baseCost": 57700,
+        "total": 7789500,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 77895,
+        "profit": 2019500
+      },
+      {
+        "productId": "1795333981751",
+        "name": "گیره لباس 18 عددی",
+        "quantity": 100,
+        "unitPrice": 112200,
+        "baseCost": 66000,
+        "total": 11220000,
+        "hasDiscount": false,
+        "discountPercentage": 0,
+        "discountAmount": 0,
+        "finalTotal": 112200,
+        "profit": 4620000
       }
     ],
-    "totalAmount": 120911400,
+    "totalAmount": 139920900,
     "totalDiscount": 0,
-    "finalAmount": 120911400,
-    "totalQuantity": 2740,
+    "finalAmount": 139920900,
+    "totalQuantity": 2940,
     "isSent": false,
     "createdAt": "2026-11-24T08:38:23.752Z",
-    "updatedAt": "2026-11-24T08:39:11.515Z"
+    "updatedAt": "2026-11-24T08:50:27.315Z"
   }
 ]
