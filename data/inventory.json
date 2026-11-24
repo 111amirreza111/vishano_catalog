@@ -127,19 +127,28 @@
   {
     "productId": "1789281524430",
     "productName": "وردنه 40 سانتی گردو",
-    "quantity": 70,
-    "createdAt": "2026-11-23T07:25:23.055Z"
+    "quantity": 470,
+    "createdAt": "2026-11-23T07:25:23.055Z",
+    "updatedAt": "2026-11-24T08:30:26.649Z"
   },
   {
     "productId": "1788428262784",
     "productName": "گوشتکوب یک تیکه کوچک",
-    "quantity": 97,
-    "createdAt": "2026-11-23T07:25:46.263Z"
+    "quantity": 297,
+    "createdAt": "2026-11-23T07:25:46.263Z",
+    "updatedAt": "2026-11-24T08:27:13.299Z"
   },
   {
     "productId": "1788427924372",
     "productName": "گوشتکوب دو تیکه",
-    "quantity": 79,
-    "createdAt": "2026-11-23T07:26:07.119Z"
+    "quantity": 109,
+    "createdAt": "2026-11-23T07:26:07.119Z",
+    "updatedAt": "2026-11-24T08:27:29.904Z"
+  },
+  {
+    "productId": "1789281577234",
+    "productName": "وردنه 30 سانتی ",
+    "quantity": 200,
+    "createdAt": "2026-11-24T08:30:01.830Z"
   }
 ]
