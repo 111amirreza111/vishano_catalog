@@ -135,16 +135,16 @@
   {
     "productId": "1788428262784",
     "productName": "گوشتکوب یک تیکه کوچک",
-    "quantity": 297,
+    "quantity": 447,
     "createdAt": "2026-11-23T07:25:46.263Z",
-    "updatedAt": "2026-11-24T08:27:13.299Z"
+    "updatedAt": "2026-11-28T08:12:23.119Z"
   },
   {
     "productId": "1788427924372",
     "productName": "گوشتکوب دو تیکه",
-    "quantity": 279,
+    "quantity": 327,
     "createdAt": "2026-11-23T07:26:07.119Z",
-    "updatedAt": "2026-11-28T07:56:33.817Z"
+    "updatedAt": "2026-11-28T08:12:41.161Z"
   },
   {
     "productId": "1789281577234",
@@ -162,8 +162,8 @@
   {
     "productId": "1792915515001",
     "productName": "گوشت کوب دسته بلند ",
-    "quantity": 45,
+    "quantity": 245,
     "createdAt": "2026-11-28T06:41:10.115Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T07:57:10.881Z"
   }
 ]
