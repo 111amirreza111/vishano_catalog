@@ -527,15 +527,31 @@
         "finalTotal": 2700000,
         "baseCost": 20000,
         "profit": 700000
+      },
+      {
+        "productId": "1788426451054",
+        "name": "شات بشکه ای ",
+        "quantity": 100,
+        "unitPrice": 77895,
+        "baseCost": 57700,
+        "total": 7789500,
+        "hasDiscount": true,
+        "discountPercentage": 20,
+        "discountAmount": 1557900,
+        "finalTotal": 6231600,
+        "profit": 461600
       }
     ],
-    "totalAmount": 27168750,
-    "totalDiscount": 0,
-    "finalAmount": 27168750,
-    "totalQuantity": 275,
+    "totalAmount": 34958250,
+    "totalDiscount": 1557900,
+    "finalAmount": 33400350,
+    "totalQuantity": 375,
     "createdAt": "2026-11-01T07:29:17.370Z",
     "isSent": true,
-    "updatedAt": "2026-11-24T07:24:56.212Z"
+    "updatedAt": "2026-11-28T07:21:19.081Z",
+    "customerId": "1793779494850kk15toj8s",
+    "customerPhone": "09398656541",
+    "customerAddress": "تهران - شوش - باربری کارون"
   },
   {
     "id": "1793518639517",
