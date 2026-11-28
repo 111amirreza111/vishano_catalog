@@ -2,16 +2,16 @@
   {
     "productId": "1790134297126",
     "productName": "نمکدان موشکی",
-    "quantity": 423,
+    "quantity": 323,
     "createdAt": "2026-11-22T07:44:38.494Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T08:47:48.560Z"
   },
   {
     "productId": "1791007584682",
     "productName": "نمکدان الماسی",
-    "quantity": 377,
+    "quantity": 277,
     "createdAt": "2026-11-22T07:45:10.081Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T08:47:48.561Z"
   },
   {
     "productId": "1793088274952",
@@ -22,14 +22,16 @@
   {
     "productId": "1788428025752",
     "productName": "پیمانه منحنی 7 سانتی",
-    "quantity": 1700,
-    "createdAt": "2026-11-22T07:45:44.518Z"
+    "quantity": 1500,
+    "createdAt": "2026-11-22T07:45:44.518Z",
+    "updatedAt": "2026-11-28T08:51:27.633Z"
   },
   {
     "productId": "1788428154010",
     "productName": "پیمانه حلزونی 7 سانتی",
-    "quantity": 200,
-    "createdAt": "2026-11-22T07:45:55.069Z"
+    "quantity": 0,
+    "createdAt": "2026-11-22T07:45:55.069Z",
+    "updatedAt": "2026-11-28T08:51:27.633Z"
   },
   {
     "productId": "1788426653776",
@@ -40,83 +42,86 @@
   {
     "productId": "1788427406657",
     "productName": "نمکدان گوی ",
-    "quantity": 316,
+    "quantity": 216,
     "createdAt": "2026-11-22T07:46:51.968Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T08:47:48.558Z"
   },
   {
     "productId": "1788427596450",
     "productName": "نمکدان تخم مرغی ",
-    "quantity": 467,
+    "quantity": 367,
     "createdAt": "2026-11-22T07:49:49.604Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T08:47:48.555Z"
   },
   {
     "productId": "1790666946305",
     "productName": "گیره لباس 12 عددی",
-    "quantity": 200,
+    "quantity": 100,
     "createdAt": "2026-11-22T07:50:11.370Z",
-    "updatedAt": "2026-11-28T06:46:15.710Z"
+    "updatedAt": "2026-11-28T08:49:26.359Z"
   },
   {
     "productId": "1795333981751",
     "productName": "گیره لباس 18 عددی",
-    "quantity": 400,
+    "quantity": 300,
     "createdAt": "2026-11-22T08:14:48.806Z",
-    "updatedAt": "2026-11-23T07:05:29.955Z"
+    "updatedAt": "2026-11-28T08:47:48.564Z"
   },
   {
     "productId": "1788426451054",
     "productName": "شات بشکه ای ",
-    "quantity": 250,
+    "quantity": 150,
     "createdAt": "2026-11-22T08:58:37.138Z",
-    "updatedAt": "2026-11-28T07:19:59.360Z"
+    "updatedAt": "2026-11-28T08:47:48.569Z"
   },
   {
     "productId": "1788426996153",
     "productName": "پیمانه تخت بزرگ",
-    "quantity": 300,
-    "createdAt": "2026-11-22T08:58:56.915Z"
+    "quantity": 200,
+    "createdAt": "2026-11-22T08:58:56.915Z",
+    "updatedAt": "2026-11-28T08:49:26.359Z"
   },
   {
     "productId": "1788426851563",
     "productName": "پیمانه منحنی بزرگ",
-    "quantity": 150,
-    "createdAt": "2026-11-22T08:59:08.166Z"
+    "quantity": 50,
+    "createdAt": "2026-11-22T08:59:08.166Z",
+    "updatedAt": "2026-11-28T08:49:26.359Z"
   },
   {
     "productId": "1788427299742",
     "productName": "پیمانه بزرگ چوبی حلزونی ",
-    "quantity": 150,
-    "createdAt": "2026-11-22T08:59:20.810Z"
+    "quantity": 50,
+    "createdAt": "2026-11-22T08:59:20.810Z",
+    "updatedAt": "2026-11-28T08:49:26.359Z"
   },
   {
     "productId": "1788429889733",
     "productName": "کفگیر چوبی دسته بلند راش",
-    "quantity": 100,
+    "quantity": 0,
     "createdAt": "2026-11-22T09:00:41.849Z",
-    "updatedAt": "2026-11-23T07:06:28.294Z"
+    "updatedAt": "2026-11-28T08:47:48.563Z"
   },
   {
     "productId": "1788430047644",
     "productName": "قاشق چوبی متوسط راش",
-    "quantity": 100,
+    "quantity": 0,
     "createdAt": "2026-11-22T09:00:58.797Z",
-    "updatedAt": "2026-11-23T07:17:58.842Z"
+    "updatedAt": "2026-11-28T08:47:48.565Z"
   },
   {
     "productId": "1788443230560",
     "productName": "قاشق چوبی بلند راش",
-    "quantity": 100,
+    "quantity": 0,
     "createdAt": "2026-11-22T09:01:09.145Z",
-    "updatedAt": "2026-11-23T07:17:58.842Z"
+    "updatedAt": "2026-11-28T08:47:48.567Z"
   },
   {
     "productId": "1788443303976",
     "productName": "کفگیر پلویی دسته بلند راش",
-    "quantity": 150,
+    "quantity": 50,
     "createdAt": "2026-11-22T09:01:23.275Z",
-    "updatedAt": "2026-11-23T07:19:32.669Z"
+    "updatedAt": "2026-11-28T08:51:27.633Z"
   },
   {
     "productId": "1795338199296",
@@ -142,9 +147,9 @@
   {
     "productId": "1788427924372",
     "productName": "گوشتکوب دو تیکه",
-    "quantity": 279,
+    "quantity": 159,
     "createdAt": "2026-11-23T07:26:07.119Z",
-    "updatedAt": "2026-11-28T08:18:04.210Z"
+    "updatedAt": "2026-11-28T08:51:27.633Z"
   },
   {
     "productId": "1789281577234",
@@ -162,8 +167,22 @@
   {
     "productId": "1792915515001",
     "productName": "گوشت کوب دسته بلند ",
-    "quantity": 245,
+    "quantity": 205,
     "createdAt": "2026-11-28T06:41:10.115Z",
-    "updatedAt": "2026-11-28T07:57:10.881Z"
+    "updatedAt": "2026-11-28T08:51:27.633Z"
+  },
+  {
+    "productId": "1788443562621",
+    "productName": "اسپند دودکن ",
+    "quantity": 200,
+    "createdAt": "2026-11-28T08:48:04.418Z",
+    "updatedAt": "2026-11-28T08:49:26.359Z"
+  },
+  {
+    "productId": "1788427165885",
+    "productName": "پیمانه سرگرد",
+    "quantity": 1300,
+    "createdAt": "2026-11-28T08:49:43.514Z",
+    "updatedAt": "2026-11-28T08:51:27.633Z"
   }
 ]
