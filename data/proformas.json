@@ -474,19 +474,6 @@
     "time": "۱۲:۰۶",
     "items": [
       {
-        "productId": "1791007584682",
-        "name": "نمکدان الماسی",
-        "quantity": 100,
-        "unitPrice": 52110,
-        "baseCost": 38600,
-        "total": 5211000,
-        "hasDiscount": false,
-        "discountPercentage": 0,
-        "discountAmount": 0,
-        "finalTotal": 5211000,
-        "profit": 1351000
-      },
-      {
         "productId": "1793088274952",
         "name": "نمکدان مثلثی ",
         "quantity": 140,
@@ -574,7 +561,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 77895,
+        "finalTotal": 7789500,
         "profit": 2019500
       },
       {
@@ -587,16 +574,16 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 112200,
+        "finalTotal": 11220000,
         "profit": 4620000
       }
     ],
-    "totalAmount": 139920900,
+    "totalAmount": 134709900,
     "totalDiscount": 0,
-    "finalAmount": 139920900,
-    "totalQuantity": 2940,
+    "finalAmount": 134709900,
+    "totalQuantity": 2840,
     "isSent": false,
     "createdAt": "2026-11-24T08:38:23.752Z",
-    "updatedAt": "2026-11-24T08:50:27.315Z"
+    "updatedAt": "2026-11-28T08:40:18.372Z"
   }
 ]
