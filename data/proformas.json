@@ -18,7 +18,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 78200,
+        "finalTotal": 15640000,
         "profit": 6440000
       },
       {
@@ -31,7 +31,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 112200,
+        "finalTotal": 22440000,
         "profit": 9240000
       },
       {
@@ -44,7 +44,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 21802500,
         "profit": 5652500
       },
       {
@@ -57,7 +57,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 114750,
+        "finalTotal": 22950000,
         "profit": 5950000
       },
       {
@@ -70,7 +70,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 155250,
+        "finalTotal": 12420000,
         "profit": 3220000
       },
       {
@@ -83,7 +83,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 128250,
+        "finalTotal": 12825000,
         "profit": 3325000
       },
       {
@@ -96,7 +96,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 153900,
+        "finalTotal": 7695000,
         "profit": 1995000
       }
     ],
@@ -106,7 +106,7 @@
     "totalQuantity": 1000,
     "isSent": false,
     "createdAt": "2026-11-23T09:04:29.481Z",
-    "updatedAt": "2026-11-23T09:11:13.388Z"
+    "updatedAt": "2026-11-28T08:55:24.861Z"
   },
   {
     "id": "1795505997455",

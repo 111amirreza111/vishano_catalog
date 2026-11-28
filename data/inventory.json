@@ -56,16 +56,16 @@
   {
     "productId": "1790666946305",
     "productName": "گیره لباس 12 عددی",
-    "quantity": 100,
+    "quantity": 0,
     "createdAt": "2026-11-22T07:50:11.370Z",
-    "updatedAt": "2026-11-28T08:49:26.359Z"
+    "updatedAt": "2026-11-28T09:13:42.698Z"
   },
   {
     "productId": "1795333981751",
     "productName": "گیره لباس 18 عددی",
-    "quantity": 300,
+    "quantity": 100,
     "createdAt": "2026-11-22T08:14:48.806Z",
-    "updatedAt": "2026-11-28T08:47:48.564Z"
+    "updatedAt": "2026-11-28T09:03:52.024Z"
   },
   {
     "productId": "1788426451054",
@@ -133,29 +133,30 @@
   {
     "productId": "1789281524430",
     "productName": "وردنه 40 سانتی گردو",
-    "quantity": 470,
+    "quantity": 300,
     "createdAt": "2026-11-23T07:25:23.055Z",
-    "updatedAt": "2026-11-24T08:30:26.649Z"
+    "updatedAt": "2026-11-28T09:03:52.025Z"
   },
   {
     "productId": "1788428262784",
     "productName": "گوشتکوب یک تیکه کوچک",
-    "quantity": 447,
+    "quantity": 347,
     "createdAt": "2026-11-23T07:25:46.263Z",
-    "updatedAt": "2026-11-28T08:12:23.119Z"
+    "updatedAt": "2026-11-28T09:03:52.030Z"
   },
   {
     "productId": "1788427924372",
     "productName": "گوشتکوب دو تیکه",
-    "quantity": 159,
+    "quantity": 79,
     "createdAt": "2026-11-23T07:26:07.119Z",
-    "updatedAt": "2026-11-28T08:51:27.633Z"
+    "updatedAt": "2026-11-28T09:03:52.028Z"
   },
   {
     "productId": "1789281577234",
     "productName": "وردنه 30 سانتی ",
-    "quantity": 200,
-    "createdAt": "2026-11-24T08:30:01.830Z"
+    "quantity": 0,
+    "createdAt": "2026-11-24T08:30:01.830Z",
+    "updatedAt": "2026-11-28T09:03:52.026Z"
   },
   {
     "productId": "1789367360771",
@@ -167,9 +168,9 @@
   {
     "productId": "1792915515001",
     "productName": "گوشت کوب دسته بلند ",
-    "quantity": 205,
+    "quantity": 155,
     "createdAt": "2026-11-28T06:41:10.115Z",
-    "updatedAt": "2026-11-28T08:51:27.633Z"
+    "updatedAt": "2026-11-28T09:03:52.032Z"
   },
   {
     "productId": "1788443562621",
