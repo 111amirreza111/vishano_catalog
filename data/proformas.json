@@ -452,7 +452,7 @@
         "hasDiscount": false,
         "discountPercentage": 0,
         "discountAmount": 0,
-        "finalTotal": 77895,
+        "finalTotal": 7789500,
         "profit": 2019500
       }
     ],
@@ -462,7 +462,7 @@
     "totalQuantity": 3250,
     "isSent": false,
     "createdAt": "2026-11-24T07:39:57.456Z",
-    "updatedAt": "2026-11-24T08:48:49.540Z"
+    "updatedAt": "2026-11-25T06:33:33.224Z"
   },
   {
     "id": "1795509503752",

@@ -2,16 +2,16 @@
   {
     "productId": "1790134297126",
     "productName": "نمکدان موشکی",
-    "quantity": 523,
+    "quantity": 423,
     "createdAt": "2026-11-22T07:44:38.494Z",
-    "updatedAt": "2026-11-23T07:04:56.941Z"
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   },
   {
     "productId": "1791007584682",
     "productName": "نمکدان الماسی",
-    "quantity": 477,
+    "quantity": 377,
     "createdAt": "2026-11-22T07:45:10.081Z",
-    "updatedAt": "2026-11-23T07:04:56.942Z"
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   },
   {
     "productId": "1793088274952",
@@ -40,23 +40,23 @@
   {
     "productId": "1788427406657",
     "productName": "نمکدان گوی ",
-    "quantity": 416,
+    "quantity": 316,
     "createdAt": "2026-11-22T07:46:51.968Z",
-    "updatedAt": "2026-11-23T07:04:56.941Z"
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   },
   {
     "productId": "1788427596450",
     "productName": "نمکدان تخم مرغی ",
-    "quantity": 567,
+    "quantity": 467,
     "createdAt": "2026-11-22T07:49:49.604Z",
-    "updatedAt": "2026-11-24T08:26:00.099Z"
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   },
   {
     "productId": "1790666946305",
     "productName": "گیره لباس 12 عددی",
-    "quantity": 400,
+    "quantity": 200,
     "createdAt": "2026-11-22T07:50:11.370Z",
-    "updatedAt": "2026-11-23T07:05:29.955Z"
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   },
   {
     "productId": "1795333981751",
@@ -150,5 +150,19 @@
     "productName": "وردنه 30 سانتی ",
     "quantity": 200,
     "createdAt": "2026-11-24T08:30:01.830Z"
+  },
+  {
+    "productId": "1789367360771",
+    "productName": "وردنه 40 سانتی سپیدار",
+    "quantity": 0,
+    "createdAt": "2026-11-28T06:40:07.661Z",
+    "updatedAt": "2026-11-28T06:42:19.771Z"
+  },
+  {
+    "productId": "1792915515001",
+    "productName": "گوشت کوب دسته بلند ",
+    "quantity": 45,
+    "createdAt": "2026-11-28T06:41:10.115Z",
+    "updatedAt": "2026-11-28T06:46:15.710Z"
   }
 ]
